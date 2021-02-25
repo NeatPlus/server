@@ -1,0 +1,12 @@
+# Python related
+.venv/
+__pycache__/
+*.pyc
+
+# Django related
+media/
+*.sqlite3
+.env
+
+# IDE related
+.vscode/
