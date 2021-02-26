@@ -10,3 +10,6 @@ media/
 
 # IDE related
 .vscode/
+
+# docker related
+docker-compose.yml

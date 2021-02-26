@@ -11,21 +11,43 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from re import DEBUG
+
+from django.core.management.utils import get_random_secret_key
+from environs import Env
+from marshmallow.validate import OneOf
+
+# read dotenv
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Server environment
+SERVER_ENVIRONMENT = env.str(
+    "SERVER_ENVIRONMENT",
+    validate=OneOf(choices=["development", "testing", "staging", "production"]),
+    error="SERVER_ENVIRONMENT can only be one of {choices}",
+)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+# is server secure server
+IS_SERVER_SECURE = SERVER_ENVIRONMENT in ["staging", "production"]
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "=9gdil@#1n_8h*se3=52z7jk7q48r+k47-n0@#!4&-206$$nxi"
+# secret key for server
+if IS_SERVER_SECURE:
+    SECRET_KEY = env.str("DJANGO_SECRET_KEY", validate=lambda n: len(n) > 49)
+else:
+    SECRET_KEY = get_random_secret_key()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# debug
+if IS_SERVER_SECURE:
+    DEBUG = False
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = []
+# list of allowed hosts
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
 
 
 # Application definition
@@ -73,12 +95,7 @@ WSGI_APPLICATION = "neatplus.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+DATABASES = {"default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3")}
 
 
 # Password validation
