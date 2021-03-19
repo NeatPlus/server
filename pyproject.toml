@@ -2,6 +2,13 @@
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+exclude = "migrations/"
+
+[tool.isort]
+skip_glob = ["__pycache__", "**/migrations"]
+profile = "black"
+
 [tool.poetry]
 name = "neatplus-server"
 version = "0.0.1"
@@ -16,6 +23,10 @@ marshmallow = "^3.10.0"
 uvicorn = {version = "^0.13.4", extras = ["standard"], optional=true}
 gunicorn = {version="^20.0.4", optional=true}
 psycopg2-binary = "^2.8.6"
+djangorestframework = "^3.12.2"
+django-filter = "^2.4.0"
+djangorestframework-simplejwt = "^4.6.0"
+djangorestframework-camel-case = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
