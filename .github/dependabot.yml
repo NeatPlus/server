@@ -1,5 +1,5 @@
 version: 2
-update:
+updates:
   # maintain poetry dependencies weekly
   - package-ecosystem: "pip"
     directory: "/"
