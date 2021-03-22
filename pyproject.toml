@@ -30,7 +30,7 @@ djangorestframework-camel-case = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
-isort = "^5.7.0"
+isort = "^5.8.0"
 safety = "^1.10.3"
 pre-commit = "^2.10.1"
 
