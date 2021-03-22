@@ -1,12 +1,12 @@
 version: 2
 updates:
-  # maintain poetry dependencies weekly
+  # maintain poetry dependencies monthly
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
-  # maintain github actions dependencies weekly
+      interval: "monthly"
+  # maintain github actions dependencies monthly
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
