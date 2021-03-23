@@ -59,13 +59,17 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_otp",
     "django_otp.plugins.otp_totp",
+    "silk",
+    "corsheaders",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
 MIDDLEWARE = [
+    "silk.middleware.SilkyMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -190,3 +194,13 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS512",
     "ISSUER": env.str("SIMPLE_JWT_ISSUER", default="neatplus-sever"),
 }
+
+# CORS settings
+CORS_URLS_REGEX = r"^(/api/).*$"
+CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[], subcast=str)
+
+# SILK settings
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True
+SILKY_META = True
+SILKY_INTERCEPT_PERCENT = env.float("SILKY_INTERCEPT_PERCENT", default=1.0)

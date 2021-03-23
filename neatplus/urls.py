@@ -22,6 +22,7 @@ if settings.IS_SERVER_SECURE:
 
     admin.site.__class__ = OTPAdmin
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(
@@ -33,6 +34,7 @@ urlpatterns = [
     re_path(
         get_api_path(r"jwt/verify/$"), TokenVerifyView.as_view(), name="jwt-verify"
     ),
+    re_path(r"^silk/", include("silk.urls", namespace="silk")),
 ]
 
 if not settings.IS_SERVER_SECURE:
