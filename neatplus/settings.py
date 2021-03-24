@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 from marshmallow.validate import OneOf
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Read .env file for environment variable
 env = Env()
@@ -104,6 +106,8 @@ WSGI_APPLICATION = "neatplus.wsgi.application"
 
 DATABASES = {"default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3")}
 
+# CACHES
+CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 
 # Auth user model
 AUTH_USER_MODEL = "user.User"
@@ -231,3 +235,15 @@ SILKY_AUTHENTICATION = True
 SILKY_AUTHORISATION = True
 SILKY_META = True
 SILKY_INTERCEPT_PERCENT = env.float("SILKY_INTERCEPT_PERCENT", default=1.0)
+
+
+# Sentry
+ENABLE_SENTRY = env.bool("ENABLE_SENTRY", default=False)
+if ENABLE_SENTRY:
+    sentry_sdk.init(
+        dsn=env.url("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+        send_default_pii=True,
+        environment=SERVER_ENVIRONMENT,
+    )
