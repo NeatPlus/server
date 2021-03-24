@@ -144,6 +144,36 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Logging
+ENABLE_SYSLOG = env.bool("ENABLE_SYSLOG", default=False)
+
+if ENABLE_SYSLOG:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "simple": {
+                "()": "django.utils.log.ServerFormatter",
+                "format": "[{server_time}] ({levelname}): {message}",
+                "style": "{",
+            },
+        },
+        "handlers": {
+            "SysLog": {
+                "level": "INFO",
+                "formatter": "simple",
+                "class": "logging.handlers.SysLogHandler",
+                "address": (env.url("SYSLOG_URL"), env.int("SYSLOG_PORT")),
+            },
+        },
+        "loggers": {
+            "django": {
+                "handlers": ["SysLog"],
+                "level": "INFO",
+            },
+        },
+    }
+
 
 # Static file and media file settings
 USE_S3_STORAGE = env.bool("USE_S3_STORAGE", default=False)
