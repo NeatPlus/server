@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework_simplejwt.views import (
@@ -41,3 +42,6 @@ if not settings.IS_SERVER_SECURE:
     urlpatterns += [
         path("api-auth/", include("rest_framework.urls")),
     ]
+
+if not settings.USE_S3_STORAGE:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

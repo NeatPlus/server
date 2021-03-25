@@ -5,6 +5,7 @@ import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 from marshmallow.validate import OneOf
+from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
 # Read .env file for environment variable
@@ -272,8 +273,18 @@ ENABLE_SENTRY = env.bool("ENABLE_SENTRY", default=False)
 if ENABLE_SENTRY:
     sentry_sdk.init(
         dsn=env.url("SENTRY_DSN"),
-        integrations=[DjangoIntegration()],
+        integrations=[DjangoIntegration(), CeleryIntegration()],
         traces_sample_rate=1.0,
         send_default_pii=True,
         environment=SERVER_ENVIRONMENT,
     )
+
+
+# CELERY
+ENABLE_CELERY = env.bool("ENABLE_CELERY", default=False)
+if ENABLE_CELERY:
+    CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
+    CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+    CELERY_TIMEZONE = TIME_ZONE
+    CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 1

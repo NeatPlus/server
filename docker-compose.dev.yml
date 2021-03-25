@@ -15,6 +15,17 @@ services:
     networks:
       - default
       - external-services
+  celery_worker:
+    env_file: .env
+    environment:
+      - CELERY_WORKER=true
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    networks:
+      - default
+      - external-services
 
 networks:
   external-services:

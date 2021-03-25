@@ -10,6 +10,14 @@ services:
     networks:
       - default
       - external-services
+  celery_worker:
+    env_file: .env
+    environment:
+      - CELERY_WORKER=true
+    image: ghcr.io/neatplus/server:latest
+    networks:
+      - default
+      - external-services
 
 networks:
   external-services:
