@@ -281,10 +281,26 @@ if ENABLE_SENTRY:
 
 
 # CELERY
-ENABLE_CELERY = env.bool("ENABLE_CELERY", default=False)
-if ENABLE_CELERY:
+CELERY_BROKER_TYPE = env.str(
+    "CELERY_BROKER_TYPE",
+    default="filesystem",
+    validate=OneOf(choices=["redis", "filesystem"]),
+    error="CELERY_BROKER_TYPE can only be one of {choices}",
+)
+
+if CELERY_BROKER_TYPE == "redis":
     CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL
-    CELERY_TIMEZONE = TIME_ZONE
-    CELERY_WORKER_HIJACK_ROOT_LOGGER = False
-    CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
+if CELERY_BROKER_TYPE == "filesystem":
+    CELERY_BROKER_URL = "filesystem://"
+    CELERY_RESULT_BACKEND = "file:///tmp"
+    CELERY_BROKER_TRANSPORT_OPTIONS = {
+        "data_folder_in": "/tmp",
+        "data_folder_out": "/tmp",
+        "data_folder_processed": "/tmp",
+    }
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
