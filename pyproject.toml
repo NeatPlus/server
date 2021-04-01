@@ -19,7 +19,7 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.9"
 Django = "^3.1.7"
 environs = {version = "^9.3.2", extras = ["django"]}
-marshmallow = "^3.10.0"
+marshmallow = "^3.11.1"
 uvicorn = {version = "^0.13.4", extras = ["standard"], optional=true}
 gunicorn = {version="^20.1.0", optional=true}
 psycopg2-binary = "^2.8.6"
