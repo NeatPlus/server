@@ -21,7 +21,7 @@ Django = "^3.1.7"
 environs = {version = "^9.3.2", extras = ["django"]}
 marshmallow = "^3.10.0"
 uvicorn = {version = "^0.13.4", extras = ["standard"], optional=true}
-gunicorn = {version="^20.0.4", optional=true}
+gunicorn = {version="^20.1.0", optional=true}
 psycopg2-binary = "^2.8.6"
 djangorestframework = "^3.12.2"
 django-filter = "^2.4.0"
