@@ -418,7 +418,7 @@ pipenv = ["pipenv"]
 
 [[package]]
 name = "environs"
-version = "9.3.1"
+version = "9.3.2"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
@@ -432,9 +432,9 @@ marshmallow = ">=2.7.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.8.4)", "flake8-bugbear (==20.11.1)", "mypy (==0.800)", "pre-commit (>=2.4,<3.0)", "tox"]
+dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
-lint = ["flake8 (==3.8.4)", "flake8-bugbear (==20.11.1)", "mypy (==0.800)", "pre-commit (>=2.4,<3.0)"]
+lint = ["flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)"]
 tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
 
 [[package]]
@@ -968,7 +968,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "16a748320916bc67030ffae3e31a20ca0b0d3bbd575474d2e525967a707719ea"
+content-hash = "3d39e0d3ba0f42a45055e6d24878ef194cc0f17650fb3173e7fe1eaadd14f487"
 
 [metadata.files]
 amqp = [
@@ -1098,8 +1098,8 @@ dparse = [
     {file = "dparse-0.5.1.tar.gz", hash = "sha256:a1b5f169102e1c894f9a7d5ccf6f9402a836a5d24be80a986c7ce9eaed78f367"},
 ]
 environs = [
-    {file = "environs-9.3.1-py2.py3-none-any.whl", hash = "sha256:2da44b7c30114415aa858577fa6396ee326fc76a0a60f0f15e8260ba554f19dc"},
-    {file = "environs-9.3.1.tar.gz", hash = "sha256:3f6def554abb5455141b540e6e0b72fda3853404f2b0d31658aab1bf95410db3"},
+    {file = "environs-9.3.2-py2.py3-none-any.whl", hash = "sha256:6bef733b88cc901e787cf24fb2eaa72621b0656226ea4e332ab24ed0cba36fcf"},
+    {file = "environs-9.3.2.tar.gz", hash = "sha256:2eb671afd37e6e9820131b918bbbcaa6658d0fb420ebf35bdfb750ae39c51a66"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
