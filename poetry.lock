@@ -243,7 +243,7 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-admin-interface"
-version = "0.15.5"
+version = "0.16.0"
 description = "django-admin-interface is a modern responsive flat admin interface customizable by the admin itself."
 category = "main"
 optional = false
@@ -968,7 +968,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "775b48df7e7cbfe8fabc3790fcbbd9108e3d1f4715964d6e7b6b2a62d89fdc57"
+content-hash = "31fdf833fe24ab066fe8f3941d776a10c2561745a76c0cff930bb762ea7a7184"
 
 [metadata.files]
 amqp = [
@@ -1046,8 +1046,8 @@ django = [
     {file = "Django-3.1.7.tar.gz", hash = "sha256:32ce792ee9b6a0cbbec340123e229ac9f765dff8c2a4ae9247a14b2ba3a365a7"},
 ]
 django-admin-interface = [
-    {file = "django-admin-interface-0.15.5.tar.gz", hash = "sha256:3a3198d3b4c56d4a5863b3d275b99c37678a555e0c4c1255900d9dfc666d4ec7"},
-    {file = "django_admin_interface-0.15.5-py3-none-any.whl", hash = "sha256:3167b11bbd07c237299583c857bd364938f4c224a012d341185682f78ad167e0"},
+    {file = "django-admin-interface-0.16.0.tar.gz", hash = "sha256:d18bf7db865f5d40d16f30e94f92a602a4a216dccc117456cff76171eab07a30"},
+    {file = "django_admin_interface-0.16.0-py3-none-any.whl", hash = "sha256:7d1dfd1d85e9947dbb462e0674f001c23dd04fcf927bb4bc87dd2bb500ec6136"},
 ]
 django-cache-url = [
     {file = "django-cache-url-3.2.3.tar.gz", hash = "sha256:c1d45626ae8a206267c1263aa7a3461e2e186be2e939bcbd8c660e25851ddac8"},
