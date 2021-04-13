@@ -103,7 +103,6 @@ WSGI_APPLICATION = "neatplus.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {"default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3")}
 
@@ -114,7 +113,6 @@ CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 AUTH_USER_MODEL = "user.User"
 
 # Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -133,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
@@ -304,3 +301,7 @@ if CELERY_BROKER_TYPE == "filesystem":
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
+# Default auto field
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
