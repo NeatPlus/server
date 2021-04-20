@@ -32,3 +32,10 @@ class UserStampedModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class CodeModel(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+
+    class Meta:
+        abstract = True

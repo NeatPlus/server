@@ -310,6 +310,26 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "django-modeltranslation"
+version = "0.16.2"
+description = "Translates Django models using a registration approach."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+django = ">=2.2"
+six = ">=1.15.0,<2.0.0"
+
+[[package]]
+name = "django-ordered-model"
+version = "3.4.1"
+description = "Allows Django models to be ordered and provides a simple admin interface for reordering them."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-otp"
 version = "1.0.3"
 description = "A pluggable framework for adding two-factor authentication to Django using one-time passwords."
@@ -341,6 +361,17 @@ python-dateutil = "*"
 pytz = "*"
 requests = "*"
 sqlparse = "*"
+
+[[package]]
+name = "django-simple-history"
+version = "2.12.0"
+description = "Store model history and view/revert changes from admin site."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+six = "*"
 
 [[package]]
 name = "django-storages"
@@ -968,7 +999,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "39fcf7b7bac21eab4b6ef8a83d9437208a530cb7904d814f7f26482fa626f8ed"
+content-hash = "a9b5b6cd7d483188d0de56acc2f8f9c764a409464268e78dc17bd5735b3350f2"
 
 [metadata.files]
 amqp = [
@@ -1071,12 +1102,23 @@ django-flat-responsive = [
 django-flat-theme = [
     {file = "django-flat-theme-1.1.4.tar.gz", hash = "sha256:6b522d8c2b5a8228b30947fb002eff2868da076e9beacf3e798410e5c1a2d849"},
 ]
+django-modeltranslation = [
+    {file = "django-modeltranslation-0.16.2.tar.gz", hash = "sha256:a14e67d40952a6e927fb743e6529e29ccfd33a80d8aaaa39036aaf994cfdaf7e"},
+]
+django-ordered-model = [
+    {file = "django-ordered-model-3.4.1.tar.gz", hash = "sha256:d867166ed4dd12501139e119cbbc5b4d19798a3e72740aef0af4879ba97102cf"},
+    {file = "django_ordered_model-3.4.1-py3-none-any.whl", hash = "sha256:29af6624cf3505daaf0df00e2df1d0726dd777b95e08f304d5ad0264092aa934"},
+]
 django-otp = [
     {file = "django-otp-1.0.3.tar.gz", hash = "sha256:381a15e65293b8b06d47b7d6b306e0b7af2e104137ac92f6c566d3b9b90b6244"},
     {file = "django_otp-1.0.3-py3-none-any.whl", hash = "sha256:f4ab096b424c33ffe69453620356e1b7517f30dfb9ba13bfeaa1d1f20faddc13"},
 ]
 django-silk = [
     {file = "django_silk-4.1.0-py2.py3-none-any.whl", hash = "sha256:a331e55618fa62eaf3cf5a63f31bc1e91205efbeeca5e587c577498b0e251ed8"},
+]
+django-simple-history = [
+    {file = "django-simple-history-2.12.0.tar.gz", hash = "sha256:3b7bf6bfbcf973afca123c5786c72b917ed4d92d7bf3b6cb70fe2e3850e763a3"},
+    {file = "django_simple_history-2.12.0-py2.py3-none-any.whl", hash = "sha256:e7e830cb7a768dc90d6ba0507f8023f889bcb62fe31a08f18fac102c55eec539"},
 ]
 django-storages = [
     {file = "django-storages-1.11.1.tar.gz", hash = "sha256:c823dbf56c9e35b0999a13d7e05062b837bae36c518a40255d522fbe3750fbb4"},

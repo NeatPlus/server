@@ -29,7 +29,11 @@ IS_SERVER_SECURE = SERVER_ENVIRONMENT in ["staging", "production"]
 if IS_SERVER_SECURE:
     SECRET_KEY = env.str("DJANGO_SECRET_KEY", validate=lambda n: len(n) > 49)
 else:
-    SECRET_KEY = get_random_secret_key()
+    SECRET_KEY = env.str(
+        "DJANGO_SECRET_KEY",
+        validate=lambda n: len(n) > 49,
+        default=get_random_secret_key(),
+    )
 
 # Debug
 if IS_SERVER_SECURE:
@@ -46,6 +50,7 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    "modeltranslation",
     "admin_interface",
     "colorfield",
     # Django
@@ -56,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Internal
+    "survey",
     "user",
     # External
     "django_filters",
@@ -64,6 +70,8 @@ INSTALLED_APPS = [
     "django_otp.plugins.otp_totp",
     "silk",
     "corsheaders",
+    "simple_history",
+    "ordered_model",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -79,6 +87,7 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "neatplus.urls"
@@ -218,12 +227,12 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ],
-    "DEFAULT_AUTHENTICATION_CLASS": [
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "DEFAULT_PERMISSION_CLASS": [
+    "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
     "DEFAULT_FILTER_BACKENDS": [
@@ -302,6 +311,12 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 
-# Default auto field
 
+# Default auto field
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+# Model translation
+MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
+MODELTRANSLATION_LANGUAGES = ("en", "es", "fr")
+MODELTRANSLATION_PREPOPULATE_LANGUAGE = "en"
+MODELTRANSLATION_AUTO_POPULATE = True
