@@ -5,7 +5,15 @@ from simple_history.admin import SimpleHistoryAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import Answer, Question, QuestionCategory, QuestionContext
+from .models import (
+    Answer,
+    AnswerMitigation,
+    AnswerOpportunity,
+    AnswerStatement,
+    Question,
+    QuestionCategory,
+    QuestionContext,
+)
 
 
 @admin.register(QuestionContext)
@@ -72,3 +80,30 @@ class AnswerAdmin(
         "code",
         "title",
     )
+
+
+@admin.register(AnswerStatement)
+class AnswerStatementAdmin(
+    UserStampedModelAdmin,
+    OrderedModelAdmin,
+):
+    list_display = ("answer", "statement", "move_up_down_links")
+    autocomplete_fields = ("answer", "statement")
+
+
+@admin.register(AnswerMitigation)
+class AnswerMitigationAdmin(
+    UserStampedModelAdmin,
+    OrderedModelAdmin,
+):
+    list_display = ("answer", "mitigation", "move_up_down_links")
+    autocomplete_fields = ("answer", "mitigation")
+
+
+@admin.register(AnswerOpportunity)
+class AnswerOpportunityAdmin(
+    UserStampedModelAdmin,
+    OrderedModelAdmin,
+):
+    list_display = ("answer", "opportunity", "move_up_down_links")
+    autocomplete_fields = ("answer", "opportunity")

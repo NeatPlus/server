@@ -1,5 +1,5 @@
 #!/bin/sh
-poetry install --no-dev
+poetry install
 if [ "$CELERY_WORKER" = "true" ]
 then
     if [ -z "$CELERY_QUEUES" ]
