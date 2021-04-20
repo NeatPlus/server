@@ -75,6 +75,14 @@ INSTALLED_APPS = [
     "ordered_model",
 ]
 
+try:
+    import django_extensions
+
+    INSTALLED_APPS += ["django_extensions"]
+
+except ImportError:
+    pass
+
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
 MIDDLEWARE = [
