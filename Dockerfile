@@ -3,14 +3,14 @@
 # See https://docs.docker.com/develop/develop-images/multistage-build/
 
 # Creating a python base with shared environment variables
-FROM python:3.9.1-slim as python-base
+FROM python:3.9.4-slim as python-base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.1.5 \
+    POETRY_VERSION=1.1.6 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_CREATE=false \
     POETRY_NO_INTERACTION=1

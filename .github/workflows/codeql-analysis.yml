@@ -1,18 +1,23 @@
-name: Lint python application
+name: "CodeQL"
 
 on:
-  pull_request:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
+  schedule:
+    - cron: '15 4 * * 1'
 
 jobs:
-  lint:
-    name: lint
+  analyze:
+    name: Analyze
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9.4
@@ -30,9 +35,14 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --no-interaction
-      - name: Lint python projects
+      - name: Set CODEQL-PYTHON
         run: |
           source .venv/bin/activate
-          black . --check
-          isort . --check-only
-          safety check
+          echo "CODEQL_PYTHON=$(which python)" >> $GITHUB_ENV
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: python
+          setup-python-dependencies: false
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
