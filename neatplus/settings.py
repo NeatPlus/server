@@ -80,7 +80,7 @@ try:
 
     INSTALLED_APPS += ["django_extensions"]
 
-except ImportError:
+except ModuleNotFoundError:
     pass
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -129,6 +129,8 @@ CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 
 # Auth user model
 AUTH_USER_MODEL = "user.User"
+
+AUTHENTICATION_BACKENDS = ["neatplus.auth_backends.EmailOrUsernameModelBackend"]
 
 # Password validation
 
