@@ -1182,7 +1182,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "6e2cc3de9076a781cd1a3d5f2eb2b4d7e020e71dd88e1bcdf1832350e4160771"
+content-hash = "9756911366646dce8b6702a0f742c26f45a23747eff0d4e5668b5de26073241a"
 
 [metadata.files]
 amqp = [

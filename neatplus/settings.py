@@ -104,7 +104,7 @@ ROOT_URLCONF = "neatplus.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -130,8 +130,6 @@ CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 # Auth user model
 AUTH_USER_MODEL = "user.User"
 
-AUTHENTICATION_BACKENDS = ["neatplus.auth_backends.EmailOrUsernameModelBackend"]
-
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -149,6 +147,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email
+email_config = env.dj_email_url(
+    "EMAIL_URL",
+    default="console://user:password@localhost?_server_email=root@localhost&_default_from_email=root@localhost",
+)
+EMAIL_FILE_PATH = email_config["EMAIL_FILE_PATH"]
+EMAIL_HOST_USER = email_config["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = email_config["EMAIL_HOST_PASSWORD"]
+EMAIL_HOST = email_config["EMAIL_HOST"]
+EMAIL_PORT = email_config["EMAIL_PORT"]
+EMAIL_BACKEND = email_config["EMAIL_BACKEND"]
+EMAIL_USE_TLS = email_config["EMAIL_USE_TLS"]
+EMAIL_USE_SSL = email_config["EMAIL_USE_SSL"]
+if "SERVER_EMAIL" in email_config:
+    SERVER_EMAIL = email_config["SERVER_EMAIL"]
+if "DEFAULT_FROM_EMAIL" in email_config:
+    DEFAULT_FROM_EMAIL = email_config["DEFAULT_FROM_EMAIL"]
 
 # Internationalization
 
