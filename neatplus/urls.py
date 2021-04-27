@@ -8,6 +8,15 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from user.views import (
+    EmailConfirmPinSendView,
+    EmailConfirmPinVerifyView,
+    PasswordResetPasswordChangeView,
+    PasswordResetPinSendView,
+    PasswordResetPinVerifyView,
+    UserRegisterView,
+)
+
 API_VERSION = "v1"
 
 
@@ -34,6 +43,36 @@ urlpatterns = [
     ),
     re_path(
         get_api_path(r"jwt/verify/$"), TokenVerifyView.as_view(), name="jwt-verify"
+    ),
+    re_path(
+        get_api_path(r"registration/$"),
+        UserRegisterView.as_view(),
+        name="register",
+    ),
+    re_path(
+        get_api_path(r"password-reset-pin/$"),
+        PasswordResetPinSendView.as_view(),
+        name="password-reset-pin",
+    ),
+    re_path(
+        get_api_path(r"password-reset-pin/verify/$"),
+        PasswordResetPinVerifyView.as_view(),
+        name="password-reset-pin-verify",
+    ),
+    re_path(
+        get_api_path(r"password-reset-pin/change/$"),
+        PasswordResetPasswordChangeView.as_view(),
+        name="password-reset-pin-confirm",
+    ),
+    re_path(
+        get_api_path(r"email-confirm/$"),
+        EmailConfirmPinSendView.as_view(),
+        name="email-confirm",
+    ),
+    re_path(
+        get_api_path(r"email-confirm/verify/$"),
+        EmailConfirmPinVerifyView.as_view(),
+        name="email-confirm-verify",
     ),
     re_path(r"^silk/", include("silk.urls", namespace="silk")),
 ]
