@@ -13,11 +13,56 @@ from neatplus.utils import random_N_digit_number, random_N_length_string
 
 from .models import EmailConfirmationPin, PasswordResetPin
 from .serializers import (
+    ChangePasswordSerializer,
     PasswordResetPasswordChangeSerializer,
     PinVerifySerializer,
     UserNameSerializer,
     UserRegisterSerializer,
+    UserSerializer,
 )
+
+
+class UserView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None, *args, **kwargs):
+        serializer = UserSerializer(self.request.user)
+        return Response(serializer.data)
+
+    def patch(self, request, format=None, *args, **kwargs):
+        serializer = UserSerializer(self.request.user, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class ChangePasswordView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = serializer.data
+        user = self.request.user
+        old_password = data["old_password"]
+        new_password = data["new_password"]
+        re_new_password = data["re_new_password"]
+        if re_new_password != new_password:
+            return Response(
+                {"error": "New password and re new password doesn't match"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not user.check_password(old_password):
+            return Response(
+                {"error": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        user.set_password(new_password)
+        return Response({"detail": "Password successfully updated"})
 
 
 class UserRegisterView(views.APIView):
@@ -27,7 +72,7 @@ class UserRegisterView(views.APIView):
         serializer = UserRegisterSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
@@ -69,7 +114,7 @@ class PasswordResetPinSendView(views.APIView):
         serializer = UserNameSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
@@ -113,7 +158,7 @@ class PasswordResetPinVerifyView(views.APIView):
         serializer = PinVerifySerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
@@ -184,7 +229,7 @@ class PasswordResetPasswordChangeView(views.APIView):
         serializer = PasswordResetPasswordChangeSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
@@ -269,7 +314,7 @@ class EmailConfirmPinSendView(views.APIView):
         serializer = UserNameSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
@@ -316,7 +361,7 @@ class EmailConfirmPinVerifyView(views.APIView):
         serializer = PinVerifySerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"error": "Payload data is not valid"},
+                serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
