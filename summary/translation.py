@@ -1,4 +1,3 @@
-import simple_history
 from modeltranslation import translator
 
 from .models import Mitigation, Opportunity, Statement
@@ -17,8 +16,3 @@ class MitigationTranslationOptions(translator.TranslationOptions):
 @translator.register(Opportunity)
 class OpportunityTranslationOptions(translator.TranslationOptions):
     fields = ("title", "hints")
-
-
-simple_history.register(Statement)
-simple_history.register(Mitigation)
-simple_history.register(Opportunity)

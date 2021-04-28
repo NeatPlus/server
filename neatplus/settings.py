@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Internal
+    "organization",
     "summary",
     "survey",
     "user",
@@ -71,7 +72,6 @@ INSTALLED_APPS = [
     "django_otp.plugins.otp_totp",
     "silk",
     "corsheaders",
-    "simple_history",
     "ordered_model",
 ]
 
@@ -96,7 +96,6 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "neatplus.urls"

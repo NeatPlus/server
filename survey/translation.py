@@ -1,4 +1,3 @@
-import simple_history
 from modeltranslation import translator
 
 from .models import Answer, Question, QuestionCategory, QuestionContext
@@ -22,9 +21,3 @@ class QuestionTranslationOptions(translator.TranslationOptions):
 @translator.register(Answer)
 class AnswerTranslationOptions(translator.TranslationOptions):
     fields = ("title",)
-
-
-simple_history.register(QuestionContext)
-simple_history.register(QuestionCategory)
-simple_history.register(Question)
-simple_history.register(Answer)

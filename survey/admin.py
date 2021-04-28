@@ -1,7 +1,6 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
-from simple_history.admin import SimpleHistoryAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
@@ -21,7 +20,6 @@ class QuestionContextAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = ("code", "title", "move_up_down_links")
     search_fields = (
@@ -35,7 +33,6 @@ class QuestionCategoryAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = ("code", "title", "context", "move_up_down_links")
     autocomplete_fields = ("context",)
@@ -50,7 +47,6 @@ class QuestionAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = (
         "code",
@@ -72,7 +68,6 @@ class AnswerAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = ("code", "title", "question", "move_up_down_links")
     autocomplete_fields = ("question",)
