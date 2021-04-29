@@ -1,7 +1,6 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
-from simple_history.admin import SimpleHistoryAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
@@ -13,7 +12,6 @@ class StatementAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = (
         "code",
@@ -32,7 +30,6 @@ class MitigationAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = (
         "code",
@@ -51,7 +48,6 @@ class OpportunityAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
-    SimpleHistoryAdmin,
 ):
     list_display = (
         "code",
