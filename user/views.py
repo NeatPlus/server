@@ -1,11 +1,9 @@
-import datetime
-
-import pytz
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.template.loader import get_template
+from django.utils import timezone
 from rest_framework import permissions, status, views
 from rest_framework.response import Response
 
@@ -132,7 +130,7 @@ class PasswordResetPinSendView(views.APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         random_6_digit_pin = random_N_digit_number(6)
-        active_for_one_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+        active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         identifier = random_N_length_string(16)
         password_reset_pin_object, _ = PasswordResetPin.objects.update_or_create(
             user=user,
@@ -174,7 +172,7 @@ class PasswordResetPinVerifyView(views.APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         pin = data["pin"]
-        current_time = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        current_time = timezone.now()
         password_reset_pin_object = PasswordResetPin.objects.filter(
             user=user,
             user__is_active=True,
@@ -252,7 +250,7 @@ class PasswordResetPasswordChangeView(views.APIView):
                 {"error": "Password and re_password doesn't match"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        current_time = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        current_time = timezone.now()
         password_reset_pin_object = PasswordResetPin.objects.filter(
             user=user,
             user__is_active=True,
@@ -333,7 +331,7 @@ class EmailConfirmPinSendView(views.APIView):
                 )
         email_confirm_pin = EmailConfirmationPin.objects.filter(user=user)
         random_6_digit_pin = random_N_digit_number(6)
-        active_for_one_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+        active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         if not email_confirm_pin.first().is_active:
             return Response(
                 {"error": "Email address has already been confirmed"},
@@ -377,7 +375,7 @@ class EmailConfirmPinVerifyView(views.APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         pin = data["pin"]
-        current_time = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        current_time = timezone.now()
         email_confirmation_mail_object = EmailConfirmationPin.objects.filter(
             user=user,
             pin=pin,

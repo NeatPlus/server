@@ -1,0 +1,41 @@
+name: Test Django application
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.4
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.2
+        with:
+          version: 1.1.6
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Setup cache
+        uses: actions/cache@v2.1.4
+        with:
+          path: .venv
+          key: poetry-venv-${{ hashFiles('poetry.lock') }}
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction
+      - uses: iamsauravsharma/create-dotenv@v1.0.0
+        with:
+          env-prefix: 'ENV_'
+        env:
+          ENV_SERVER_ENVIRONMENT: "testing"
+      - name: Run test
+        run: |
+          source .venv/bin/activate
+          python3 manage.py test -v 2

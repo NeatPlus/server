@@ -2,7 +2,6 @@ import functools
 import os
 
 from celery import Celery
-from django.conf import settings
 from django.core.cache import cache
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "neatplus.settings")

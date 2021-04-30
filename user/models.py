@@ -1,5 +1,3 @@
-import datetime
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
@@ -8,6 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.loader import get_template
+from django.utils import timezone
 
 from neatplus.auth_validators import CustomASCIIUsernameValidator
 from neatplus.fields import LowerCharField, LowerEmailField
@@ -97,7 +96,7 @@ class EmailConfirmationPin(TimeStampedModel):
 def send_email_confiramtion_pin(sender, instance, created, **kwargs):
     if created or "email" in kwargs["update_fields"]:
         six_digit_pin = random_N_digit_number(6)
-        active_for_one_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+        active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         email_confirm_object, _ = EmailConfirmationPin.objects.update_or_create(
             user=instance,
             defaults={
