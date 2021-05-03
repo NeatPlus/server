@@ -35,4 +35,4 @@ jobs:
           source .venv/bin/activate
           black . --check
           isort . --check-only
-          safety check
+          poetry export --dev -E asgi --without-hashes | safety check --stdin
