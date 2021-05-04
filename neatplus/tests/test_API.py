@@ -15,7 +15,7 @@ class TestAPI(APIFullTestCase):
         user.save()
         cls.user = user
 
-    def test_jwt_login(self):
+    def test_username_jwt_login(self):
         jwt_create_url = self.reverse("jwt-create", kwargs={"version": "v1"})
         response = self.client.post(
             jwt_create_url,
