@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "silk",
     "corsheaders",
     "ordered_model",
+    "drf_spectacular",
 ]
 
 try:
@@ -267,6 +268,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "neatplus.pagination.CustomLimitOffsetPagination",
     "PAGE_SIZE": 100,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 if IS_SERVER_SECURE:

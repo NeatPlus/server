@@ -25,9 +25,11 @@ UserModel = get_user_model()
 
 
 class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = UserModel.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return UserModel.objects.filter(is_active=True)
 
     @action(
         methods=[],
@@ -56,6 +58,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         methods=["post"],
         detail=False,
         serializer_class=ChangePasswordSerializer,
+        url_path="me/change_password",
     )
     def change_password(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -125,12 +128,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             }
         )
 
-
-class PasswordResetPinSendView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = UserNameSerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=UserNameSerializer,
+    )
+    def password_reset(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -165,12 +170,15 @@ class PasswordResetPinSendView(views.APIView):
         user.email_user("Password reset pin", message)
         return Response({"detail": "Password reset email successfully send"})
 
-
-class PasswordResetPinVerifyView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = PinVerifySerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=PinVerifySerializer,
+        url_path="password_reset/verify",
+    )
+    def password_reset_verify(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -232,12 +240,15 @@ class PasswordResetPinVerifyView(views.APIView):
             password_reset_pin_object.save()
             return Response({"identifier": password_reset_pin_object_identifier})
 
-
-class PasswordResetPasswordChangeView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = PasswordResetPasswordChangeSerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=PasswordResetPasswordChangeSerializer,
+        url_path="password_reset/change",
+    )
+    def password_reset_change(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -313,12 +324,14 @@ class PasswordResetPasswordChangeView(views.APIView):
             user.save()
             return Response({"detail": "Password successfully changed"})
 
-
-class EmailConfirmPinSendView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = UserNameSerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=UserNameSerializer,
+    )
+    def email_confirm(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -360,12 +373,15 @@ class EmailConfirmPinSendView(views.APIView):
         user.email_user("Email confirmation mail", message)
         return Response({"detail": "Email confirmation mail successfully send"})
 
-
-class EmailConfirmPinVerifyView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = PinVerifySerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=PinVerifySerializer,
+        url_path="email_confirm/verify",
+    )
+    def email_confirm_verify(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
