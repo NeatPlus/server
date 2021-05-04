@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
+from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -9,14 +10,12 @@ from rest_framework_simplejwt.views import (
 )
 
 from user.views import (
-    ChangePasswordView,
     EmailConfirmPinSendView,
     EmailConfirmPinVerifyView,
     PasswordResetPasswordChangeView,
     PasswordResetPinSendView,
     PasswordResetPinVerifyView,
-    UserRegisterView,
-    UserView,
+    UserViewSet,
 )
 
 API_VERSION = "v1"
@@ -25,6 +24,9 @@ API_VERSION = "v1"
 def get_api_path(path):
     return r"^api/(?P<version>({}))/{}".format(API_VERSION, path)
 
+
+router = routers.DefaultRouter()
+router.register("user", UserViewSet, basename="user")
 
 if settings.IS_SERVER_SECURE:
     from django_otp.admin import OTPAdminSite
@@ -38,6 +40,8 @@ if settings.IS_SERVER_SECURE:
 urlpatterns = [
     # admin
     path("admin/", admin.site.urls),
+    # DRF router
+    re_path(get_api_path(""), include(router.urls)),
     # jwt
     re_path(
         get_api_path(r"jwt/create/$"), TokenObtainPairView.as_view(), name="jwt-create"
@@ -47,19 +51,6 @@ urlpatterns = [
     ),
     re_path(
         get_api_path(r"jwt/verify/$"), TokenVerifyView.as_view(), name="jwt-verify"
-    ),
-    # user
-    re_path(get_api_path(r"user/$"), UserView.as_view(), name="user"),
-    re_path(
-        get_api_path(r"user/change-password/$"),
-        ChangePasswordView.as_view(),
-        name="user-change-password",
-    ),
-    # registration
-    re_path(
-        get_api_path(r"registration/$"),
-        UserRegisterView.as_view(),
-        name="register",
     ),
     # password reset
     re_path(

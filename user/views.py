@@ -4,7 +4,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
-from rest_framework import permissions, status, views
+from rest_framework import mixins, permissions, status, views, viewsets
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
 from neatplus.utils import random_N_digit_number, random_N_length_string
@@ -14,32 +15,50 @@ from .serializers import (
     ChangePasswordSerializer,
     PasswordResetPasswordChangeSerializer,
     PinVerifySerializer,
+    PrivateUserSerializer,
     UserNameSerializer,
     UserRegisterSerializer,
     UserSerializer,
 )
 
+UserModel = get_user_model()
 
-class UserView(views.APIView):
+
+class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = UserModel.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, format=None, *args, **kwargs):
-        serializer = UserSerializer(self.request.user)
+    @action(
+        methods=[],
+        detail=False,
+        serializer_class=PrivateUserSerializer,
+    )
+    def me(self, request, *args, **kwargs):
+        pass
+
+    @me.mapping.get
+    def get_me(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.request.user)
         return Response(serializer.data)
 
-    def patch(self, request, format=None, *args, **kwargs):
-        serializer = UserSerializer(self.request.user, data=request.data, partial=True)
+    @me.mapping.patch
+    def patch_me(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
+            self.request.user, data=request.data, partial=True
+        )
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data)
 
-
-class ChangePasswordView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = ChangePasswordSerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        serializer_class=ChangePasswordSerializer,
+    )
+    def change_password(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -62,12 +81,14 @@ class ChangePasswordView(views.APIView):
         user.set_password(new_password)
         return Response({"detail": "Password successfully updated"})
 
-
-class UserRegisterView(views.APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request, format=None, *args, **kwargs):
-        serializer = UserRegisterSerializer(data=request.data)
+    @action(
+        methods=["post"],
+        detail=False,
+        permission_classes=[permissions.AllowAny],
+        serializer_class=UserRegisterSerializer,
+    )
+    def register(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 serializer.errors,
@@ -85,13 +106,13 @@ class UserRegisterView(views.APIView):
                 {"error": "Password and re_password doesn't match"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        user_exists = get_user_model().objects.filter_by_username(username).exists()
+        user_exists = UserModel.objects.filter_by_username(username).exists()
         if user_exists:
             return Response(
                 {"error": "User with username/email already exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        _ = get_user_model().objects.create_user(
+        _ = UserModel.objects.create_user(
             username=username,
             email=email,
             first_name=first_name,
@@ -117,11 +138,7 @@ class PasswordResetPinSendView(views.APIView):
             )
         data = serializer.data
         username = data["username"]
-        user = (
-            get_user_model()
-            .objects.filter_by_username(username, is_active=True)
-            .first()
-        )
+        user = UserModel.objects.filter_by_username(username, is_active=True).first()
         if not user:
             return Response(
                 {
@@ -161,11 +178,7 @@ class PasswordResetPinVerifyView(views.APIView):
             )
         data = serializer.data
         username = data["username"]
-        user = (
-            get_user_model()
-            .objects.filter_by_username(username, is_active=True)
-            .first()
-        )
+        user = UserModel.objects.filter_by_username(username, is_active=True).first()
         if not user:
             return Response(
                 {"error": "No active user present for username/email"},
@@ -232,11 +245,7 @@ class PasswordResetPasswordChangeView(views.APIView):
             )
         data = serializer.data
         username = data["username"]
-        user = (
-            get_user_model()
-            .objects.filter_by_username(username, is_active=True)
-            .first()
-        )
+        user = UserModel.objects.filter_by_username(username, is_active=True).first()
         if not user:
             return Response(
                 {"error": "No active user present for username/email"},
@@ -317,7 +326,7 @@ class EmailConfirmPinSendView(views.APIView):
             )
         data = serializer.data
         username = data["username"]
-        user = get_user_model().objects.filter_by_username(username).first()
+        user = UserModel.objects.filter_by_username(username).first()
         if not user:
             return Response(
                 {"error": "No user present with given email address/username"},
@@ -364,11 +373,7 @@ class EmailConfirmPinVerifyView(views.APIView):
             )
         data = serializer.data
         username = data["username"]
-        user = (
-            get_user_model()
-            .objects.filter_by_username(username, is_active=False)
-            .first()
-        )
+        user = UserModel.objects.filter_by_username(username, is_active=False).first()
         if not user:
             return Response(
                 {"error": "No inactive user present for username"},
