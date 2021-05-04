@@ -2,6 +2,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -9,14 +14,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from user.views import (
-    EmailConfirmPinSendView,
-    EmailConfirmPinVerifyView,
-    PasswordResetPasswordChangeView,
-    PasswordResetPinSendView,
-    PasswordResetPinVerifyView,
-    UserViewSet,
-)
+from user.views import UserViewSet
 
 API_VERSION = "v1"
 
@@ -52,35 +50,18 @@ urlpatterns = [
     re_path(
         get_api_path(r"jwt/verify/$"), TokenVerifyView.as_view(), name="jwt-verify"
     ),
-    # password reset
-    re_path(
-        get_api_path(r"password-reset-pin/$"),
-        PasswordResetPinSendView.as_view(),
-        name="password-reset-pin",
-    ),
-    re_path(
-        get_api_path(r"password-reset-pin/verify/$"),
-        PasswordResetPinVerifyView.as_view(),
-        name="password-reset-pin-verify",
-    ),
-    re_path(
-        get_api_path(r"password-reset-pin/change/$"),
-        PasswordResetPasswordChangeView.as_view(),
-        name="password-reset-pin-confirm",
-    ),
-    # email confirm
-    re_path(
-        get_api_path(r"email-confirm/$"),
-        EmailConfirmPinSendView.as_view(),
-        name="email-confirm",
-    ),
-    re_path(
-        get_api_path(r"email-confirm/verify/$"),
-        EmailConfirmPinVerifyView.as_view(),
-        name="email-confirm-verify",
-    ),
     # silk
     re_path(r"^silk/", include("silk.urls", namespace="silk")),
+    # DRF spectaular
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "schema/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger",
+    ),
+    path(
+        "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
+    ),
 ]
 
 if not settings.IS_SERVER_SECURE:
