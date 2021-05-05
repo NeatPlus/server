@@ -12,8 +12,9 @@ class APIFullTestCase(APITestCase, APILiveServerTestCase):
 
     status_code = status
 
+    @classmethod
     def reverse(
-        self,
+        cls,
         viewname,
         urlconf=None,
         args=None,
