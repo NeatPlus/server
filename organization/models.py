@@ -14,6 +14,9 @@ class Organization(TimeStampedModel, UserStampedModel):
         settings.AUTH_USER_MODEL, related_name="member_organizations"
     )
 
+    def __str__(self):
+        return self.title
+
 
 class Project(TimeStampedModel, UserStampedModel, OrderedModel):
     class VisibilityChoice(models.TextChoices):
@@ -32,3 +35,6 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
 
     class Meta(OrderedModel.Meta):
         pass
+
+    def __str__(self):
+        return self.title
