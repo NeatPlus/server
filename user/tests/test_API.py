@@ -3,10 +3,10 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.test import override_settings
 
-from neatplus.tests import APIFullTestCase
+from neatplus.tests import FullTestCase
 
 
-class TestAPI(APIFullTestCase):
+class TestAPI(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -26,7 +26,7 @@ class TestAPI(APIFullTestCase):
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_user_email_verify(self):
-        non_activated_user_pass = "random_pass@1278"
+        non_activated_user_pass = get_user_model().objects.make_random_password()
         non_activated_user = self.baker.make(settings.AUTH_USER_MODEL)
         non_activated_user.set_password(non_activated_user_pass)
         non_activated_user.save()

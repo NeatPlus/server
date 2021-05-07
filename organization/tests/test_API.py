@@ -1,9 +1,9 @@
 from django.conf import settings
 
-from neatplus.tests import APIFullTestCase
+from neatplus.tests import FullTestCase
 
 
-class TestAPI(APIFullTestCase):
+class TestAPI(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
