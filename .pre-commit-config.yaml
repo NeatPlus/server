@@ -14,6 +14,6 @@ repos:
       language: system
     - id: safety
       name: safety
-      entry: poetry run safety check --ignore 40291 # pip <21.1 affected
+      entry: scripts/safety.sh
       pass_filenames: false
-      language: system
+      language: script
