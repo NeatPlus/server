@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
-from rest_framework import mixins, permissions, status, views, viewsets
-from rest_framework.decorators import action, permission_classes
+from rest_framework import mixins, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from neatplus.utils import random_N_digit_number, random_N_length_string
@@ -125,7 +125,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response(
             {
                 "detail": "User successfully registered and email send to user's email address"
-            }
+            },
+            status=status.HTTP_201_CREATED,
         )
 
     @action(

@@ -2,6 +2,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.test import override_settings
+from model_bakery import random_gen
 
 from neatplus.tests import FullTestCase
 
@@ -27,9 +28,21 @@ class TestAPI(FullTestCase):
 
     def test_user_email_verify(self):
         non_activated_user_pass = get_user_model().objects.make_random_password()
-        non_activated_user = self.baker.make(settings.AUTH_USER_MODEL)
-        non_activated_user.set_password(non_activated_user_pass)
-        non_activated_user.save()
+        non_activated_user_username = random_gen.gen_string(15)
+        user_data = {
+            "username": non_activated_user_username,
+            "email": random_gen.gen_email(),
+            "first_name": random_gen.gen_string(150),
+            "last_name": random_gen.gen_string(150),
+            "password": non_activated_user_pass,
+            "re_password": non_activated_user_pass,
+        }
+        url = self.reverse("user-register", kwargs={"version": "v1"})
+        response = self.client.post(url, data=user_data)
+        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        non_activated_user = get_user_model().objects.get(
+            username=non_activated_user_username
+        )
         url = self.reverse("user-email-confirm", kwargs={"version": "v1"})
         user = authenticate(
             username=non_activated_user.username, password=non_activated_user_pass
