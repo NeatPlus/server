@@ -1,9 +1,12 @@
 from django.db.models import Q
-from rest_framework import permissions, status, viewsets
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.views import UserStampedModelUpdateMixin
+
 from .models import Organization, Project
+from .permissions import CanEditProject
 from .serializers import (
     CreateOrganizationProjectSerializer,
     OrganizationSerializer,
@@ -24,16 +27,22 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     def create_project(self, request, *args, **kwargs):
         organization = self.get_object()
         current_user = self.request.user
-        data = request.data
-        serializer = self.get_serializer(data=data)
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save(created_by=current_user, organization=organization)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+class ProjectViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    UserStampedModelUpdateMixin,
+    viewsets.GenericViewSet,
+):
+    permission_classes = [CanEditProject]
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
@@ -49,4 +58,5 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
             )
             | Q(users=current_user)
             | Q(created_by=current_user)
+            | Q(organization__admins=current_user)
         )
