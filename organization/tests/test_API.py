@@ -7,13 +7,18 @@ class TestAPI(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = cls.baker.make(
-            settings.AUTH_USER_MODEL, is_superuser=True, is_active=True
+        cls.admin_user, cls.user, cls.project_created_user = cls.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, _quantity=3
         )
         cls.organization = cls.baker.make(
-            "organization.Organization", members=[cls.user]
+            "organization.Organization", admins=[cls.admin_user], members=[cls.user]
         )
-        project = cls.baker.make("organization.Project", users=[cls.user])
+        project = cls.baker.make(
+            "organization.Project",
+            organization=cls.organization,
+            created_by=cls.project_created_user,
+            users=[cls.user],
+        )
         cls.organization_list_url = cls.reverse(
             "organization-list", kwargs={"version": "v1"}
         )
@@ -69,3 +74,21 @@ class TestAPI(FullTestCase):
         )
         get_response = self.client.get(created_project_detail_url)
         self.assertEqual(get_response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_organization_admin_edit_project(self):
+        self.client.force_authenticate(self.admin_user)
+        data = {"title": "update_project"}
+        response = self.client.patch(self.project_detail_url, data=data)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_project_creator_edit_project(self):
+        self.client.force_authenticate(self.project_created_user)
+        data = {"title": "update_project_by_created_by"}
+        response = self.client.patch(self.project_detail_url, data=data)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_normal_user_edit_project(self):
+        self.client.force_authenticate(self.user)
+        data = {"title": "update_project_by_normal_user"}
+        response = self.client.patch(self.project_detail_url, data=data)
+        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
