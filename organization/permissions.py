@@ -4,7 +4,12 @@ from rest_framework import permissions
 from .models import Organization
 
 
-class CanEditProject(permissions.IsAuthenticated):
+class IsProjectOrganizationAdmin(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.organization.admins.all()
+
+
+class CanEditProjectOrReadOnly(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True

@@ -13,11 +13,12 @@ class TestAPI(FullTestCase):
         cls.organization = cls.baker.make(
             "organization.Organization", admins=[cls.admin_user], members=[cls.user]
         )
-        project = cls.baker.make(
+        cls.project = cls.baker.make(
             "organization.Project",
             organization=cls.organization,
             created_by=cls.project_created_user,
             users=[cls.user],
+            is_accepted_by_admin=True,
         )
         cls.organization_list_url = cls.reverse(
             "organization-list", kwargs={"version": "v1"}
@@ -27,7 +28,7 @@ class TestAPI(FullTestCase):
         )
         cls.project_list_url = cls.reverse("project-list", kwargs={"version": "v1"})
         cls.project_detail_url = cls.reverse(
-            "project-detail", kwargs={"version": "v1", "pk": project.pk}
+            "project-detail", kwargs={"version": "v1", "pk": cls.project.pk}
         )
 
     def test_organization_list(self):
@@ -92,3 +93,39 @@ class TestAPI(FullTestCase):
         data = {"title": "update_project_by_normal_user"}
         response = self.client.patch(self.project_detail_url, data=data)
         self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+
+    def test_project_creator_project_accept(self):
+        self.client.force_authenticate(self.project_created_user)
+        url = self.reverse(
+            "project-accept",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+
+    def test_organization_admin_project_accept(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse(
+            "project-accept",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_project_creator_project_reject(self):
+        self.client.force_authenticate(self.project_created_user)
+        url = self.reverse(
+            "project-reject",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+
+    def test_organization_admin_project_reject(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse(
+            "project-reject",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
