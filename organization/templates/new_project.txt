@@ -1,0 +1,6 @@
+Dear {{ admin.username }},
+
+Recently new project was created with title {{ project.title }} by {{project.created_by}}. Please visit website to accept project.
+
+Thanks,
+Neat+ Team

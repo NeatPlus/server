@@ -1,0 +1,6 @@
+Dear {{ project.created_by.username }},
+
+Your project with title {{project.title }} is accepted by {{ project.organization }} admins.
+
+Thanks,
+Neat+ Team

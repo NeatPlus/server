@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelUpdateMixin
 
+from .filters import OrganizationFilter, ProjectFilter
 from .models import Organization, Project
 from .permissions import CanEditProjectOrReadOnly, IsProjectOrganizationAdmin
 from .serializers import (
@@ -17,6 +18,7 @@ from .serializers import (
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+    filterset_class = OrganizationFilter
 
     @action(
         methods=["post"],
@@ -44,6 +46,7 @@ class ProjectViewSet(
 ):
     permission_classes = [CanEditProjectOrReadOnly]
     serializer_class = ProjectSerializer
+    filterset_class = ProjectFilter
 
     def get_queryset(self):
         current_user = self.request.user
@@ -62,7 +65,7 @@ class ProjectViewSet(
                     )
                     | Q(users=current_user)
                 )
-                & Q(is_accepted_by_admin=True)
+                & Q(status="accepted")
             )
         )
 
@@ -71,8 +74,8 @@ class ProjectViewSet(
     )
     def accept(self, request, *args, **kwargs):
         project = self.get_object()
-        if not project.is_accepted_by_admin:
-            project.is_accepted_by_admin = True
+        if project.status != "accepted":
+            project.status = "accepted"
             project.save()
         return Response({"detail": "Project successfully accepted"})
 
@@ -81,7 +84,7 @@ class ProjectViewSet(
     )
     def reject(self, request, *args, **kwargs):
         project = self.get_object()
-        if not project.is_accepted_by_admin:
-            project.is_accepted_by_admin = False
+        if project.status != "rejected":
+            project.status = "rejected"
             project.save()
         return Response({"detail": "Project successfully rejected"})

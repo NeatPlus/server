@@ -19,7 +19,7 @@ class ProjectAdmin(UserStampedModelAdmin, OrderedModelAdmin):
         "title",
         "organization",
         "visibility",
-        "is_accepted_by_admin",
+        "status",
         "move_up_down_links",
     )
     autocomplete_fields = ("organization", "users")

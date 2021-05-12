@@ -18,7 +18,7 @@ class TestAPI(FullTestCase):
             organization=cls.organization,
             created_by=cls.project_created_user,
             users=[cls.user],
-            is_accepted_by_admin=True,
+            status="accepted",
         )
         cls.organization_list_url = cls.reverse(
             "organization-list", kwargs={"version": "v1"}
