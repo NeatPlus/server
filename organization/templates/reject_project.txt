@@ -1,0 +1,6 @@
+Dear {{ project.created_by.username }},
+
+Sorry, Your project with title {{project.title }} is rejected by {{ project.organization }} admins.
+
+Thanks,
+Neat+ Team
