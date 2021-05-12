@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
@@ -18,6 +17,7 @@ from neatplus.utils import random_N_digit_number
 class User(AbstractUser):
     username_validator = CustomASCIIUsernameValidator()
 
+    # Abstract user modification
     username = LowerCharField(
         "username",
         max_length=20,
@@ -43,6 +43,11 @@ class User(AbstractUser):
         default=False,
         help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
     )
+
+    # Custom
+    organization = models.CharField(max_length=255, null=True, blank=True, default=None)
+    role = models.CharField(max_length=50, null=True, blank=True, default=None)
+
     objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
@@ -92,7 +97,7 @@ class EmailConfirmationPin(TimeStampedModel):
     is_active = models.BooleanField(default=True)
 
 
-@receiver(post_save, sender=get_user_model())
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def send_email_confiramtion_pin(sender, instance, created, **kwargs):
     if created or "email" in kwargs["update_fields"]:
         six_digit_pin = random_N_digit_number(6)

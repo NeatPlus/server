@@ -6,12 +6,19 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name")
+        fields = ("username", "first_name", "last_name", "organization", "role")
 
 
 class PrivateUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
-        fields = ("username", "email", "first_name", "last_name")
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "organization",
+            "role",
+        )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -43,3 +50,5 @@ class UserRegisterSerializer(serializers.Serializer):
     last_name = serializers.CharField()
     password = serializers.CharField()
     re_password = serializers.CharField()
+    organization = serializers.CharField()
+    role = serializers.CharField()

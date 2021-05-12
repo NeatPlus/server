@@ -36,6 +36,8 @@ class TestAPI(FullTestCase):
             "last_name": random_gen.gen_string(150),
             "password": non_activated_user_pass,
             "re_password": non_activated_user_pass,
+            "organization": random_gen.gen_string(255),
+            "role": random_gen.gen_string(50),
         }
         url = self.reverse("user-register", kwargs={"version": "v1"})
         response = self.client.post(url, data=user_data)
