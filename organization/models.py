@@ -1,8 +1,5 @@
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.template.loader import get_template
 from ordered_model.models import OrderedModel
 
 from neatplus.models import TimeStampedModel, UserStampedModel
@@ -38,9 +35,17 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
         "Organization", on_delete=models.CASCADE, related_name="projects"
     )
     visibility = models.CharField(max_length=26, choices=VisibilityChoice.choices)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="projects")
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="projects",
+        through="ProjectUser",
+        through_fields=("project", "user"),
+    )
     status = models.CharField(
-        max_length=8, choices=StatusChoice.choices, default="pending", editable=False
+        max_length=8,
+        choices=StatusChoice.choices,
+        default=StatusChoice.PENDING,
+        editable=False,
     )
 
     class Meta(OrderedModel.Meta):
@@ -67,27 +72,15 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
         super().save(*args, **kwargs)
 
 
-@receiver(post_save, sender=Project)
-def send_new_project_organization_admin(sender, instance, created, **kwargs):
-    if created:
-        for admin in instance.organization.admins.all():
-            email_template = get_template("new_project.txt")
-            context = {"admin": admin, "project": instance}
-            message = email_template.render(context)
-            admin.email_user("New project mail", message)
+class ProjectUser(UserStampedModel, TimeStampedModel):
+    class SurveyPermissionChoice(models.TextChoices):
+        WRITE = "write"
+        READ_ONLY = "read_only"
 
-
-@receiver(post_save, sender=Project)
-def send_project_acceptance_change_mail(sender, instance, created, **kwargs):
-    if not created and "status" in kwargs["update_fields"]:
-        if instance.status == "accepted":
-            email_template = get_template("accept_project.txt")
-            subject = "Project acceptance mail"
-        elif instance.status == "rejected":
-            email_template = get_template("reject_project.txt")
-            subject = "Project rejection mail"
-        else:
-            return
-        context = {"project": instance}
-        message = email_template.render(context)
-        instance.created_by.email_user(subject, message)
+    project = models.ForeignKey("Project", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    permission = models.CharField(
+        max_length=9,
+        choices=SurveyPermissionChoice.choices,
+        default=SurveyPermissionChoice.READ_ONLY,
+    )

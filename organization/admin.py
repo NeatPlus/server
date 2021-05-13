@@ -3,7 +3,7 @@ from ordered_model.admin import OrderedModelAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import Organization, Project
+from .models import Organization, Project, ProjectUser
 
 
 @admin.register(Organization)
@@ -24,3 +24,9 @@ class ProjectAdmin(UserStampedModelAdmin, OrderedModelAdmin):
     )
     autocomplete_fields = ("organization", "users")
     search_fields = ("title",)
+
+
+@admin.register(ProjectUser)
+class ProjectUserAdmin(UserStampedModelAdmin):
+    list_display = ("project", "user", "permission")
+    autocomplete_fields = ("project", "user")
