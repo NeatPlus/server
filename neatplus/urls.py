@@ -14,6 +14,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet, ProjectViewSet
 from user.views import UserViewSet
 
@@ -25,6 +26,7 @@ def get_api_path(path):
 
 
 router = routers.DefaultRouter()
+router.register("notification", NotificationViewSet, basename="notification")
 router.register("organization", OrganizationViewSet, basename="organization")
 router.register("project", ProjectViewSet, basename="project")
 router.register("user", UserViewSet, basename="user")
