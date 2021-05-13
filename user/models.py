@@ -1,7 +1,9 @@
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
+from django.utils import timezone
 
 from neatplus.auth_validators import CustomASCIIUsernameValidator
 from neatplus.fields import LowerCharField, LowerEmailField
@@ -61,6 +63,52 @@ class User(AbstractUser):
             if "email" in kwargs["update_fields"]:
                 self.is_active = False
         super().save(*args, **kwargs)
+
+    def notify(
+        self,
+        actor,
+        verb,
+        notification_type=None,
+        timestamp=timezone.now(),
+        action_object=None,
+        target=None,
+        description=None,
+    ):
+        """
+        Create notification for user.
+
+        Notifications are actually actions events, which are categorized by four main components.
+
+        Actor. The object that performed the activity.
+        Verb. The verb phrase that identifies the action of the activity.
+        Action Object. (Optional) The object linked to the action itself.
+        Target. (Optional) The object to which the activity was performed.
+
+        Actor, Action Object and Target are GenericForeignKeys to any arbitrary Django object.
+        An action is a description of an action that was performed (Verb) at some instant in time by some Actor on some
+        optional Target that results in an Action Object getting created/updated/deleted
+
+        Use '{actor} {verb} {action_object(optional)} on {target(optional)}' as description if description is not provided
+        """
+        if not description:
+            extra_content = ""
+            if action_object:
+                extra_content += f" {action_object}"
+            if target:
+                extra_content += f" on {target}"
+
+        description = f"{actor} {verb}{extra_content}"
+        NotificationModel = apps.get_model("notification", "Notification")
+        NotificationModel.objects.create(
+            recipient=self,
+            actor_content_object=actor,
+            verb=verb,
+            description=description,
+            notification_type=notification_type,
+            timestamp=timestamp,
+            action_object_content_object=action_object,
+            target_content_object=target,
+        )
 
 
 class PasswordResetPin(TimeStampedModel):

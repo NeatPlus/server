@@ -13,6 +13,13 @@ def send_new_project_organization_admin(sender, instance, created, **kwargs):
             context = {"admin": admin, "project": instance}
             message = email_template.render(context)
             admin.email_user("New project mail", message)
+            admin.notify(
+                instance.created_by,
+                "created",
+                action_object=instance,
+                target=instance.organization,
+                notification_type="new_project",
+            )
 
 
 @receiver(post_save, sender=Project)
@@ -29,3 +36,9 @@ def send_project_acceptance_change_mail(sender, instance, created, **kwargs):
         context = {"project": instance}
         message = email_template.render(context)
         instance.created_by.email_user(subject, message)
+        instance.created_by.notify(
+            instance.organization,
+            instance.status,
+            action_object=instance,
+            notification_type=f"project_{instance.status}",
+        )
