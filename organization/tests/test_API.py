@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from neatplus.tests import FullTestCase
+from organization.models import ProjectUser
 
 
 class TestAPI(FullTestCase):
@@ -62,7 +63,6 @@ class TestAPI(FullTestCase):
             "title": "sample_project",
             "description": "Description goes here",
             "visibility": "private",
-            "users": [another_user_pk],
         }
         url = self.reverse(
             "organization-create-project",
@@ -129,3 +129,65 @@ class TestAPI(FullTestCase):
         )
         response = self.client.post(url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_project_user_modification(self):
+        self.client.force_authenticate(self.project_created_user)
+        first_user, second_user = self.baker.make(settings.AUTH_USER_MODEL, _quantity=2)
+        url = self.reverse(
+            "project-update-or-add-users",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        multiple_data = [
+            {"user": first_user.pk, "permission": "write"},
+            {"user": second_user.pk},
+        ]
+        multiple_post_response = self.client.post(
+            url, data=multiple_data, format="json"
+        )
+        self.assertEqual(
+            multiple_post_response.status_code, self.status_code.HTTP_200_OK
+        )
+        self.assertEqual(
+            ProjectUser.objects.get(project=self.project, user=first_user).permission,
+            "write",
+        )
+        self.assertEqual(
+            ProjectUser.objects.get(project=self.project, user=second_user).permission,
+            "read_only",
+        )
+
+        single_data = {"user": second_user.pk, "permission": "write"}
+        single_post_response = self.client.post(url, data=single_data)
+        self.assertEqual(single_post_response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            ProjectUser.objects.get(project=self.project, user=first_user).permission,
+            "write",
+        )
+        self.assertEqual(
+            ProjectUser.objects.get(project=self.project, user=second_user).permission,
+            "write",
+        )
+
+    def test_project_user_deletion(self):
+        self.client.force_authenticate(self.project_created_user)
+        first_user, second_user, third_user = self.baker.make(
+            settings.AUTH_USER_MODEL, _quantity=3
+        )
+        url = self.reverse(
+            "project-remove-users",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        multiple_data = [
+            {"user": first_user.pk},
+            {"user": second_user.pk},
+        ]
+        multiple_post_response = self.client.post(
+            url, data=multiple_data, format="json"
+        )
+        self.assertEqual(
+            multiple_post_response.status_code, self.status_code.HTTP_200_OK
+        )
+
+        single_data = {"user": third_user.pk}
+        single_post_response = self.client.post(url, data=single_data)
+        self.assertEqual(single_post_response.status_code, self.status_code.HTTP_200_OK)
