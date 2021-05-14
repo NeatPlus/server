@@ -191,3 +191,24 @@ class TestAPI(FullTestCase):
         single_data = {"user": third_user.pk}
         single_post_response = self.client.post(url, data=single_data)
         self.assertEqual(single_post_response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_project_access_level(self):
+        url = self.reverse(
+            "project-access-level",
+            kwargs={"version": "v1", "pk": self.project.pk},
+        )
+        # admin user
+        self.client.force_authenticate(self.admin_user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(response.json()["accessLevel"], "organization_admin")
+        # project user
+        self.client.force_authenticate(self.project_created_user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(response.json()["accessLevel"], "owner")
+        # normal user
+        self.client.force_authenticate(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(response.json()["accessLevel"], "read_only")
