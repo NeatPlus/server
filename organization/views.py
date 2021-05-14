@@ -2,7 +2,7 @@ from typing import OrderedDict
 
 from django.db.models import Q
 from rest_framework import mixins, permissions, serializers, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelUpdateMixin
@@ -11,10 +11,11 @@ from .filters import OrganizationFilter, ProjectFilter
 from .models import Organization, Project, ProjectUser
 from .permissions import CanEditProjectOrReadOnly, IsProjectOrganizationAdmin
 from .serializers import (
+    AccessLevelResponseSerializer,
     CreateOrganizationProjectSerializer,
     OrganizationSerializer,
-    ProjectDetailSerializer,
     ProjectSerializer,
+    ProjectUsersDetailSerializer,
     RemoveProjectUserSerializer,
     UpdateOrCreateUserSerializer,
 )
@@ -62,7 +63,7 @@ class ProjectViewSet(
                 obj.created_by == current_user
                 or current_user in obj.organization.admins.all()
             ):
-                return ProjectDetailSerializer
+                return ProjectUsersDetailSerializer
         return ProjectSerializer
 
     def get_queryset(self):
@@ -70,21 +71,25 @@ class ProjectViewSet(
         organizations = Organization.objects.filter(
             Q(admins=current_user) | Q(members=current_user)
         )
-        return Project.objects.filter(
-            Q(created_by=current_user)
-            | Q(organization__admins=current_user)
-            | (
-                (
-                    Q(visibility="public")
-                    | (
-                        Q(visibility="public_within_organization")
-                        & Q(organization__in=organizations)
+        return (
+            Project.objects.filter(
+                Q(created_by=current_user)
+                | Q(organization__admins=current_user)
+                | (
+                    (
+                        Q(visibility="public")
+                        | (
+                            Q(visibility="public_within_organization")
+                            & Q(organization__in=organizations)
+                        )
+                        | Q(users=current_user)
                     )
-                    | Q(users=current_user)
+                    & Q(status="accepted")
                 )
-                & Q(status="accepted")
             )
-        ).distinct()
+            .distinct()
+            .prefetch_related("organization__admins")
+        )
 
     @action(
         methods=["post"],
@@ -167,3 +172,32 @@ class ProjectViewSet(
             user_obj = validated_datum.pop("user")
             project.users.remove(user_obj)
         return Response({"detail": "Successfully removed users from project"})
+
+    @action(
+        methods=["get"],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated],
+        serializer_class=AccessLevelResponseSerializer,
+    )
+    def access_level(self, request, *args, **kwargs):
+        project = self.get_object()
+        user = self.request.user
+        if user in project.organization.admins.all():
+            access_level = "organization_admin"
+        elif user == project.created_by:
+            access_level = "owner"
+        elif user in project.users.all():
+            permission = ProjectUser.objects.get(user=user, project=project).permission
+            if permission == "write":
+                access_level = "write"
+            else:
+                access_level = "read_only"
+        else:
+            access_level = "visibility_access"
+        data = {"access_level": access_level}
+        serializer = self.get_serializer(data=data)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        return Response(serializer.data)
