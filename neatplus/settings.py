@@ -42,10 +42,12 @@ else:
     DEBUG = True
 
 # List of allowed hosts
+DJANGO_ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
 if IS_SERVER_SECURE:
-    ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
+    ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
 else:
-    ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+    LOCAL_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = LOCAL_ALLOWED_HOSTS + DJANGO_ALLOWED_HOSTS
 
 # Application definition
 
@@ -122,17 +124,15 @@ WSGI_APPLICATION = "neatplus.wsgi.application"
 
 
 # Database
-
 DATABASES = {"default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3")}
 
 # CACHES
 CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
 
-# Auth user model
+# AUTH User model
 AUTH_USER_MODEL = "user.User"
 
 # Password validation
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -177,6 +177,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 # Logging
 ENABLE_SYSLOG = env.bool("ENABLE_SYSLOG", default=False)

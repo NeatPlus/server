@@ -1,10 +1,15 @@
 from modeltranslation import translator
 
-from .models import Answer, Question, QuestionCategory, QuestionContext
+from .models import Answer, Context, Module, Question, QuestionCategory
 
 
-@translator.register(QuestionContext)
-class QuestionContextTranslationOptions(translator.TranslationOptions):
+@translator.register(Context)
+class ContextTranslationOptions(translator.TranslationOptions):
+    fields = ("title",)
+
+
+@translator.register(Module)
+class ModuleTranslationOptions(translator.TranslationOptions):
     fields = ("title",)
 
 
