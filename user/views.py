@@ -98,30 +98,30 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = serializer.data
-        username = data["username"]
-        email = data["email"]
-        first_name = data["first_name"]
-        last_name = data["last_name"]
-        password = data["password"]
-        re_password = data["re_password"]
-        if re_password != password:
+        if data["re_password"] != data["password"]:
             return Response(
                 {"error": "Password and re_password doesn't match"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        user_exists = UserModel.objects.filter_by_username(username).exists()
+        user_exists = UserModel.objects.filter_by_username(data["username"]).exists()
         if user_exists:
             return Response(
                 {"error": "User with username/email already exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        _ = UserModel.objects.create_user(
-            username=username,
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            password=password,
-        )
+        serializer = PrivateUserSerializer(data=data)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user_password = data.pop("re_password")
+        try:
+            validate_password(password=user_password)
+        except ValidationError as e:
+            errors = list(e.messages)
+            return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+        UserModel.objects.create_user(**data)
         return Response(
             {
                 "detail": "User successfully registered and email send to user's email address"
