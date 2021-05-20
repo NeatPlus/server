@@ -63,8 +63,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Internal
+    "context",
     "notification",
     "organization",
+    "project",
     "summary",
     "survey",
     "user",

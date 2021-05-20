@@ -12,7 +12,7 @@ class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel
         validators=[FileExtensionValidator(allowed_extensions=["svg", "png"])],
     )
     context = models.ForeignKey(
-        "survey.Context", on_delete=models.PROTECT, related_name="statement_topics"
+        "context.Context", on_delete=models.PROTECT, related_name="statement_topics"
     )
 
     def __str__(self):
