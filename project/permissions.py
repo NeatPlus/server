@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework import permissions
 
-from .models import Organization
+CREATE_METHOD = "POST"
 
 
 class IsProjectOrganizationAdmin(permissions.IsAuthenticated):
@@ -9,9 +9,20 @@ class IsProjectOrganizationAdmin(permissions.IsAuthenticated):
         return request.user in obj.organization.admins.all()
 
 
-class CanEditProjectOrReadOnly(permissions.IsAuthenticated):
+class CanEditProject(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+        return (
+            request.user == obj.created_by
+            or request.user in obj.organization.admins.all()
+        )
+
+
+class CanEditProjectOrReadOrCreateOnly(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        if (
+            request.method in permissions.SAFE_METHODS
+            or request.method == CREATE_METHOD
+        ):
             return True
         return (
             request.user == obj.created_by

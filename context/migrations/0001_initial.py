@@ -10,13 +10,12 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('context', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='QuestionCategory',
+            name='Context',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
@@ -27,34 +26,10 @@ class Migration(migrations.Migration):
                 ('title_en', models.CharField(max_length=255, null=True)),
                 ('title_es', models.CharField(max_length=255, null=True)),
                 ('title_fr', models.CharField(max_length=255, null=True)),
-                ('created_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('module', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='categories', to='context.module')),
-                ('updated_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'verbose_name_plural': 'Question Categories',
-                'ordering': ('order',),
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Question',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('code', models.CharField(max_length=10, unique=True)),
-                ('order', models.PositiveIntegerField(db_index=True, editable=False, verbose_name='order')),
-                ('title', models.TextField()),
-                ('title_en', models.TextField(null=True)),
-                ('title_es', models.TextField(null=True)),
-                ('title_fr', models.TextField(null=True)),
-                ('hints', models.TextField(blank=True, default=None, null=True)),
-                ('hints_en', models.TextField(blank=True, default=None, null=True)),
-                ('hints_es', models.TextField(blank=True, default=None, null=True)),
-                ('hints_fr', models.TextField(blank=True, default=None, null=True)),
-                ('can_select_multiple_answer', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='questions', to='survey.questioncategory')),
+                ('description', models.TextField()),
+                ('description_en', models.TextField(null=True)),
+                ('description_es', models.TextField(null=True)),
+                ('description_fr', models.TextField(null=True)),
                 ('created_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
                 ('updated_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
@@ -64,19 +39,23 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Answer',
+            name='Module',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
                 ('code', models.CharField(max_length=10, unique=True)),
                 ('order', models.PositiveIntegerField(db_index=True, editable=False, verbose_name='order')),
-                ('title', models.TextField()),
-                ('title_en', models.TextField(null=True)),
-                ('title_es', models.TextField(null=True)),
-                ('title_fr', models.TextField(null=True)),
+                ('title', models.CharField(max_length=255)),
+                ('title_en', models.CharField(max_length=255, null=True)),
+                ('title_es', models.CharField(max_length=255, null=True)),
+                ('title_fr', models.CharField(max_length=255, null=True)),
+                ('description', models.TextField()),
+                ('description_en', models.TextField(null=True)),
+                ('description_es', models.TextField(null=True)),
+                ('description_fr', models.TextField(null=True)),
+                ('context', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='modules', to='context.context')),
                 ('created_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='answers', to='survey.question')),
                 ('updated_by', models.ForeignKey(blank=True, default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
             options={
