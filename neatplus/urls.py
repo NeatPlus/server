@@ -18,6 +18,7 @@ from context.views import ContextViewSet, ModuleViewSet
 from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
+from survey.views import OptionViewSet, QuestionGroupViewSet, QuestionViewSet
 from user.views import UserViewSet
 
 API_VERSION = "v1"
@@ -31,8 +32,11 @@ router = routers.DefaultRouter()
 router.register("context", ContextViewSet, basename="context")
 router.register("module", ModuleViewSet, basename="module")
 router.register("notification", NotificationViewSet, basename="notification")
+router.register("option", OptionViewSet, basename="option")
 router.register("organization", OrganizationViewSet, basename="organization")
 router.register("project", ProjectViewSet, basename="project")
+router.register("question-group", QuestionGroupViewSet, basename="question-group")
+router.register("question", QuestionViewSet, basename="question")
 router.register("user", UserViewSet, basename="user")
 
 
