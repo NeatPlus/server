@@ -5,11 +5,11 @@ from ordered_model.admin import OrderedModelAdmin
 from neatplus.admin import UserStampedModelAdmin
 
 from .models import (
-    AnswerMitigation,
-    AnswerOpportunity,
-    AnswerStatement,
     Mitigation,
     Opportunity,
+    OptionMitigation,
+    OptionOpportunity,
+    OptionStatement,
     Statement,
     StatementTopic,
 )
@@ -79,28 +79,28 @@ class OpportunityAdmin(
     autocomplete_fields = ("statement",)
 
 
-@admin.register(AnswerStatement)
-class AnswerStatementAdmin(
+@admin.register(OptionStatement)
+class OptionStatementAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("answer", "statement", "move_up_down_links")
-    autocomplete_fields = ("answer", "statement")
+    list_display = ("option", "statement", "move_up_down_links")
+    autocomplete_fields = ("option", "statement")
 
 
-@admin.register(AnswerMitigation)
-class AnswerMitigationAdmin(
+@admin.register(OptionMitigation)
+class OptionMitigationAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("answer", "mitigation", "move_up_down_links")
-    autocomplete_fields = ("answer", "mitigation")
+    list_display = ("option", "mitigation", "move_up_down_links")
+    autocomplete_fields = ("option", "mitigation")
 
 
-@admin.register(AnswerOpportunity)
-class AnswerOpportunityAdmin(
+@admin.register(OptionOpportunity)
+class OptionOpportunityAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("answer", "opportunity", "move_up_down_links")
-    autocomplete_fields = ("answer", "opportunity")
+    list_display = ("option", "opportunity", "move_up_down_links")
+    autocomplete_fields = ("option", "opportunity")

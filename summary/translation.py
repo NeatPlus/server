@@ -15,9 +15,9 @@ class StatementTranslationOptions(translator.TranslationOptions):
 
 @translator.register(Mitigation)
 class MitigationTranslationOptions(translator.TranslationOptions):
-    fields = ("title", "hints")
+    fields = ("title",)
 
 
 @translator.register(Opportunity)
 class OpportunityTranslationOptions(translator.TranslationOptions):
-    fields = ("title", "hints")
+    fields = ("title",)

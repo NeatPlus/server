@@ -1,18 +1,18 @@
 from modeltranslation import translator
 
-from .models import Answer, Question, QuestionCategory
+from .models import Option, Question, QuestionGroup
 
 
-@translator.register(QuestionCategory)
-class QuestionCategoryTranslationOptions(translator.TranslationOptions):
+@translator.register(QuestionGroup)
+class QuestionGroupTranslationOptions(translator.TranslationOptions):
     fields = ("title",)
 
 
 @translator.register(Question)
 class QuestionTranslationOptions(translator.TranslationOptions):
-    fields = ("title", "hints")
+    fields = ("title", "description", "hints")
 
 
-@translator.register(Answer)
-class AnswerTranslationOptions(translator.TranslationOptions):
+@translator.register(Option)
+class OptionTranslationOptions(translator.TranslationOptions):
     fields = ("title",)

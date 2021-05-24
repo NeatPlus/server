@@ -4,17 +4,16 @@ from ordered_model.admin import OrderedModelAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import Answer, Question, QuestionCategory
+from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
 
 
-@admin.register(QuestionCategory)
-class QuestionCategoryAdmin(
+@admin.register(QuestionGroup)
+class QuestionGroupAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("code", "title", "module", "move_up_down_links")
-    autocomplete_fields = ("module",)
+    list_display = ("code", "title", "move_up_down_links")
     search_fields = (
         "code",
         "title",
@@ -30,20 +29,21 @@ class QuestionAdmin(
     list_display = (
         "code",
         "title",
-        "hints",
-        "category",
-        "can_select_multiple_answer",
+        "group",
+        "answer_type",
+        "module",
+        "is_required",
         "move_up_down_links",
     )
-    autocomplete_fields = ("category",)
+    autocomplete_fields = ("group", "module")
     search_fields = (
         "code",
         "title",
     )
 
 
-@admin.register(Answer)
-class AnswerAdmin(
+@admin.register(Option)
+class OptionAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
@@ -54,3 +54,16 @@ class AnswerAdmin(
         "code",
         "title",
     )
+
+
+@admin.register(Survey)
+class SurveyAdmin(UserStampedModelAdmin, OrderedModelAdmin):
+    list_display = ("title", "project", "move_up_down_links")
+    autocomplete_fields = ("project",)
+    search_fields = ("title",)
+
+
+@admin.register(SurveyAnswer)
+class SurveyAnswerAdmin(UserStampedModelAdmin):
+    list_display = ("question", "survey", "answer")
+    autocomplete_fields = ("question", "survey", "options")

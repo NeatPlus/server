@@ -25,8 +25,8 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     topic = models.ForeignKey(
         "StatementTopic", on_delete=models.PROTECT, related_name="statements"
     )
-    answers = models.ManyToManyField(
-        "survey.Answer", related_name="statements", through="AnswerStatement"
+    options = models.ManyToManyField(
+        "survey.Option", related_name="statements", through="OptionStatement"
     )
 
     def __str__(self):
@@ -38,12 +38,11 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField()
-    hints = models.TextField(null=True, blank=True, default=None)
     statement = models.ForeignKey(
         "Statement", on_delete=models.CASCADE, related_name="mitigations"
     )
-    answers = models.ManyToManyField(
-        "survey.Answer", related_name="mitigations", through="AnswerMitigation"
+    options = models.ManyToManyField(
+        "survey.Option", related_name="mitigations", through="OptionMitigation"
     )
 
     def __str__(self):
@@ -55,12 +54,11 @@ class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField()
-    hints = models.TextField(null=True, blank=True, default=None)
     statement = models.ForeignKey(
         "Statement", on_delete=models.CASCADE, related_name="opportunities"
     )
-    answers = models.ManyToManyField(
-        "survey.Answer", related_name="opportunities", through="AnswerOpportunity"
+    options = models.ManyToManyField(
+        "survey.Option", related_name="opportunities", through="OptionOpportunity"
     )
 
     def __str__(self):
@@ -70,14 +68,14 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         verbose_name_plural = "Opportunities"
 
 
-class AnswerStatement(UserStampedModel, TimeStampedModel, OrderedModel):
-    answer = models.ForeignKey("survey.Answer", on_delete=models.CASCADE)
+class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
+    option = models.ForeignKey("survey.Option", on_delete=models.CASCADE)
     statement = models.ForeignKey("Statement", on_delete=models.CASCADE)
 
     def __str__(self):
         return (
-            "Answer:"
-            + str(self.answer.pk)
+            "Option:"
+            + str(self.option.pk)
             + "-"
             + "Statement:"
             + str(self.statement.pk)
@@ -87,14 +85,14 @@ class AnswerStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         pass
 
 
-class AnswerMitigation(UserStampedModel, TimeStampedModel, OrderedModel):
-    answer = models.ForeignKey("survey.Answer", on_delete=models.CASCADE)
+class OptionMitigation(UserStampedModel, TimeStampedModel, OrderedModel):
+    option = models.ForeignKey("survey.Option", on_delete=models.CASCADE)
     mitigation = models.ForeignKey("Mitigation", on_delete=models.CASCADE)
 
     def __str__(self):
         return (
-            "Answer:"
-            + str(self.answer.pk)
+            "Option:"
+            + str(self.option.pk)
             + "-"
             + "Mitigation:"
             + str(self.mitigation.pk)
@@ -104,18 +102,18 @@ class AnswerMitigation(UserStampedModel, TimeStampedModel, OrderedModel):
         pass
 
 
-class AnswerOpportunity(UserStampedModel, TimeStampedModel, OrderedModel):
-    answer = models.ForeignKey("survey.Answer", on_delete=models.CASCADE)
+class OptionOpportunity(UserStampedModel, TimeStampedModel, OrderedModel):
+    option = models.ForeignKey("survey.Option", on_delete=models.CASCADE)
     opportunity = models.ForeignKey("Opportunity", on_delete=models.CASCADE)
 
     def __str__(self):
         return (
-            "Answer:"
-            + str(self.answer.pk)
+            "Option:"
+            + str(self.option.pk)
             + "-"
             + "Opportunity:"
             + str(self.opportunity.pk)
         )
 
     class Meta(OrderedModel.Meta):
-        verbose_name_plural = "Answer Opportunities"
+        verbose_name_plural = "Option Opportunities"
