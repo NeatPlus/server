@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "organization",
     "project",
     "summary",
+    "support",
     "survey",
     "user",
     # External

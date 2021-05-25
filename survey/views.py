@@ -1,22 +1,24 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
+
+from neatplus.views import UserStampedModelViewSetMixin
 
 from .filters import OptionFilter, QuestionFilter
 from .models import Option, Question, QuestionGroup
 from .serializers import OptionSerializer, QuestionGroupSerializer, QuestionSerializer
 
 
-class QuestionGroupViewSet(viewsets.ModelViewSet):
+class QuestionGroupViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuestionGroupSerializer
     queryset = QuestionGroup.objects.all()
 
 
-class QuestionViewSet(viewsets.ModelViewSet):
+class QuestionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     filterset_class = QuestionFilter
 
 
-class OptionViewSet(viewsets.ModelViewSet):
+class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     serializer_class = OptionSerializer
     queryset = Option.objects.all()
     filterset_class = OptionFilter

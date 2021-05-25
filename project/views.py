@@ -126,10 +126,18 @@ class ProjectViewSet(
             validated_data = [validated_data]
 
         for validated_datum in validated_data:
-            user_obj = validated_datum.pop("user")
-            ProjectUser.objects.update_or_create(
-                project=project, user=user_obj, defaults=validated_datum
-            )
+            user = validated_datum.pop("user")
+            try:
+                project_user = ProjectUser.objects.get(project=project, user=user)
+                validated_datum["updated_by"] = request.user
+                for key, value in validated_datum.items():
+                    setattr(project_user, key, value)
+                project_user.save()
+            except ProjectUser.DoesNotExist:
+                validated_datum["created_by"] = request.user
+                project_user = ProjectUser.objects.create(
+                    project=project, user=user, **validated_datum
+                )
         return Response({"detail": "Successfully modified users list for project"})
 
     @action(
