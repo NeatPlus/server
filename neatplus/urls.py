@@ -18,6 +18,7 @@ from context.views import ContextViewSet, ModuleViewSet
 from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
+from support.views import FrequentlyAskedQuestionViewSet
 from survey.views import OptionViewSet, QuestionGroupViewSet, QuestionViewSet
 from user.views import UserViewSet
 
@@ -30,6 +31,11 @@ def get_api_path(path):
 
 router = routers.DefaultRouter()
 router.register("context", ContextViewSet, basename="context")
+router.register(
+    "frequently-asked-question",
+    FrequentlyAskedQuestionViewSet,
+    basename="frequently-asked-question",
+)
 router.register("module", ModuleViewSet, basename="module")
 router.register("notification", NotificationViewSet, basename="notification")
 router.register("option", OptionViewSet, basename="option")
