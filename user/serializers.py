@@ -52,3 +52,7 @@ class UserRegisterSerializer(serializers.Serializer):
     re_password = serializers.CharField()
     organization = serializers.CharField()
     role = serializers.CharField()
+
+
+class UploadImageSerializer(serializers.Serializer):
+    file = serializers.ImageField()

@@ -1,6 +1,9 @@
+import os
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
@@ -16,6 +19,7 @@ from .serializers import (
     PasswordResetPasswordChangeSerializer,
     PinVerifySerializer,
     PrivateUserSerializer,
+    UploadImageSerializer,
     UserNameSerializer,
     UserRegisterSerializer,
     UserSerializer,
@@ -442,3 +446,19 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             user.is_active = True
             user.save()
             return Response({"detail": "Email successfully confirmed"})
+
+    @action(methods=["post"], detail=False, serializer_class=UploadImageSerializer)
+    def upload_image(self, request, *args, **kwargs):
+        username = self.request.user.username
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        file = request.data["file"]
+        upload_path = os.path.join("user_uploaded_file", f"{username}", file.name)
+        saved_file = default_storage.save(upload_path, file)
+        url = request.build_absolute_uri(default_storage.url(saved_file))
+        data = {"name": saved_file, "url": url}
+        return Response(data)
