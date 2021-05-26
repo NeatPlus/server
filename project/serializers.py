@@ -30,7 +30,7 @@ class CreateProjectSerializer(serializers.ModelSerializer):
         exclude = ("users",)
 
 
-class UpdateOrCreateUserSerializer(serializers.ModelSerializer):
+class UpsertProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         exclude = ("project",)

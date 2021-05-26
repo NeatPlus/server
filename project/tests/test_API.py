@@ -1,4 +1,5 @@
 from django.conf import settings
+from model_bakery import random_gen
 
 from neatplus.tests import FullTestCase
 from project.models import ProjectUser
@@ -13,13 +14,6 @@ class TestAPI(FullTestCase):
         )
         cls.organization = cls.baker.make(
             "organization.Organization", admins=[cls.admin_user], members=[cls.user]
-        )
-        cls.project = cls.baker.make(
-            "project.Project",
-            organization=cls.organization,
-            created_by=cls.project_created_user,
-            users=[cls.user],
-            status="accepted",
         )
         cls.project = cls.baker.make(
             "project.Project",
@@ -225,3 +219,22 @@ class TestAPI(FullTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
         self.assertEqual(response.json()["accessLevel"], "read_only")
+
+    def test_project_survey_creation(self):
+        url = self.reverse(
+            "project-create-survey", kwargs={"version": "v1", "pk": self.project.pk}
+        )
+        question = self.baker.make("survey.Question")
+        data = {
+            "title": random_gen.gen_string(255),
+            "answers": [
+                {
+                    "question": question.pk,
+                    "answer": random_gen.gen_text(),
+                    "answer_type": "text",
+                }
+            ],
+        }
+        self.client.force_authenticate(self.project_created_user)
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)

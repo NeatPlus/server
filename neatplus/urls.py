@@ -23,7 +23,13 @@ from support.views import (
     ResourceTagViewSet,
     ResourceViewSet,
 )
-from survey.views import OptionViewSet, QuestionGroupViewSet, QuestionViewSet
+from survey.views import (
+    OptionViewSet,
+    QuestionGroupViewSet,
+    QuestionViewSet,
+    SurveyAnswerViewSet,
+    SurveyViewSet,
+)
 from user.views import UserViewSet
 
 API_VERSION = "v1"
@@ -45,10 +51,12 @@ router.register("notification", NotificationViewSet, basename="notification")
 router.register("option", OptionViewSet, basename="option")
 router.register("organization", OrganizationViewSet, basename="organization")
 router.register("project", ProjectViewSet, basename="project")
-router.register("question-group", QuestionGroupViewSet, basename="question-group")
 router.register("question", QuestionViewSet, basename="question")
+router.register("question-group", QuestionGroupViewSet, basename="question-group")
 router.register("resource", ResourceViewSet, basename="resource")
 router.register("resource-tag", ResourceTagViewSet, basename="resource-tag")
+router.register("survey", SurveyViewSet, basename="survey")
+router.register("survey-answer", SurveyAnswerViewSet, basename="survey-answer")
 router.register("user", UserViewSet, basename="user")
 
 

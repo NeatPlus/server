@@ -1,18 +1,20 @@
 from typing import OrderedDict
 
-from django.db.models import Q
+from django.db import transaction
 from rest_framework import permissions, serializers, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelViewSetMixin
-from organization.models import Organization
+from survey.models import Survey, SurveyAnswer
+from survey.serializers import WritableSurveySerializer
 
 from .filters import ProjectFilter
-from .models import Project, ProjectUser
+from .models import ProjectUser
 from .permissions import (
+    CanCreateSurveyForProject,
     CanEditProject,
-    CanEditProjectOrReadOrCreateOnly,
+    CanEditProjectOrReadAndCreateOnly,
     IsProjectOrganizationAdmin,
 )
 from .serializers import (
@@ -21,15 +23,16 @@ from .serializers import (
     ProjectSerializer,
     ProjectUserSerializer,
     RemoveProjectUserSerializer,
-    UpdateOrCreateUserSerializer,
+    UpsertProjectUserSerializer,
 )
+from .utils import read_allowed_project_for_user
 
 
 class ProjectViewSet(
     UserStampedModelViewSetMixin,
     viewsets.ModelViewSet,
 ):
-    permission_classes = [CanEditProjectOrReadOrCreateOnly]
+    permission_classes = [CanEditProjectOrReadAndCreateOnly]
     filterset_class = ProjectFilter
 
     def get_serializer_class(self):
@@ -41,27 +44,8 @@ class ProjectViewSet(
 
     def get_queryset(self):
         current_user = self.request.user
-        organizations = Organization.objects.filter(
-            Q(admins=current_user) | Q(members=current_user)
-        )
-        return (
-            Project.objects.filter(
-                Q(created_by=current_user)
-                | Q(organization__admins=current_user)
-                | (
-                    (
-                        Q(visibility="public")
-                        | (
-                            Q(visibility="public_within_organization")
-                            & Q(organization__in=organizations)
-                        )
-                        | Q(users=current_user)
-                    )
-                    & Q(status="accepted")
-                )
-            )
-            .distinct()
-            .prefetch_related("organization__admins")
+        return read_allowed_project_for_user(current_user).prefetch_related(
+            "organization__admins"
         )
 
     @action(
@@ -86,6 +70,7 @@ class ProjectViewSet(
     def accept(self, request, *args, **kwargs):
         project = self.get_object()
         if project.status != "accepted":
+            project.updated_by = request.user
             project.status = "accepted"
             project.save()
         return Response({"detail": "Project successfully accepted"})
@@ -99,6 +84,7 @@ class ProjectViewSet(
     def reject(self, request, *args, **kwargs):
         project = self.get_object()
         if project.status != "rejected":
+            project.updated_by = request.user
             project.status = "rejected"
             project.save()
         return Response({"detail": "Project successfully rejected"})
@@ -107,7 +93,7 @@ class ProjectViewSet(
         methods=["post"],
         detail=True,
         permission_classes=[CanEditProject],
-        serializer_class=UpdateOrCreateUserSerializer,
+        serializer_class=UpsertProjectUserSerializer,
     )
     def update_or_add_users(self, request, *args, **kwargs):
         project = self.get_object()
@@ -195,3 +181,36 @@ class ProjectViewSet(
                 serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         return Response(serializer.data)
+
+    @action(
+        methods=["post"],
+        detail=True,
+        permission_classes=[CanCreateSurveyForProject],
+        serializer_class=WritableSurveySerializer,
+    )
+    def create_survey(self, request, *args, **kwargs):
+        project = self.get_object()
+        data = request.data
+        data["project"] = project.pk
+        serializer = self.get_serializer(data=data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        validated_data = serializer.validated_data
+        answers = validated_data.pop("answers", [])
+        try:
+            with transaction.atomic():
+                survey = Survey.objects.create(
+                    **validated_data, created_by=request.user
+                )
+                for answer in answers:
+                    SurveyAnswer.objects.create(
+                        **answer, created_by=request.user, survey=survey
+                    )
+        except:
+            return Response(
+                {"error": "Cannot create survey and survey answer. Invalid data"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            {"detail": "Successfully submitted survey"}, status=status.HTTP_201_CREATED
+        )
