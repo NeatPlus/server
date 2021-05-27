@@ -12,18 +12,18 @@ class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel)
 
 
 class AnswerTypeChoices(models.TextChoices):
-    CHECK_BOX = "check_box"
+    BOOLEAN = "boolean"
     DATE = "date"
     DESCRIPTION = "description"
     IMAGE = "image"
     LOCATION = "location"
     NUMBER = "number"
+    TEXT = "text"
     SINGLE_OPTION = "single_option"
     MULTIPLE_OPTION = "multiple_option"
 
 
 class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
-
     title = models.TextField()
     description = models.TextField(blank=True, null=True, default=None)
     hints = models.TextField(blank=True, null=True, default=None)
@@ -74,7 +74,9 @@ class Survey(UserStampedModel, TimeStampedModel, OrderedModel):
 
 class SurveyAnswer(UserStampedModel, TimeStampedModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
-    survey = models.ForeignKey("Survey", on_delete=models.CASCADE)
+    survey = models.ForeignKey(
+        "Survey", on_delete=models.CASCADE, related_name="answers"
+    )
     answer = models.TextField(null=True, blank=True, default=None)
     answer_type = models.CharField(max_length=15, choices=AnswerTypeChoices.choices)
     options = models.ManyToManyField("Option", blank=True)
