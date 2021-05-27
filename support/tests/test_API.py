@@ -6,12 +6,26 @@ class APITest(FullTestCase):
     def setUpClass(cls):
         super().setUpClass()
         frequently_asked_question = cls.baker.make("support.FrequentlyAskedQuestion")
+        resource_tag = cls.baker.make("support.ResourceTag")
+        resource = cls.baker.make("support.Resource")
         cls.frequently_asked_question_list_url = cls.reverse(
             "frequently-asked-question-list", kwargs={"version": "v1"}
         )
         cls.frequently_asked_question_detail_url = cls.reverse(
             "frequently-asked-question-detail",
             kwargs={"version": "v1", "pk": frequently_asked_question.pk},
+        )
+        cls.resource_tag_list_url = cls.reverse(
+            "resource-tag-list", kwargs={"version": "v1"}
+        )
+        cls.resource_tag_detail_url = cls.reverse(
+            "resource-tag-detail",
+            kwargs={"version": "v1", "pk": resource_tag.pk},
+        )
+        cls.resource_list_url = cls.reverse("resource-list", kwargs={"version": "v1"})
+        cls.resource_detail_url = cls.reverse(
+            "resource-detail",
+            kwargs={"version": "v1", "pk": resource.pk},
         )
 
     def test_frequently_asked_question_list(self):
@@ -20,4 +34,20 @@ class APITest(FullTestCase):
 
     def test_frequently_asked_question_detail(self):
         response = self.client.get(self.frequently_asked_question_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_resource_tag_list(self):
+        response = self.client.get(self.resource_tag_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_resource_tag_detail(self):
+        response = self.client.get(self.resource_tag_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_resource_list(self):
+        response = self.client.get(self.resource_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_resource_detail(self):
+        response = self.client.get(self.resource_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)

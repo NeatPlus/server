@@ -18,7 +18,11 @@ from context.views import ContextViewSet, ModuleViewSet
 from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
-from support.views import FrequentlyAskedQuestionViewSet
+from support.views import (
+    FrequentlyAskedQuestionViewSet,
+    ResourceTagViewSet,
+    ResourceViewSet,
+)
 from survey.views import OptionViewSet, QuestionGroupViewSet, QuestionViewSet
 from user.views import UserViewSet
 
@@ -43,6 +47,8 @@ router.register("organization", OrganizationViewSet, basename="organization")
 router.register("project", ProjectViewSet, basename="project")
 router.register("question-group", QuestionGroupViewSet, basename="question-group")
 router.register("question", QuestionViewSet, basename="question")
+router.register("resource", ResourceViewSet, basename="resource")
+router.register("resource-tag", ResourceTagViewSet, basename="resource-tag")
 router.register("user", UserViewSet, basename="user")
 
 
