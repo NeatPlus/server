@@ -1,3 +1,5 @@
+from ckeditor_uploader.fields import RichTextUploadingField
+from django.contrib.gis.db.models import PointField
 from django.db import models
 from ordered_model.models import OrderedModel
 
@@ -18,6 +20,9 @@ class FrequentlyAskedQuestion(UserStampedModel, TimeStampedModel, OrderedModel):
 class ResourceTag(UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.title
+
     class Meta(OrderedModel.Meta):
         pass
 
@@ -34,5 +39,19 @@ class Resource(UserStampedModel, TimeStampedModel, OrderedModel):
     attachment = models.FileField(null=True, blank=True, default=None)
     tags = models.ManyToManyField("ResourceTag", related_name="resources")
 
+    def __str__(self):
+        return self.title
+
     class Meta(OrderedModel.Meta):
         pass
+
+
+class Action(UserStampedModel, TimeStampedModel, OrderedModel):
+    title = models.CharField(max_length=255)
+    organization = models.CharField(max_length=255)
+    summary = models.TextField()
+    description = RichTextUploadingField()
+    point = PointField()
+
+    def __str__(self):
+        return self.title

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import FrequentlyAskedQuestion, Resource, ResourceTag
+from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag
 
 
 class FrequentlyAskedQuestionSerializer(serializers.ModelSerializer):
@@ -18,4 +18,10 @@ class ResourceTagSerializer(serializers.ModelSerializer):
 class ResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
+        fields = "__all__"
+
+
+class ActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Action
         fields = "__all__"

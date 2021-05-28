@@ -5,7 +5,7 @@ from ordered_model.models import OrderedModel
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import FrequentlyAskedQuestion, Resource, ResourceTag
+from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag
 
 
 @admin.register(FrequentlyAskedQuestion)
@@ -31,3 +31,8 @@ class ResourceAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
         "move_up_down_links",
     )
     autocomplete_fields = ("tags",)
+
+
+@admin.register(Action)
+class ActionAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
+    list_display = ("title", "organization", "point")

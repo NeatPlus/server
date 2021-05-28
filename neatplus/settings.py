@@ -1,3 +1,4 @@
+import importlib.util
 import os
 from pathlib import Path
 
@@ -51,18 +52,26 @@ else:
 
 # Application definition
 
-INSTALLED_APPS = [
+# Apps which need to be before django default apps
+BEFORE_DJANGO_APPS = [
     "modeltranslation",
     "admin_interface",
     "colorfield",
-    # Django
+]
+
+# Django apps
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Internal
+    "django.contrib.gis",
+]
+
+# Internal/Local apps
+INTERNAL_APPS = [
     "context",
     "notification",
     "organization",
@@ -71,7 +80,10 @@ INSTALLED_APPS = [
     "support",
     "survey",
     "user",
-    # External
+]
+
+# Third party apps
+THIRD_PARTY_APPS = [
     "django_filters",
     "rest_framework",
     "django_otp",
@@ -80,18 +92,21 @@ INSTALLED_APPS = [
     "corsheaders",
     "ordered_model",
     "drf_spectacular",
+    "ckeditor",
+    "ckeditor_uploader",
+    "rest_framework_gis",
 ]
 
-try:
-    import django_extensions
+INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
 
-    INSTALLED_APPS += ["django_extensions"]
+# Add django extensions to installed app?
+if importlib.util.find_spec("django_extensions"):
+    INSTALLED_APPS.append("django_extensions")
 
-except ModuleNotFoundError:
-    pass
-
+# X frame options
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
+# MIDDLEWARE
 MIDDLEWARE = [
     "silk.middleware.SilkyMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -127,7 +142,9 @@ WSGI_APPLICATION = "neatplus.wsgi.application"
 
 
 # Database
-DATABASES = {"default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3")}
+DATABASES = {
+    "default": env.dj_db_url("DATABASE_URL", default="spatialite:///db.sqlite3")
+}
 
 # CACHES
 CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
@@ -352,3 +369,150 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
 MODELTRANSLATION_LANGUAGES = ("en", "es", "fr")
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = "en"
 MODELTRANSLATION_AUTO_POPULATE = True
+
+# SPECTAULAR
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Neatplus Schema",
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields",
+    ],
+    "CAMELIZE_NAMES": True,
+}
+
+# CKEDITOR settings
+CKEDITOR_UPLOAD_PATH = "ckeditor-uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+if USE_S3_STORAGE:
+    CKEDITOR_STORAGE_BACKEND = "mero_guru.storage_backends.CKEditorStorage"
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar_CustomToolbarConfig": [
+            {
+                "name": "document",
+                "items": [
+                    "Source",
+                    "-",
+                    "Save",
+                    "NewPage",
+                    "Preview",
+                    "Print",
+                    "-",
+                    "Templates",
+                ],
+            },
+            {
+                "name": "clipboard",
+                "items": [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
+                    "-",
+                    "Undo",
+                    "Redo",
+                ],
+            },
+            {
+                "name": "editing",
+                "items": ["Find", "Replace", "-", "SelectAll", "-", "Scayt"],
+            },
+            {
+                "name": "forms",
+                "items": [
+                    "Form",
+                    "Checkbox",
+                    "Radio",
+                    "TextField",
+                    "Textarea",
+                    "Select",
+                    "Button",
+                    "ImageButton",
+                    "HiddenField",
+                ],
+            },
+            "/",
+            {
+                "name": "basicstyles",
+                "items": [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "CopyFormatting",
+                    "RemoveFormat",
+                ],
+            },
+            {
+                "name": "paragraph",
+                "items": [
+                    "NumberedList",
+                    "BulletedList",
+                    "-",
+                    "Outdent",
+                    "Indent",
+                    "-",
+                    "Blockquote",
+                    "CreateDiv",
+                    "-",
+                    "JustifyLeft",
+                    "JustifyCenter",
+                    "JustifyRight",
+                    "JustifyBlock",
+                    "-",
+                    "BidiLtr",
+                    "BidiRtl",
+                    "Language",
+                ],
+            },
+            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
+            {
+                "name": "insert",
+                "items": [
+                    "Image",
+                    "Flash",
+                    "Table",
+                    "HorizontalRule",
+                    "Smiley",
+                    "SpecialChar",
+                    "PageBreak",
+                    "Iframe",
+                ],
+            },
+            "/",
+            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
+            {"name": "colors", "items": ["TextColor", "BGColor"]},
+            {"name": "tools", "items": ["Maximize", "ShowBlocks"]},
+            {"name": "about", "items": ["About"]},
+            "/",
+            {"name": "embeding_tools", "items": ["Embed", "Mathjax", "CodeSnippet"]},
+        ],
+        "toolbar": "CustomToolbarConfig",
+        "mathJaxLib": "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML",
+        "tabSpaces": 4,
+        "extraPlugins": ",".join(
+            [
+                "uploadimage",
+                "div",
+                "autolink",
+                "autoembed",
+                "embedsemantic",
+                "autogrow",
+                "widget",
+                "lineutils",
+                "clipboard",
+                "dialog",
+                "dialogui",
+                "elementspath",
+                "mathjax",
+                "embed",
+                "codesnippet",
+            ]
+        ),
+    }
+}
