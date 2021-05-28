@@ -10,6 +10,13 @@ class FullTestCase(APITestCase, APILiveServerTestCase):
     baker.generators.add("neatplus.fields.LowerCharField", random_gen.gen_string)
     baker.generators.add("neatplus.fields.LowerEmailField", random_gen.gen_email)
     baker.generators.add("neatplus.fields.LowerTextField", random_gen.gen_text)
+    baker.generators.add("ckeditor.fields.RichTextField", random_gen.gen_text)
+    baker.generators.add(
+        "ckeditor_uploader.fields.RichTextUploadingField", random_gen.gen_text
+    )
+    baker.generators.add(
+        "django.contrib.gis.db.models.fields.PointField", random_gen.gen_point
+    )
 
     status_code = status
     factory = RequestFactory()

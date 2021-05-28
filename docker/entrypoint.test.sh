@@ -1,4 +1,5 @@
 #!/bin/sh
+poetry install
 if [ "$CELERY_WORKER" = "true" ]
 then
     if [ -z "$CELERY_QUEUES" ]
@@ -9,6 +10,5 @@ then
     fi
 else
     poetry run ./manage.py collectstatic --no-input
-    poetry run ./manage.py migrate --no-input
-    poetry run gunicorn neatplus.asgi:application -k uvicorn.workers.UvicornWorker
+    poetry run ./manage.py test -v 3
 fi

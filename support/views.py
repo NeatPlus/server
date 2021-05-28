@@ -1,8 +1,9 @@
 from rest_framework import viewsets
 
 from .filters import ResourceFilter
-from .models import FrequentlyAskedQuestion, Resource, ResourceTag
+from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag
 from .serializers import (
+    ActionSerializer,
     FrequentlyAskedQuestionSerializer,
     ResourceSerializer,
     ResourceTagSerializer,
@@ -23,3 +24,8 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
     filterset_class = ResourceFilter
+
+
+class ActionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Action.objects.all()
+    serializer_class = ActionSerializer

@@ -8,6 +8,7 @@ class APITest(FullTestCase):
         frequently_asked_question = cls.baker.make("support.FrequentlyAskedQuestion")
         resource_tag = cls.baker.make("support.ResourceTag")
         resource = cls.baker.make("support.Resource")
+        action = cls.baker.make("support.Action")
         cls.frequently_asked_question_list_url = cls.reverse(
             "frequently-asked-question-list", kwargs={"version": "v1"}
         )
@@ -26,6 +27,11 @@ class APITest(FullTestCase):
         cls.resource_detail_url = cls.reverse(
             "resource-detail",
             kwargs={"version": "v1", "pk": resource.pk},
+        )
+        cls.action_list_url = cls.reverse("action-list", kwargs={"version": "v1"})
+        cls.action_detail_url = cls.reverse(
+            "action-detail",
+            kwargs={"version": "v1", "pk": action.pk},
         )
 
     def test_frequently_asked_question_list(self):
@@ -50,4 +56,12 @@ class APITest(FullTestCase):
 
     def test_resource_detail(self):
         response = self.client.get(self.resource_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_action_list(self):
+        response = self.client.get(self.action_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_action_detail(self):
+        response = self.client.get(self.action_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)

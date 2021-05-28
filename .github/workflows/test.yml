@@ -13,28 +13,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9.4
-      - name: Install Poetry
-        uses: snok/install-poetry@v1.1.4
-        with:
-          version: 1.1.6
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-      - name: Setup cache
-        uses: actions/cache@v2.1.5
-        with:
-          path: .venv
-          key: poetry-venv-${{ hashFiles('poetry.lock') }}
-      - name: Install dependencies
-        run: |
-          poetry install --no-interaction
-      - uses: iamsauravsharma/create-dotenv@v1.0.0
+      - uses: iamsauravsharma/create-dotenv@v1.1.0
         with:
           env-prefix: 'ENV_'
         env:
+          ENV_COMPOSE_PROJECT_NAME: "neatplus-server"
           ENV_SERVER_ENVIRONMENT: "testing"
+      - name: Initial docker related setup
+        run: |
+          docker network create external-services
+          ln -s docker-compose.test.yml docker-compose.yml
       - name: Run test
         run: |
-          poetry run ./manage.py test -v 3
+          docker-compose up

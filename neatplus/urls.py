@@ -19,6 +19,7 @@ from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
 from support.views import (
+    ActionViewSet,
     FrequentlyAskedQuestionViewSet,
     ResourceTagViewSet,
     ResourceViewSet,
@@ -40,6 +41,7 @@ def get_api_path(path):
 
 
 router = routers.DefaultRouter()
+router.register("action", ActionViewSet, basename="action")
 router.register("context", ContextViewSet, basename="context")
 router.register(
     "frequently-asked-question",
@@ -96,6 +98,7 @@ urlpatterns = [
     path(
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
 ]
 
 if not settings.IS_SERVER_SECURE:

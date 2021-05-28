@@ -12,3 +12,10 @@ class MediaStorage(S3Boto3Storage):
     location = settings.MEDIA_LOCATION
     default_acl = "private"
     file_overwrite = False
+
+
+class CKEditorStorage(S3Boto3Storage):
+    location = settings.MEDIA_LOCATION
+    default_acl = "public-read"
+    querystring_auth = False
+    file_overwrite = False
