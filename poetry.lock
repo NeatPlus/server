@@ -377,7 +377,7 @@ python-versions = "*"
 
 [[package]]
 name = "django-modeltranslation"
-version = "0.17.1"
+version = "0.17.2"
 description = "Translates Django models using a registration approach."
 category = "main"
 optional = false
@@ -1285,7 +1285,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "d8d9ad396cee664d392592d24c5725b61edba7d7e17a5ad25d11c86ba059a4dd"
+content-hash = "d5b6799d034abd12f2b6da4bb59a338f20a7dc9f0884d3cc8b45d76c52fa4ee4"
 
 [metadata.files]
 amqp = [
@@ -1418,7 +1418,7 @@ django-js-asset = [
     {file = "django_js_asset-1.2.2-py2.py3-none-any.whl", hash = "sha256:8ec12017f26eec524cab436c64ae73033368a372970af4cf42d9354fcb166bdd"},
 ]
 django-modeltranslation = [
-    {file = "django-modeltranslation-0.17.1.tar.gz", hash = "sha256:9ef886d02a3c5613ebf1c1184f3b2f4065b1453ac7d4151a73d2243991a34956"},
+    {file = "django-modeltranslation-0.17.2.tar.gz", hash = "sha256:4756dbcb68ed0e5ff09b4ba24d2617066ab5b96ae780786987845d5ae766b50d"},
 ]
 django-ordered-model = [
     {file = "django-ordered-model-3.4.3.tar.gz", hash = "sha256:3a8a0259bfd73a0c0b124932bb1fe59a6d2f4cbea096b20634d2a2d1f5d585cc"},
