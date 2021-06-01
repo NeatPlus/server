@@ -40,7 +40,7 @@ django-modeltranslation = "^0.17.1"
 django-ordered-model = "^3.4.3"
 drf-spectacular = "^0.16.0"
 Pillow = "^8.2.0"
-django-ckeditor = "^6.0.0"
+django-ckeditor = "^6.1.0"
 djangorestframework-gis = "^0.17"
 
 [tool.poetry.dev-dependencies]
