@@ -1,6 +1,7 @@
 from typing import OrderedDict
 
 from django.db import transaction
+from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
@@ -61,6 +62,14 @@ class ProjectViewSet(
         serializer = self.get_serializer(project_user, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ProjectAcceptResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Project successfully accepted")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=True,
@@ -75,6 +84,14 @@ class ProjectViewSet(
             project.save()
         return Response({"detail": "Project successfully accepted"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ProjectRejectResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Project successfully rejected")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=True,
@@ -89,6 +106,16 @@ class ProjectViewSet(
             project.save()
         return Response({"detail": "Project successfully rejected"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ProjectUpsertResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Successfully modified users list for project"
+                )
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=True,
@@ -126,6 +153,16 @@ class ProjectViewSet(
                 )
         return Response({"detail": "Successfully modified users list for project"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ProjectRemoveUserResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Successfully removed users from project"
+                )
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=True,
@@ -182,6 +219,14 @@ class ProjectViewSet(
             )
         return Response(serializer.data)
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ProjectSurveySubmitResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Successfully submitted survey")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=True,
