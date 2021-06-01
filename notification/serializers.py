@@ -42,3 +42,7 @@ class NotificationSerializer(serializers.ModelSerializer):
             return str(instance.action_object_content_object)
         else:
             None
+
+
+class UnReadCountResponseSerializer(serializers.Serializer):
+    unread_count = serializers.IntegerField()

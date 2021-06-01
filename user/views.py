@@ -7,7 +7,8 @@ from django.core.files.storage import default_storage
 from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
-from rest_framework import mixins, permissions, status, viewsets
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -58,6 +59,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         serializer.save()
         return Response(serializer.data)
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="ChangePasswordResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Password successfully updated")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -88,6 +97,16 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user.set_password(new_password)
         return Response({"detail": "Password successfully updated"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="RegisterUserResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="User successfully registered and email send to user's email address"
+                )
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -133,6 +152,16 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="PasswordResetResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Password reset email successfully send"
+                )
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -175,6 +204,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user.email_user("Password reset pin", message)
         return Response({"detail": "Password reset email successfully send"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="PasswordResetVerifyResponseSerializer",
+            fields={"identifier": serializers.CharField()},
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -245,6 +280,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             password_reset_pin_object.save()
             return Response({"identifier": password_reset_pin_object_identifier})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="PasswordResetChangeResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Password successfully changed")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -329,6 +372,16 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             user.save()
             return Response({"detail": "Password successfully changed"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="EmailConfirmResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Email confirmation mail successfully send"
+                )
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -378,6 +431,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user.email_user("Email confirmation mail", message)
         return Response({"detail": "Email confirmation mail successfully send"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="EmailConfirmVerifyResponseSerializer",
+            fields={
+                "detail": serializers.CharField(default="Email successfully confirmed")
+            },
+        )
+    )
     @action(
         methods=["post"],
         detail=False,
@@ -447,6 +508,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             user.save()
             return Response({"detail": "Email successfully confirmed"})
 
+    @extend_schema(
+        responses=inline_serializer(
+            name="UploadImageResponseSerializer",
+            fields={"name": serializers.CharField(), "url": serializers.URLField()},
+        )
+    )
     @action(methods=["post"], detail=False, serializer_class=UploadImageSerializer)
     def upload_image(self, request, *args, **kwargs):
         username = self.request.user.username
