@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from ordered_model.models import OrderedModel
 
@@ -6,6 +7,7 @@ from neatplus.models import CodeModel, TimeStampedModel, UserStampedModel
 
 class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
+    skip_logic = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
         return self.code + " " + self.title
@@ -25,7 +27,7 @@ class AnswerTypeChoices(models.TextChoices):
 
 class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField()
-    description = models.TextField(blank=True, null=True, default=None)
+    description = RichTextUploadingField(blank=True, null=True, default=None)
     hints = models.TextField(blank=True, null=True, default=None)
     answer_type = models.CharField(max_length=15, choices=AnswerTypeChoices.choices)
     group = models.ForeignKey(
@@ -40,6 +42,7 @@ class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         default=None,
     )
     is_required = models.BooleanField(default=True)
+    skip_logic = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
         return self.code + " " + self.title
