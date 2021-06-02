@@ -95,6 +95,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {"error": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST
             )
         user.set_password(new_password)
+        user.save()
         return Response({"detail": "Password successfully updated"})
 
     @extend_schema(
