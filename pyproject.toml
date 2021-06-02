@@ -20,7 +20,7 @@ python = "^3.9"
 Django = "^3.2.3"
 environs = {version = "^9.3.2", extras = ["django"]}
 marshmallow = "^3.12.1"
-uvicorn = {version = "^0.13.4", extras = ["standard"], optional=true}
+uvicorn = {version = "^0.14.0", extras = ["standard"], optional=true}
 gunicorn = {version="^20.1.0", optional=true}
 psycopg2-binary = "^2.8.6"
 djangorestframework = "^3.12.4"
