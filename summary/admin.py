@@ -10,6 +10,7 @@ from .models import (
     OptionMitigation,
     OptionOpportunity,
     OptionStatement,
+    QuestionStatement,
     Statement,
     StatementTopic,
 )
@@ -77,6 +78,15 @@ class OpportunityAdmin(
         "title",
     )
     autocomplete_fields = ("statement",)
+
+
+@admin.register(QuestionStatement)
+class QuestionStatementAdmin(
+    UserStampedModelAdmin,
+    OrderedModelAdmin,
+):
+    list_display = ("question", "statement", "move_up_down_links")
+    autocomplete_fields = ("question", "statement")
 
 
 @admin.register(OptionStatement)
