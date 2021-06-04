@@ -25,6 +25,9 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     topic = models.ForeignKey(
         "StatementTopic", on_delete=models.PROTECT, related_name="statements"
     )
+    questions = models.ManyToManyField(
+        "survey.Question", related_name="statements", through="QuestionStatement"
+    )
     options = models.ManyToManyField(
         "survey.Option", related_name="statements", through="OptionStatement"
     )
@@ -66,6 +69,23 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Opportunities"
+
+
+class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
+    question = models.ForeignKey("survey.Question", on_delete=models.CASCADE)
+    statement = models.ForeignKey("Statement", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return (
+            "Question:"
+            + str(self.question.pk)
+            + "-"
+            + "Statement:"
+            + str(self.statement.pk)
+        )
+
+    class Meta(OrderedModel.Meta):
+        pass
 
 
 class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
