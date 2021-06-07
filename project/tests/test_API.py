@@ -224,15 +224,21 @@ class TestAPI(FullTestCase):
         url = self.reverse(
             "project-create-survey", kwargs={"version": "v1", "pk": self.project.pk}
         )
-        question = self.baker.make("survey.Question")
+        question_1 = self.baker.make("survey.Question", answer_type="location")
+        question_2 = self.baker.make("survey.Question", answer_type="number")
         data = {
             "title": random_gen.gen_string(255),
             "answers": [
                 {
-                    "question": question.pk,
-                    "answer": random_gen.gen_text(),
-                    "answer_type": "text",
-                }
+                    "question": question_1.pk,
+                    "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
+                    "answer_type": "location",
+                },
+                {
+                    "question": question_2.pk,
+                    "answer": 2,
+                    "answer_type": "number",
+                },
             ],
         }
         self.client.force_authenticate(self.project_created_user)

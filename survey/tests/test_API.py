@@ -16,10 +16,18 @@ class APITest(FullTestCase):
             status="accepted",
         )
         question_group = cls.baker.make("survey.QuestionGroup")
-        question = cls.baker.make("survey.Question", group=question_group)
+        question = cls.baker.make(
+            "survey.Question", group=question_group, answer_type="single_option"
+        )
         option = cls.baker.make("survey.Option", question=question)
         survey = cls.baker.make("survey.Survey", project=project)
-        survey_answer = cls.baker.make("survey.SurveyAnswer", survey=survey)
+        survey_answer = cls.baker.make(
+            "survey.SurveyAnswer",
+            survey=survey,
+            answer_type="single_option",
+            question=question,
+            options=[option],
+        )
         cls.question_group_list_url = cls.reverse(
             "question-group-list", kwargs={"version": "v1"}
         )
