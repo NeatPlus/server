@@ -231,6 +231,8 @@ if ENABLE_SYSLOG:
 
 
 # Static file and media file settings
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
 USE_S3_STORAGE = env.bool("USE_S3_STORAGE", default=False)
 if USE_S3_STORAGE:
     AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
@@ -249,15 +251,12 @@ if USE_S3_STORAGE:
     UPLOAD_STATIC_TO_S3 = env.bool("UPLOAD_STATIC_TO_S3", default=True)
     # s3 static settings
     if UPLOAD_STATIC_TO_S3:
-        STATIC_LOCATION = "static"
         STATIC_URL = f"{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
         STATICFILES_STORAGE = "neatplus.storage_backends.StaticStorage"
     else:
-        STATIC_LOCATION = "static"
         STATIC_URL = "/static/"
         STATIC_ROOT = os.path.join(BASE_DIR, "static")
     # s3 media settings
-    MEDIA_LOCATION = "media"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
     DEFAULT_FILE_STORAGE = "neatplus.storage_backends.MediaStorage"
 else:

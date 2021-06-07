@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from neatplus.serializers import RichTextModelSerializer
+
 from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag
 
 
@@ -21,7 +23,7 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ActionSerializer(serializers.ModelSerializer):
+class ActionSerializer(RichTextModelSerializer):
     class Meta:
         model = Action
         fields = "__all__"
