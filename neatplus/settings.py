@@ -313,7 +313,9 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_URLS_REGEX = r"^(/api/).*$"
-CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[], subcast=str)
+CORS_ALLOWED_ORIGIN_REGEXES = env.list(
+    "CORS_ALLOWED_ORIGIN_REGEXES", default=[], subcast=str
+)
 
 # SILK settings
 SILKY_AUTHENTICATION = True
