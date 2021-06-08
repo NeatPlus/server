@@ -48,6 +48,14 @@ class Resource(UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Action(UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
+    context = models.ForeignKey(
+        "context.Context",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=False,
+        default=None,
+        related_name="actions",
+    )
     organization = models.CharField(max_length=255)
     summary = models.TextField()
     description = RichTextUploadingField()
