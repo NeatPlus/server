@@ -63,3 +63,6 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
 
     def __str__(self):
         return self.title
+
+    class Meta(OrderedModel.Meta):
+        pass
