@@ -35,4 +35,5 @@ class ResourceAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
 
 @admin.register(Action)
 class ActionAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
-    list_display = ("title", "organization", "point")
+    list_display = ("title", "context", "organization", "point")
+    autocomplete_fields = ("context",)

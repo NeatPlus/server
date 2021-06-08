@@ -16,7 +16,7 @@ class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
 
 class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
@@ -33,7 +33,7 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass
@@ -49,7 +49,7 @@ class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass
@@ -65,7 +65,7 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Opportunities"

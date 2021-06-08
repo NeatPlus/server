@@ -10,7 +10,7 @@ class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel)
     skip_logic = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
 
 class AnswerTypeChoices(models.TextChoices):
@@ -45,7 +45,7 @@ class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     skip_logic = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass
@@ -58,7 +58,7 @@ class Option(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass

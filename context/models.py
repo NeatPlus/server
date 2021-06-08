@@ -9,7 +9,7 @@ class Context(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     description = models.TextField()
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass
@@ -23,7 +23,7 @@ class Module(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
 
     def __str__(self):
-        return self.code + " " + self.title
+        return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
         pass
