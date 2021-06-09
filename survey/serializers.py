@@ -63,26 +63,40 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
         data = super().validate(attrs)
         question_obj = data["question"]
         answer_type = data["answer_type"]
+        options = data.get("options")
         if answer_type != question_obj.answer_type:
             raise serializers.ValidationError(
-                "answer type of question and provided answer type doesn't matched"
+                {
+                    "answer_type": "answer type of question and provided answer type doesn't matched"
+                }
             )
         serializer_class = self.answer_type_serializer_mapping[answer_type]
         if serializer_class is None and data.get("answer") is not None:
             raise serializers.ValidationError(
-                "answer field cannot be present for answer type"
+                {"answer": "answer field cannot be present for answer type"}
             )
-        if (
-            answer_type
-            in [
-                AnswerTypeChoices.SINGLE_OPTION.value,
-                AnswerTypeChoices.MULTIPLE_OPTION.value,
-            ]
-            and data.get("options") is None
-        ):
-            raise serializers.ValidationError(
-                "options should be present for answer type"
-            )
+        if answer_type in [
+            AnswerTypeChoices.SINGLE_OPTION.value,
+            AnswerTypeChoices.MULTIPLE_OPTION.value,
+        ]:
+            if options is None:
+                raise serializers.ValidationError(
+                    {"options": "options should be present for answer type"}
+                )
+            for option in options:
+                if option.question != question_obj:
+                    raise serializers.ValidationError(
+                        {"options": "Invalid option for question"}
+                    )
+            if (
+                answer_type == AnswerTypeChoices.SINGLE_OPTION.value
+                and len(options) != 1
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "options": "only one option in list form is supported for question"
+                    }
+                )
         if serializer_class is None:
             pass
         elif serializer_class == GeometryField:
@@ -91,13 +105,13 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
                     GEOSGeometry(data["answer"], srid=4326)
                 )
             except:
-                raise serializers.ValidationError("Invalid point field")
+                raise serializers.ValidationError({"answer": "Invalid point field"})
         elif serializer_class == ImageField:
             try:
                 with default_storage.open(data["answer"]) as file:
                     serializer_class().run_validation(file)
             except:
-                raise serializers.ValidationError("Invalid file field")
+                raise serializers.ValidationError({"answer": "Invalid image answer"})
         else:
             serializer_class().run_validation(data["answer"])
         return data
@@ -126,3 +140,7 @@ class WritableSurveyAnswerSerializer(SurveyAnswerSerializer):
 
 class WritableSurveySerializer(SurveySerializer):
     answers = WritableSurveyAnswerSerializer(many=True)
+
+    class Meta:
+        model = Survey
+        exclude = ("project",)

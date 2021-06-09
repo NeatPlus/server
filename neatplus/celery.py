@@ -21,9 +21,9 @@ def no_simultaneous_execution(f):
             cache.set(cache_key, "lock", timeout=None)
             try:
                 f(self, *args, **kwargs)
-            except Exception as e:
+            except Exception as err:
                 cache.delete(cache_key)
-                raise e
+                raise err
             finally:
                 cache.delete(cache_key)
 

@@ -226,18 +226,39 @@ class TestAPI(FullTestCase):
         )
         question_1 = self.baker.make("survey.Question", answer_type="location")
         question_2 = self.baker.make("survey.Question", answer_type="number")
+        question_3 = self.baker.make("survey.Question", answer_type="boolean")
+        question_4 = self.baker.make("survey.Question", answer_type="single_option")
+        question_4_option = self.baker.make("survey.Option", question=question_4)
+        question_5 = self.baker.make("survey.Question", answer_type="multiple_option")
+        question_5_option_1 = self.baker.make("survey.Option", question=question_5)
+        question_5_option_2 = self.baker.make("survey.Option", question=question_5)
         data = {
             "title": random_gen.gen_string(255),
             "answers": [
                 {
                     "question": question_1.pk,
                     "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
-                    "answer_type": "location",
+                    "answerType": "location",
                 },
                 {
                     "question": question_2.pk,
                     "answer": 2,
-                    "answer_type": "number",
+                    "answerType": "number",
+                },
+                {
+                    "question": question_3.pk,
+                    "answer": "true",
+                    "answerType": "boolean",
+                },
+                {
+                    "question": question_4.pk,
+                    "answerType": "single_option",
+                    "options": [question_4_option.pk],
+                },
+                {
+                    "question": question_5.pk,
+                    "answerType": "multiple_option",
+                    "options": [question_5_option_1.pk, question_5_option_2.pk],
                 },
             ],
         }

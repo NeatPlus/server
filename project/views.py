@@ -236,7 +236,6 @@ class ProjectViewSet(
     def create_survey(self, request, *args, **kwargs):
         project = self.get_object()
         data = request.data
-        data["project"] = project.pk
         serializer = self.get_serializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -245,15 +244,20 @@ class ProjectViewSet(
         try:
             with transaction.atomic():
                 survey = Survey.objects.create(
-                    **validated_data, created_by=request.user
+                    **validated_data, created_by=request.user, project=project
                 )
                 for answer in answers:
-                    SurveyAnswer.objects.create(
+                    options = answer.pop("options", None)
+                    survey_answer = SurveyAnswer.objects.create(
                         **answer, created_by=request.user, survey=survey
                     )
-        except:
+                    if options:
+                        survey_answer.options.add(*options)
+        except Exception as err:
             return Response(
-                {"error": "Cannot create survey and survey answer. Invalid data"},
+                {
+                    "error": "Failed to create survey or survey answer due to invalid data"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(
