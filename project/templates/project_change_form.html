@@ -1,0 +1,19 @@
+{% extends 'admin/change_form.html' %}
+
+{% block submit_buttons_bottom %}
+{{ block.super }}
+{% if request.user in original.organization.admins.all %}
+<div class="submit-row">
+    {% with 'accepted pending' as reject_list %}
+    {% with 'rejected pending' as accept_list %}
+    {% if original.status in reject_list.split %}
+    <input type="submit" value="Reject" name="_reject_project">
+    {% endif %}
+    {% if original.status in accept_list.split %}
+    <input type="submit" value="Accept" name="_accept_project">
+    {% endif %}
+    {% endwith %}
+    {% endwith %}
+</div>
+{% endif %}
+{% endblock %}
