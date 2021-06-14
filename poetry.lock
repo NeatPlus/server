@@ -516,7 +516,7 @@ pipenv = ["pipenv"]
 
 [[package]]
 name = "drf-spectacular"
-version = "0.17.0"
+version = "0.17.1"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
 category = "main"
 optional = false
@@ -1287,7 +1287,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "021028d40566b3bd9c2243c48554374bc6b792b8e82217c05afbcf90284c9bea"
+content-hash = "8d28997f829a287da54a3ce2ed1930fcc951bb3804698b0d105c9abffe05452b"
 
 [metadata.files]
 amqp = [
@@ -1457,8 +1457,8 @@ dparse = [
     {file = "dparse-0.5.1.tar.gz", hash = "sha256:a1b5f169102e1c894f9a7d5ccf6f9402a836a5d24be80a986c7ce9eaed78f367"},
 ]
 drf-spectacular = [
-    {file = "drf-spectacular-0.17.0.tar.gz", hash = "sha256:f552476dfde647963c21615249672e7f4f9ece3788036b5ee5c6cc5ad50748ab"},
-    {file = "drf_spectacular-0.17.0-py3-none-any.whl", hash = "sha256:4d35e890b8139e1c056588c5529a2f2066615635482563f0840b96d3b879d7d2"},
+    {file = "drf-spectacular-0.17.1.tar.gz", hash = "sha256:146e8c21dc806a20c84c687811c30163970fbf620213ab87280f7403469d80bb"},
+    {file = "drf_spectacular-0.17.1-py3-none-any.whl", hash = "sha256:8a028d251a6d0b39739ebdec487fd43ee4ecba244d8ffaaac43ff06430728dd8"},
 ]
 environs = [
     {file = "environs-9.3.2-py2.py3-none-any.whl", hash = "sha256:6bef733b88cc901e787cf24fb2eaa72621b0656226ea4e332ab24ed0cba36fcf"},
