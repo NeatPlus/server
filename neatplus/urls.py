@@ -18,6 +18,12 @@ from context.views import ContextViewSet, ModuleViewSet
 from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
+from summary.views import (
+    MitigationViewSet,
+    OpportunityViewSet,
+    StatementTopicViewSet,
+    StatementViewSet,
+)
 from support.views import (
     ActionViewSet,
     FrequentlyAskedQuestionViewSet,
@@ -48,8 +54,10 @@ router.register(
     FrequentlyAskedQuestionViewSet,
     basename="frequently-asked-question",
 )
+router.register("mitigation", MitigationViewSet, basename="mitigation")
 router.register("module", ModuleViewSet, basename="module")
 router.register("notification", NotificationViewSet, basename="notification")
+router.register("opportunity", OpportunityViewSet, basename="opportunity")
 router.register("option", OptionViewSet, basename="option")
 router.register("organization", OrganizationViewSet, basename="organization")
 router.register("project", ProjectViewSet, basename="project")
@@ -57,6 +65,8 @@ router.register("question", QuestionViewSet, basename="question")
 router.register("question-group", QuestionGroupViewSet, basename="question-group")
 router.register("resource", ResourceViewSet, basename="resource")
 router.register("resource-tag", ResourceTagViewSet, basename="resource-tag")
+router.register("statement", StatementViewSet, basename="statement")
+router.register("statement-topic", StatementTopicViewSet, basename="statement-topic")
 router.register("survey", SurveyViewSet, basename="survey")
 router.register("survey-answer", SurveyAnswerViewSet, basename="survey-answer")
 router.register("user", UserViewSet, basename="user")
