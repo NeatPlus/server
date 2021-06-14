@@ -54,7 +54,7 @@ ipython = "^7.24.1"
 Werkzeug = "^2.0.1"
 pyparsing = "^2.4.7"
 pydot = "^1.4.2"
-model-bakery = "^1.3.1"
+model-bakery = "^1.3.2"
 
 [tool.poetry.extras]
 asgi = ["uvicorn", "gunicorn"]
