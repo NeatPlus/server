@@ -52,13 +52,19 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
             for field in cls._meta.get_fields():
                 field_name = field.name
                 try:
-                    if getattr(old, field_name) != getattr(self, field_name):
+                    old_val = getattr(old, field_name)
+                    new_val = getattr(self, field_name)
+                    if hasattr(field, "is_custom_lower_field"):
+                        if field.is_custom_lower_field():
+                            new_val = new_val.lower()
+                    if old_val != new_val:
                         changed_fields.append(field_name)
                 except Exception as e:
                     pass
-            kwargs["update_fields"] = changed_fields
-            if "organization" in kwargs["update_fields"]:
+            if "organization" in changed_fields:
                 self.status = "pending"
+                changed_fields.append("status")
+            kwargs["update_fields"] = changed_fields
         super().save(*args, **kwargs)
 
 

@@ -1,19 +1,22 @@
 {% extends 'admin/change_form.html' %}
+{% load project_change_form_action %}
 
 {% block submit_buttons_bottom %}
 {{ block.super }}
-{% if request.user in original.organization.admins.all %}
+
+{% if request.user in original.organization.admins.all or request.user.is_superuser %}
 <div class="submit-row">
-    {% with 'accepted pending' as reject_list %}
-    {% with 'rejected pending' as accept_list %}
-    {% if original.status in reject_list.split %}
-    <input type="submit" value="Reject" name="_reject_project">
-    {% endif %}
-    {% if original.status in accept_list.split %}
-    <input type="submit" value="Accept" name="_accept_project">
-    {% endif %}
-    {% endwith %}
-    {% endwith %}
+    {% create_list "accepted" "pending" as reject_list %}
+    {% create_list "rejected" "pending" as accept_list %}
+
+    {% val_not_in_list original.status reject_list as reject_disabled %}
+    {% val_not_in_list original.status accept_list as accept_disabled %}
+
+    {% bool_to_string reject_disabled "disabled" "" as reject_disabled_string %}
+    {% bool_to_string accept_disabled "disabled" "" as accept_disabled_string %}
+
+    <input type="submit" value="Reject" name="_reject_project" {{ reject_disabled_string }}>
+    <input type="submit" value="Accept" name="_accept_project" {{ accept_disabled_string }}>
 </div>
 {% endif %}
 {% endblock %}
