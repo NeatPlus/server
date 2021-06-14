@@ -32,7 +32,7 @@ class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OptionFilter
 
 
-class SurveyViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SurveySerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_class = SurveyFilter
@@ -45,7 +45,7 @@ class SurveyViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet)
         )
 
 
-class SurveyAnswerViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class SurveyAnswerViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SurveyAnswerSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_class = SurveyAnswerFilter
