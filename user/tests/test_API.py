@@ -26,6 +26,19 @@ class TestAPI(FullTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
+    def test_user_me_patch(self):
+        user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
+        self.client.force_authenticate(user)
+        self.assertTrue(user.is_active)
+        new_email = random_gen.gen_email().lower()
+        data = {"email": new_email}
+        url = self.reverse("user-me", kwargs={"version": "v1"})
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        updated_user = get_user_model().objects.get(pk=user.pk)
+        self.assertEqual(updated_user.email, new_email)
+        self.assertFalse(user.is_active)
+
     def test_user_change_password(self):
         user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
         user_initial_password = get_user_model().objects.make_random_password()

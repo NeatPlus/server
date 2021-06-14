@@ -9,11 +9,16 @@ class TestAPI(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.admin_user, cls.user, cls.project_created_user = cls.baker.make(
-            settings.AUTH_USER_MODEL, is_active=True, _quantity=3
-        )
+        (
+            cls.admin_user,
+            cls.user,
+            cls.project_created_user,
+            cls.organization_user,
+        ) = cls.baker.make(settings.AUTH_USER_MODEL, is_active=True, _quantity=4)
         cls.organization = cls.baker.make(
-            "organization.Organization", admins=[cls.admin_user], members=[cls.user]
+            "organization.Organization",
+            admins=[cls.admin_user],
+            members=[cls.organization_user],
         )
         cls.project = cls.baker.make(
             "project.Project",
@@ -22,9 +27,19 @@ class TestAPI(FullTestCase):
             users=[cls.user],
             status="accepted",
         )
+        cls.pending_project = cls.baker.make(
+            "project.Project",
+            organization=cls.organization,
+            created_by=cls.project_created_user,
+            users=[cls.user],
+            status="pending",
+        )
         cls.project_list_url = cls.reverse("project-list", kwargs={"version": "v1"})
         cls.project_detail_url = cls.reverse(
             "project-detail", kwargs={"version": "v1", "pk": cls.project.pk}
+        )
+        cls.pending_project_detail_url = cls.reverse(
+            "project-detail", kwargs={"version": "v1", "pk": cls.pending_project.pk}
         )
 
     def test_non_authenticated_project_access(self):
@@ -40,6 +55,14 @@ class TestAPI(FullTestCase):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.project_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_pending_project_detail(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.pending_project_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.client.force_authenticate(self.organization_user)
+        response = self.client.get(self.pending_project_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)
 
     def test_project_creation(self):
         self.client.force_authenticate(self.user)

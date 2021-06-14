@@ -4,7 +4,7 @@ from rest_framework import permissions, viewsets
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
 
-from .filters import OptionFilter, QuestionFilter
+from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFilter
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
 from .serializers import (
     OptionSerializer,
@@ -35,6 +35,7 @@ class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 class SurveyViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = SurveySerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_class = SurveyFilter
 
     def get_queryset(self):
         current_user = self.request.user
@@ -47,6 +48,7 @@ class SurveyViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet)
 class SurveyAnswerViewSet(UserStampedModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = SurveyAnswerSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_class = SurveyAnswerFilter
 
     def get_queryset(self):
         current_user = self.request.user

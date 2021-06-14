@@ -1,9 +1,14 @@
 from rest_framework import serializers
 
+from user.models import User
+from user.serializers import UserSerializer
+
 from .models import Project, ProjectUser
 
 
 class ProjectUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = ProjectUser
         exclude = ("project",)
@@ -22,6 +27,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             current_user == obj.created_by
             or current_user in obj.organization.admins.all()
         )
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
 
 
 class CreateProjectSerializer(serializers.ModelSerializer):

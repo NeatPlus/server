@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils import timezone
 
 from neatplus.auth_validators import CustomASCIIUsernameValidator
@@ -55,13 +56,19 @@ class User(AbstractUser):
             for field in cls._meta.get_fields():
                 field_name = field.name
                 try:
-                    if getattr(old, field_name) != getattr(self, field_name):
+                    old_val = getattr(old, field_name)
+                    new_val = getattr(self, field_name)
+                    if hasattr(field, "is_custom_lower_field"):
+                        if field.is_custom_lower_field():
+                            new_val = new_val.lower()
+                    if old_val != new_val:
                         changed_fields.append(field_name)
                 except Exception as e:
                     pass
-            kwargs["update_fields"] = changed_fields
-            if "email" in kwargs["update_fields"]:
+            if "email" in changed_fields:
                 self.is_active = False
+                changed_fields.append("is_active")
+            kwargs["update_fields"] = changed_fields
         super().save(*args, **kwargs)
 
     def notify(
