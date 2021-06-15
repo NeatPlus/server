@@ -5,7 +5,7 @@ from .models import Mitigation, Opportunity, Statement, StatementTopic
 
 @translator.register(StatementTopic)
 class StatementTopicTranslationOptions(translator.TranslationOptions):
-    fields = ("title",)
+    fields = ("title", "description")
 
 
 @translator.register(Statement)
