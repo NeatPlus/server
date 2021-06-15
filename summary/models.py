@@ -10,7 +10,11 @@ class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel
     icon = models.FileField(
         upload_to="summary/statement_topic/icons",
         validators=[FileExtensionValidator(allowed_extensions=["svg", "png"])],
+        null=True,
+        blank=True,
+        default=None,
     )
+    description = models.TextField(null=True, blank=True, default=None)
     context = models.ForeignKey(
         "context.Context", on_delete=models.PROTECT, related_name="statement_topics"
     )
