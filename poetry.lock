@@ -279,6 +279,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-autocomplete-filter"
+version = "0.5"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+develop = false
+
+[package.dependencies]
+django = ">=2.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/farhan0581/django-admin-autocomplete-filter"
+reference = "e6ebfe50777b326bec49220546c3fc0bc2fca27d"
+resolved_reference = "e6ebfe50777b326bec49220546c3fc0bc2fca27d"
+
+[[package]]
 name = "django-admin-interface"
 version = "0.16.3"
 description = "django-admin-interface is a modern responsive flat admin interface customizable by the admin itself."
@@ -1287,7 +1305,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "527415f6b7dd757dcb3f58841b4d3b065f8dc71bb389320620ef2695e9f8c3c9"
+content-hash = "38ddada3e231d6357ea8171571a75dd3cd324f8c6ce6e7033ec8704d04ccea76"
 
 [metadata.files]
 amqp = [
@@ -1381,6 +1399,7 @@ django = [
     {file = "Django-3.2.4-py3-none-any.whl", hash = "sha256:ea735cbbbb3b2fba6d4da4784a0043d84c67c92f1fdf15ad6db69900e792c10f"},
     {file = "Django-3.2.4.tar.gz", hash = "sha256:66c9d8db8cc6fe938a28b7887c1596e42d522e27618562517cc8929eb7e7f296"},
 ]
+django-admin-autocomplete-filter = []
 django-admin-interface = [
     {file = "django-admin-interface-0.16.3.tar.gz", hash = "sha256:8e979c88475e5bcebb13236eb25090c75d25ef584a67411b878f4f9b0c5a5d25"},
     {file = "django_admin_interface-0.16.3-py3-none-any.whl", hash = "sha256:4896850ffb3dc252795206197439e8d8db4e4726a057951fb94efb5f715da361"},

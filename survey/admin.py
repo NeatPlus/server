@@ -1,3 +1,4 @@
+from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
@@ -20,6 +21,11 @@ class QuestionGroupAdmin(
     )
 
 
+class OptionInline(admin.StackedInline):
+    model = Option
+    extra = 0
+
+
 @admin.register(Question)
 class QuestionAdmin(
     UserStampedModelAdmin,
@@ -40,6 +46,7 @@ class QuestionAdmin(
         "code",
         "title",
     )
+    inlines = (OptionInline,)
 
 
 @admin.register(Option)
@@ -56,9 +63,15 @@ class OptionAdmin(
     )
 
 
+class ProjectAutoCompleteFilter(AutocompleteFilter):
+    title = "Project"
+    field = "project"
+
+
 @admin.register(Survey)
 class SurveyAdmin(UserStampedModelAdmin, OrderedModelAdmin):
     list_display = ("title", "project", "move_up_down_links")
+    list_filter = (ProjectAutoCompleteFilter,)
     autocomplete_fields = ("project",)
     search_fields = ("title",)
 
