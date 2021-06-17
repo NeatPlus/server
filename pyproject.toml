@@ -42,6 +42,7 @@ drf-spectacular = "^0.17.2"
 Pillow = "^8.2.0"
 django-ckeditor = "^6.1.0"
 djangorestframework-gis = "^0.17"
+django-admin-autocomplete-filter = {git = "https://github.com/farhan0581/django-admin-autocomplete-filter", rev = "e6ebfe50777b326bec49220546c3fc0bc2fca27d"}
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"

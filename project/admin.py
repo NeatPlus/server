@@ -1,3 +1,4 @@
+from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
 from django.http.response import HttpResponseRedirect
 from ordered_model.admin import OrderedModelAdmin
@@ -7,9 +8,16 @@ from neatplus.admin import UserStampedModelAdmin
 from .models import Project, ProjectUser
 
 
+class OrganizationAutoCompleteFilter(AutocompleteFilter):
+    title = "Organization"
+    field_name = "organization"
+
+
 @admin.register(Project)
 class ProjectAdmin(UserStampedModelAdmin, OrderedModelAdmin):
     list_display = (
+        "created_at",
+        "created_by",
         "title",
         "organization",
         "visibility",
@@ -17,6 +25,7 @@ class ProjectAdmin(UserStampedModelAdmin, OrderedModelAdmin):
         "context",
         "move_up_down_links",
     )
+    list_filter = (OrganizationAutoCompleteFilter,)
     autocomplete_fields = ("organization", "users", "context")
     search_fields = ("title",)
     change_form_template = "project_change_form.html"

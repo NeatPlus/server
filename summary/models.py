@@ -22,6 +22,9 @@ class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel
     def __str__(self):
         return self.code + "-" + self.title
 
+    class Meta(OrderedModel.Meta):
+        pass
+
 
 class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField()
