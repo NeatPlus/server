@@ -85,7 +85,7 @@ class QuestionStatementAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("question", "statement", "move_up_down_links")
+    list_display = ("question", "statement", "weightage", "move_up_down_links")
     autocomplete_fields = ("question", "statement")
 
 
@@ -94,7 +94,7 @@ class OptionStatementAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("option", "statement", "move_up_down_links")
+    list_display = ("option", "statement", "weightage", "move_up_down_links")
     autocomplete_fields = ("option", "statement")
 
 

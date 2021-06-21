@@ -81,6 +81,7 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
     question = models.ForeignKey("survey.Question", on_delete=models.CASCADE)
     statement = models.ForeignKey("Statement", on_delete=models.CASCADE)
+    weightage = models.FloatField()
 
     def __str__(self):
         return (
@@ -98,6 +99,7 @@ class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
 class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
     option = models.ForeignKey("survey.Option", on_delete=models.CASCADE)
     statement = models.ForeignKey("Statement", on_delete=models.CASCADE)
+    weightage = models.FloatField()
 
     def __str__(self):
         return (
