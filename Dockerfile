@@ -5,6 +5,9 @@
 # Creating a python base with shared environment variables
 FROM ubuntu:20.04 as base
 
+# non interactive frontend
+ENV DEBIAN_FRONTEND=noninteractive
+
 # install requiremnts for python3.9 install
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
