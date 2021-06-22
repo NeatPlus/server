@@ -8,7 +8,8 @@ FROM ubuntu:20.04 as base
 # install requiremnts for python3.9 install
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
-    software-properties-common
+    software-properties-common \
+    git
 
 # Add deadsnakes ppa
 RUN add-apt-repository ppa:deadsnakes/ppa -y

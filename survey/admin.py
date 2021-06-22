@@ -65,7 +65,7 @@ class OptionAdmin(
 
 class ProjectAutoCompleteFilter(AutocompleteFilter):
     title = "Project"
-    field = "project"
+    field_name = "project"
 
 
 @admin.register(Survey)

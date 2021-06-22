@@ -6,11 +6,12 @@ from neatplus.models import TimeStampedModel, UserStampedModel
 
 class Organization(TimeStampedModel, UserStampedModel):
     title = models.CharField(max_length=255, unique=True)
+    description = models.TextField(null=True, blank=True, default=None)
     admins = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="admin_organizations"
     )
     members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="member_organizations"
+        settings.AUTH_USER_MODEL, related_name="member_organizations", blank=True
     )
 
     def __str__(self):
