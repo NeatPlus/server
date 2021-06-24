@@ -76,7 +76,7 @@ INTERNAL_APPS = [
     "notification",
     "organization",
     "project",
-    "summary",
+    "statement",
     "support",
     "survey",
     "user",
