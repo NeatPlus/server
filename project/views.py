@@ -7,6 +7,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelViewSetMixin
+from summary.models import SurveyResult
 from survey.models import Survey, SurveyAnswer
 from survey.serializers import WritableSurveySerializer
 
@@ -241,6 +242,7 @@ class ProjectViewSet(
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         validated_data = serializer.validated_data
         answers = validated_data.pop("answers", [])
+        results = validated_data.pop("results", [])
         try:
             with transaction.atomic():
                 survey = Survey.objects.create(
@@ -253,6 +255,10 @@ class ProjectViewSet(
                     )
                     if options:
                         survey_answer.options.add(*options)
+                for result in results:
+                    SurveyResult.objects.create(
+                        **result, created_by=request.user, survey=survey
+                    )
         except Exception as err:
             return Response(
                 {

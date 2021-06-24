@@ -255,6 +255,7 @@ class TestAPI(FullTestCase):
         question_5 = self.baker.make("survey.Question", answer_type="multiple_option")
         question_5_option_1 = self.baker.make("survey.Option", question=question_5)
         question_5_option_2 = self.baker.make("survey.Option", question=question_5)
+        statement = self.baker.make("statement.Statement")
         data = {
             "title": random_gen.gen_string(255),
             "answers": [
@@ -282,6 +283,12 @@ class TestAPI(FullTestCase):
                     "question": question_5.pk,
                     "answerType": "multiple_option",
                     "options": [question_5_option_1.pk, question_5_option_2.pk],
+                },
+            ],
+            "results": [
+                {
+                    "statement": statement.pk,
+                    "score": 0.90,
                 },
             ],
         }

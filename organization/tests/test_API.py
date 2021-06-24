@@ -8,14 +8,14 @@ class TestAPI(FullTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = cls.baker.make(settings.AUTH_USER_MODEL, is_active=True)
-        cls.organization = cls.baker.make(
+        organization = cls.baker.make(
             "organization.Organization",
         )
         cls.organization_list_url = cls.reverse(
             "organization-list", kwargs={"version": "v1"}
         )
         cls.organization_detail_url = cls.reverse(
-            "organization-detail", kwargs={"version": "v1", "pk": cls.organization.pk}
+            "organization-detail", kwargs={"version": "v1", "pk": organization.pk}
         )
 
     def test_organization_list(self):

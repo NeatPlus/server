@@ -5,6 +5,7 @@ from rest_framework.fields import ImageField
 from rest_framework_gis.fields import GeometryField
 
 from neatplus.serializers import RichTextModelSerializer
+from summary.serializers import WritableSurveyResultSerializer
 
 from .models import (
     AnswerTypeChoices,
@@ -140,6 +141,7 @@ class WritableSurveyAnswerSerializer(SurveyAnswerSerializer):
 
 class WritableSurveySerializer(SurveySerializer):
     answers = WritableSurveyAnswerSerializer(many=True)
+    results = WritableSurveyResultSerializer(many=True)
 
     class Meta:
         model = Survey
