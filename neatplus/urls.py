@@ -18,7 +18,7 @@ from context.views import ContextViewSet, ModuleViewSet
 from notification.views import NotificationViewSet
 from organization.views import OrganizationViewSet
 from project.views import ProjectViewSet
-from summary.views import (
+from statement.views import (
     MitigationViewSet,
     OpportunityViewSet,
     OptionMitigationViewSet,

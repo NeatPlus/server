@@ -8,7 +8,7 @@ from neatplus.models import CodeModel, TimeStampedModel, UserStampedModel
 class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
     icon = models.FileField(
-        upload_to="summary/statement_topic/icons",
+        upload_to="statement/statement_topic/icons",
         validators=[FileExtensionValidator(allowed_extensions=["svg", "png"])],
         null=True,
         blank=True,

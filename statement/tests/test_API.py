@@ -10,23 +10,23 @@ class APITest(FullTestCase):
         cls.user = cls.baker.make(settings.AUTH_USER_MODEL)
         questions = cls.baker.make("survey.Question", _quantity=3)
         options = cls.baker.make("survey.Option", _quantity=3)
-        statement_topic = cls.baker.make("summary.StatementTopic")
+        statement_topic = cls.baker.make("statement.StatementTopic")
         cls.statement = cls.baker.make(
-            "summary.Statement",
+            "statement.Statement",
             topic=statement_topic,
             questions=questions,
             options=options,
         )
         cls.mitigation = cls.baker.make(
-            "summary.Mitigation", statement=cls.statement, options=options
+            "statement.Mitigation", statement=cls.statement, options=options
         )
         cls.opportunity = cls.baker.make(
-            "summary.Opportunity", statement=cls.statement, options=options
+            "statement.Opportunity", statement=cls.statement, options=options
         )
-        question_statement = cls.baker.make("summary.QuestionStatement")
-        option_statement = cls.baker.make("summary.OptionStatement")
-        option_mitigation = cls.baker.make("summary.OptionMitigation")
-        option_opportunity = cls.baker.make("summary.OptionOpportunity")
+        question_statement = cls.baker.make("statement.QuestionStatement")
+        option_statement = cls.baker.make("statement.OptionStatement")
+        option_mitigation = cls.baker.make("statement.OptionMitigation")
+        option_opportunity = cls.baker.make("statement.OptionOpportunity")
 
         cls.statement_topic_list_url = cls.reverse(
             "statement-topic-list", kwargs={"version": "v1"}
