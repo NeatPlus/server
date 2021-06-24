@@ -28,6 +28,7 @@ from statement.views import (
     StatementTopicViewSet,
     StatementViewSet,
 )
+from summary.views import SurveyResultViewSet
 from support.views import (
     ActionViewSet,
     FrequentlyAskedQuestionViewSet,
@@ -83,6 +84,7 @@ router.register("statement", StatementViewSet, basename="statement")
 router.register("statement-topic", StatementTopicViewSet, basename="statement-topic")
 router.register("survey", SurveyViewSet, basename="survey")
 router.register("survey-answer", SurveyAnswerViewSet, basename="survey-answer")
+router.register("survey-result", SurveyResultViewSet, basename="survey-result")
 router.register("user", UserViewSet, basename="user")
 
 
