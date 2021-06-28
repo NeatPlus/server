@@ -19,6 +19,7 @@ class TestAPI(FullTestCase):
             "organization.Organization",
             admins=[cls.admin_user],
             members=[cls.organization_user],
+            status="accepted",
         )
         cls.project = cls.baker.make(
             "project.Project",
@@ -63,24 +64,6 @@ class TestAPI(FullTestCase):
         self.client.force_authenticate(self.organization_user)
         response = self.client.get(self.pending_project_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)
-
-    def test_project_creation(self):
-        self.client.force_authenticate(self.user)
-        context = self.baker.make("context.Context")
-        data = {
-            "title": "sample_project",
-            "description": "Description goes here",
-            "visibility": "private",
-            "organization": self.organization.pk,
-            "context": context.pk,
-        }
-        post_response = self.client.post(self.project_list_url, data=data)
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
-        created_project_detail_url = self.reverse(
-            "project-detail", kwargs={"version": "v1", "pk": post_response.json()["id"]}
-        )
-        get_response = self.client.get(created_project_detail_url)
-        self.assertEqual(get_response.status_code, self.status_code.HTTP_200_OK)
 
     def test_organization_admin_project_users(self):
         self.client.force_authenticate(self.admin_user)

@@ -2,7 +2,7 @@
 
 {% block accept_reject_submit_row %}
 
-{% if request.user in original.organization.admins.all or request.user.is_superuser %}
+{% if request.user.is_superuser %}
 {{ block.super }}
 {% endif %}
 

@@ -1,0 +1,26 @@
+{% extends 'admin/change_form.html' %}
+{% load accept_reject %}
+
+{% block submit_buttons_bottom %}
+
+{{ block.super }}
+
+{% if original %}
+{% block accept_reject_submit_row %}
+<div class="submit-row">
+    {% create_list "accepted" "pending" as reject_list %}
+    {% create_list "rejected" "pending" as accept_list %}
+
+    {% val_not_in_list original.status reject_list as reject_disabled %}
+    {% val_not_in_list original.status accept_list as accept_disabled %}
+
+    {% bool_to_string reject_disabled "disabled" "" as reject_disabled_string %}
+    {% bool_to_string accept_disabled "disabled" "" as accept_disabled_string %}
+
+    <input type="submit" value="Reject" name="_reject" {{ reject_disabled_string }}>
+    <input type="submit" value="Accept" name="_accept" {{ accept_disabled_string }}>
+</div>
+{% endblock %}
+{% endif %}
+
+{% endblock %}

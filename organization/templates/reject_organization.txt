@@ -1,0 +1,6 @@
+Dear {{ admin }},
+
+Sorry, Your organization {{ organization }} is rejected by Neat+ admin team.
+
+Thanks,
+Neat+ Team

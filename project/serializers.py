@@ -35,7 +35,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        exclude = ("users",)
+        exclude = ("users", "organization")
 
 
 class UpsertProjectUserSerializer(serializers.ModelSerializer):

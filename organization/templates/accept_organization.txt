@@ -1,0 +1,6 @@
+Dear {{ admin }},
+
+Your organization {{ organization }} is accepted by Neat+ admin team.
+
+Thanks,
+Neat+ Team
