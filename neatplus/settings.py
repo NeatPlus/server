@@ -136,6 +136,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries": {"accept_reject": "templatetags.accept_reject"},
         },
     },
 ]

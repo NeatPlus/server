@@ -6,7 +6,9 @@ from .models import Project
 
 
 def read_allowed_project_for_user(user):
-    organizations = Organization.objects.filter(Q(admins=user) | Q(members=user))
+    organizations = Organization.objects.filter(status="accepted").filter(
+        Q(admins=user) | Q(members=user)
+    )
     return Project.objects.filter(
         Q(created_by=user)
         | Q(organization__admins=user)

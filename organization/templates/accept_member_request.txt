@@ -1,0 +1,6 @@
+Dear {{ member_request.user.username }},
+
+Your member request for organization {{ member_request.organization }} is accepted.
+
+Thanks,
+Neat+ Team

@@ -2,7 +2,7 @@ from typing import OrderedDict
 
 from django.db import transaction
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import permissions, serializers, status, viewsets
+from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 
@@ -16,12 +16,11 @@ from .models import ProjectUser
 from .permissions import (
     CanCreateSurveyForProject,
     CanEditProject,
-    CanEditProjectOrReadAndCreateOnly,
+    CanEditProjectOrReadOnly,
     IsProjectOrganizationAdmin,
 )
 from .serializers import (
     AccessLevelResponseSerializer,
-    CreateProjectSerializer,
     ProjectSerializer,
     ProjectUserSerializer,
     RemoveProjectUserSerializer,
@@ -32,17 +31,15 @@ from .utils import read_allowed_project_for_user
 
 class ProjectViewSet(
     UserStampedModelViewSetMixin,
-    viewsets.ModelViewSet,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
 ):
-    permission_classes = [CanEditProjectOrReadAndCreateOnly]
+    permission_classes = [CanEditProjectOrReadOnly]
     filterset_class = ProjectFilter
-
-    def get_serializer_class(self):
-        if self.name and self.serializer_class:
-            return self.serializer_class
-        if self.action == "create":
-            return CreateProjectSerializer
-        return ProjectSerializer
+    serializer_class = ProjectSerializer
 
     def get_queryset(self):
         current_user = self.request.user

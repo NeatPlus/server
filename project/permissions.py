@@ -2,8 +2,6 @@ from rest_framework import permissions
 
 from project.models import ProjectUser
 
-CREATE_METHOD = "POST"
-
 
 class IsProjectOrganizationAdmin(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
@@ -18,12 +16,9 @@ class CanEditProject(permissions.IsAuthenticated):
         )
 
 
-class CanEditProjectOrReadAndCreateOnly(permissions.IsAuthenticated):
+class CanEditProjectOrReadOnly(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        if (
-            request.method in permissions.SAFE_METHODS
-            or request.method == CREATE_METHOD
-        ):
+        if request.method in permissions.SAFE_METHODS:
             return True
         return (
             request.user == obj.created_by

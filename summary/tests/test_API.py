@@ -8,7 +8,9 @@ class TestAPI(FullTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = cls.baker.make(settings.AUTH_USER_MODEL, is_active=True)
-        organization = cls.baker.make("organization.Organization", members=[cls.user])
+        organization = cls.baker.make(
+            "organization.Organization", members=[cls.user], status="accepted"
+        )
         project = cls.baker.make(
             "project.Project",
             organization=organization,
