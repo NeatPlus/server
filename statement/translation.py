@@ -1,11 +1,28 @@
 from modeltranslation import translator
 
-from .models import Mitigation, Opportunity, Statement, StatementTopic
+from .models import (
+    Mitigation,
+    Opportunity,
+    Statement,
+    StatementTag,
+    StatementTagGroup,
+    StatementTopic,
+)
 
 
 @translator.register(StatementTopic)
 class StatementTopicTranslationOptions(translator.TranslationOptions):
     fields = ("title", "description")
+
+
+@translator.register(StatementTagGroup)
+class StatementTagGroupTranslationOptions(translator.TranslationOptions):
+    fields = ("title",)
+
+
+@translator.register(StatementTag)
+class StatementTagTranslationOptions(translator.TranslationOptions):
+    fields = ("title",)
 
 
 @translator.register(Statement)

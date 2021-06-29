@@ -11,9 +11,14 @@ class APITest(FullTestCase):
         questions = cls.baker.make("survey.Question", _quantity=3)
         options = cls.baker.make("survey.Option", _quantity=3)
         statement_topic = cls.baker.make("statement.StatementTopic")
+        statement_tag_group = cls.baker.make("statement.StatementTagGroup")
+        statement_tag = cls.baker.make(
+            "statement.StatementTag", group=statement_tag_group
+        )
         cls.statement = cls.baker.make(
             "statement.Statement",
             topic=statement_topic,
+            tags=[statement_tag],
             questions=questions,
             options=options,
         )
@@ -33,6 +38,20 @@ class APITest(FullTestCase):
         )
         cls.statement_topic_detail_url = cls.reverse(
             "statement-topic-detail", kwargs={"version": "v1", "pk": statement_topic.pk}
+        )
+
+        cls.statement_tag_group_list_url = cls.reverse(
+            "statement-tag-group-list", kwargs={"version": "v1"}
+        )
+        cls.statement_tag_group_detail_url = cls.reverse(
+            "statement-tag-group-detail",
+            kwargs={"version": "v1", "pk": statement_tag.pk},
+        )
+        cls.statement_tag_list_url = cls.reverse(
+            "statement-tag-list", kwargs={"version": "v1"}
+        )
+        cls.statement_tag_detail_url = cls.reverse(
+            "statement-tag-detail", kwargs={"version": "v1", "pk": statement_tag.pk}
         )
 
         cls.statement_list_url = cls.reverse("statement-list", kwargs={"version": "v1"})
@@ -94,6 +113,26 @@ class APITest(FullTestCase):
     def test_statement_topic_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_topic_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_statement_tag_group_list(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.statement_tag_group_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_statement_tag_group_detail(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.statement_tag_group_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_statement_tag_list(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.statement_tag_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_statement_tag_detail(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.statement_tag_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_list(self):

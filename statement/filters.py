@@ -8,6 +8,8 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementTag,
+    StatementTagGroup,
     StatementTopic,
 )
 
@@ -18,12 +20,25 @@ class StatementTopicFilter(FilterSet):
         fields = {"title": ["exact"], "context": ["exact"]}
 
 
+class StatementTagGroupFilter(FilterSet):
+    class Meta:
+        model = StatementTagGroup
+        fields = {"title": ["exact"]}
+
+
+class StatementTagFilter(FilterSet):
+    class Meta:
+        model = StatementTag
+        fields = {"title": ["exact"], "group": ["exact"]}
+
+
 class StatementFilter(FilterSet):
     class Meta:
         model = Statement
         fields = {
             "title": ["exact"],
             "topic": ["exact"],
+            "tags": ["exact"],
             "questions": ["exact"],
             "options": ["exact"],
         }

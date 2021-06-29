@@ -8,6 +8,8 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementTag,
+    StatementTagGroup,
     StatementTopic,
 )
 
@@ -15,6 +17,18 @@ from .models import (
 class StatementTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = StatementTopic
+        fields = "__all__"
+
+
+class StatementTagGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatementTagGroup
+        fields = "__all__"
+
+
+class StatementTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatementTag
         fields = "__all__"
 
 

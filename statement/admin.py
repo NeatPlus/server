@@ -12,6 +12,8 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementTag,
+    StatementTagGroup,
     StatementTopic,
 )
 
@@ -21,6 +23,21 @@ class StatementTopicAdmin(UserStampedModelAdmin, TranslationAdmin, OrderedModelA
     list_display = ("title", "context", "move_up_down_links")
     search_fields = ("title",)
     autocomplete_fields = ("context",)
+
+
+@admin.register(StatementTagGroup)
+class StatementTagGroupAdmin(
+    UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
+):
+    list_display = ("title", "move_up_down_links")
+    search_fields = ("title",)
+
+
+@admin.register(StatementTag)
+class StatementTagAdmin(UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin):
+    list_display = ("title", "group", "move_up_down_links")
+    search_fields = ("title",)
+    autocomplete_fields = ("group",)
 
 
 @admin.register(Statement)
@@ -39,7 +56,7 @@ class StatementAdmin(
         "code",
         "title",
     )
-    autocomplete_fields = ("topic",)
+    autocomplete_fields = ("topic", "tags")
 
 
 @admin.register(Mitigation)
