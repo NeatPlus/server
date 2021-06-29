@@ -1,7 +1,6 @@
 from django.db import models
 
 from neatplus.models import TimeStampedModel, UserStampedModel
-from survey.models import Survey
 
 
 class SurveyResult(UserStampedModel, TimeStampedModel):

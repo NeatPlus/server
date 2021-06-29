@@ -278,3 +278,29 @@ class TestAPI(FullTestCase):
         self.client.force_authenticate(self.project_created_user)
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+
+    def test_project_creation(self):
+        self.client.force_authenticate(self.user)
+        context = self.baker.make("context.Context")
+        data = {
+            "title": "sample_project",
+            "description": "Description goes here",
+            "visibility": "private",
+            "context": context.pk,
+        }
+        post_response = self.client.post(self.project_list_url, data=data)
+        self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
+
+    def test_project_creation_fail_for_visibility(self):
+        self.client.force_authenticate(self.user)
+        context = self.baker.make("context.Context")
+        data = {
+            "title": "sample_project",
+            "description": "Description goes here",
+            "visibility": "public_within_organization",
+            "context": context.pk,
+        }
+        post_response = self.client.post(self.project_list_url, data=data)
+        self.assertEqual(
+            post_response.status_code, self.status_code.HTTP_400_BAD_REQUEST
+        )

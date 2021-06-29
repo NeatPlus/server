@@ -19,7 +19,12 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
     organization = models.ForeignKey(
-        "organization.Organization", on_delete=models.CASCADE, related_name="projects"
+        "organization.Organization",
+        on_delete=models.CASCADE,
+        related_name="projects",
+        null=True,
+        blank=True,
+        default=None,
     )
     visibility = models.CharField(max_length=26, choices=VisibilityChoice.choices)
     users = models.ManyToManyField(
@@ -59,7 +64,7 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
                             new_val = new_val.lower()
                     if old_val != new_val:
                         changed_fields.append(field_name)
-                except Exception as e:
+                except Exception:
                     pass
             if "organization" in changed_fields:
                 self.status = "pending"

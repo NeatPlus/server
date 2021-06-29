@@ -1,7 +1,6 @@
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from django.test import override_settings
 from model_bakery import random_gen
 
 from neatplus.tests import FullTestCase

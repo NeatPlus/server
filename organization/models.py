@@ -44,7 +44,7 @@ class Organization(TimeStampedModel, UserStampedModel):
                             new_val = new_val.lower()
                     if old_val != new_val:
                         changed_fields.append(field_name)
-                except Exception as e:
+                except Exception:
                     pass
             kwargs["update_fields"] = changed_fields
         super().save(*args, **kwargs)
@@ -86,7 +86,7 @@ class OrganizationMemberRequest(UserStampedModel, TimeStampedModel):
                             new_val = new_val.lower()
                     if old_val != new_val:
                         changed_fields.append(field_name)
-                except Exception as e:
+                except Exception:
                     pass
             kwargs["update_fields"] = changed_fields
         super().save(*args, **kwargs)

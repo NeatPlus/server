@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PrivateUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         fields = (
+            "id",
             "username",
             "email",
             "first_name",

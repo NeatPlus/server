@@ -48,27 +48,7 @@ class TestAPI(FullTestCase):
             "title": "sample_organization",
             "description": "Description goes here",
         }
-        url = self.reverse(
-            "organization-create-organization",
-            kwargs={"version": "v1"},
-        )
-        post_response = self.client.post(url, data=data)
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
-
-    def test_project_creation(self):
-        self.client.force_authenticate(self.user)
-        context = self.baker.make("context.Context")
-        data = {
-            "title": "sample_project",
-            "description": "Description goes here",
-            "visibility": "private",
-            "context": context.pk,
-        }
-        url = self.reverse(
-            "organization-create-project",
-            kwargs={"version": "v1", "pk": self.organization.pk},
-        )
-        post_response = self.client.post(url, data=data)
+        post_response = self.client.post(self.organization_list_url, data=data)
         self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
 
     def test_member_request(self):

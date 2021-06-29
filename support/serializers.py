@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from context.models import Context
 from neatplus.serializers import RichTextModelSerializer
 
 from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag

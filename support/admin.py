@@ -1,7 +1,6 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
-from ordered_model.models import OrderedModel
 
 from neatplus.admin import UserStampedModelAdmin
 

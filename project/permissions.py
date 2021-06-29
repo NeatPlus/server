@@ -16,7 +16,7 @@ class CanEditProject(permissions.IsAuthenticated):
         )
 
 
-class CanEditProjectOrReadOnly(permissions.IsAuthenticated):
+class CanEditProjectOrReadOrCreateOnly(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
