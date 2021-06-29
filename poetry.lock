@@ -928,7 +928,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "ptpython"
-version = "3.0.17"
+version = "3.0.18"
 description = "Python REPL build on top of prompt_toolkit"
 category = "dev"
 optional = false
@@ -936,12 +936,12 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 appdirs = "*"
-black = "*"
 jedi = ">=0.16.0"
 prompt-toolkit = ">=3.0.18,<3.1.0"
 pygments = "*"
 
 [package.extras]
+all = ["black"]
 ptipython = ["ipython"]
 
 [[package]]
@@ -1306,7 +1306,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b3594774d132b98ba4c54b09fc39deea759ec39d2b7d37fc1c5d695fa56d1d00"
+content-hash = "d5e6d3cf08f25c2f1f379b91120c772e5c53bda84a5a0f4c91daa5889e6ce162"
 
 [metadata.files]
 amqp = [
@@ -1708,8 +1708,8 @@ psycopg2-binary = [
     {file = "psycopg2_binary-2.9.1-cp39-cp39-win_amd64.whl", hash = "sha256:b4d7679a08fea64573c969f6994a2631908bb2c0e69a7235648642f3d2e39a68"},
 ]
 ptpython = [
-    {file = "ptpython-3.0.17-py2.py3-none-any.whl", hash = "sha256:65c79e8ca860f2bdeaa61dbcc362449b3d54286dc449ff32dc013a93f8c4d628"},
-    {file = "ptpython-3.0.17.tar.gz", hash = "sha256:911d25cca31a8e4f9b2ecd16dcdad793b8859e94fca1275f3485d8cdf20b13de"},
+    {file = "ptpython-3.0.18-py2.py3-none-any.whl", hash = "sha256:0e156603adfab0436aedd3e149cd7af04edbf4deb7fd67eea06f21760700f3ae"},
+    {file = "ptpython-3.0.18.tar.gz", hash = "sha256:1a641021f550d03580576ddf49eb15a94693b39de9a8334786d85e180834da9d"},
 ]
 ptyprocess = [
     {file = "ptyprocess-0.7.0-py2.py3-none-any.whl", hash = "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35"},
