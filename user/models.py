@@ -119,9 +119,12 @@ class User(AbstractUser):
         )
 
     def celery_email_user(self, subject, message, from_email=None, **kwargs):
-        background_send_mail.delay(
-            self.pk, subject, message, from_email=from_email, **kwargs
-        )
+        if settings.ENABLE_CELERY:
+            background_send_mail.delay(
+                self.pk, subject, message, from_email=from_email, **kwargs
+            )
+        else:
+            self.email_user(subject, message, from_email=from_email, **kwargs)
 
 
 class PasswordResetPin(TimeStampedModel):

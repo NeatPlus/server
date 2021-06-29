@@ -8,6 +8,8 @@ from .filters import (
     OptionStatementFilter,
     QuestionStatementFilter,
     StatementFilter,
+    StatementTagFilter,
+    StatementTagGroupFilter,
     StatementTopicFilter,
 )
 from .models import (
@@ -18,6 +20,8 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementTag,
+    StatementTagGroup,
     StatementTopic,
 )
 from .serializers import (
@@ -28,6 +32,8 @@ from .serializers import (
     OptionStatementSerializer,
     QuestionStatementSerializer,
     StatementSerializer,
+    StatementTagGroupSerializer,
+    StatementTagSerializer,
     StatementTopicSerializer,
 )
 
@@ -37,6 +43,20 @@ class StatementTopicViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = StatementTopic.objects.all()
     filterset_class = StatementTopicFilter
+
+
+class StatementTagGroupViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = StatementTagGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = StatementTagGroup.objects.all()
+    filterset_class = StatementTagGroupFilter
+
+
+class StatementTagViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = StatementTagSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = StatementTag.objects.all()
+    filterset_class = StatementTagFilter
 
 
 class StatementViewSet(viewsets.ReadOnlyModelViewSet):

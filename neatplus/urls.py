@@ -25,6 +25,8 @@ from statement.views import (
     OptionOpportunityViewSet,
     OptionStatementViewSet,
     QuestionStatementViewSet,
+    StatementTagGroupViewSet,
+    StatementTagViewSet,
     StatementTopicViewSet,
     StatementViewSet,
 )
@@ -86,6 +88,10 @@ router.register(
 router.register("resource", ResourceViewSet, basename="resource")
 router.register("resource-tag", ResourceTagViewSet, basename="resource-tag")
 router.register("statement", StatementViewSet, basename="statement")
+router.register("statement-tag", StatementTagViewSet, basename="statement-tag")
+router.register(
+    "statement-tag-group", StatementTagGroupViewSet, basename="statement-tag-group"
+)
 router.register("statement-topic", StatementTopicViewSet, basename="statement-topic")
 router.register("survey", SurveyViewSet, basename="survey")
 router.register("survey-answer", SurveyAnswerViewSet, basename="survey-answer")

@@ -26,11 +26,35 @@ class StatementTopic(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel
         pass
 
 
+class StatementTagGroup(UserStampedModel, TimeStampedModel, OrderedModel):
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+    class Meta(OrderedModel.Meta):
+        pass
+
+
+class StatementTag(UserStampedModel, TimeStampedModel, OrderedModel):
+    title = models.CharField(max_length=255)
+    group = models.ForeignKey(
+        "StatementTagGroup", on_delete=models.CASCADE, related_name="tags"
+    )
+
+    class Meta(OrderedModel.Meta):
+        pass
+
+
 class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField()
     hints = models.TextField(null=True, blank=True, default=None)
     topic = models.ForeignKey(
         "StatementTopic", on_delete=models.PROTECT, related_name="statements"
+    )
+    tags = models.ManyToManyField(
+        "StatementTag",
+        related_name="statements",
     )
     questions = models.ManyToManyField(
         "survey.Question", related_name="statements", through="QuestionStatement"
