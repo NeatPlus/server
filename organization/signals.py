@@ -22,7 +22,7 @@ def send_organization_acceptance_change_change_mail(
         for admin in instance.admins.all():
             context = {"organization": instance, "admin": admin}
             message = email_template.render(context)
-            admin.email_user(subject, message)
+            admin.celery_email_user(subject, message)
             admin.notify(
                 instance.updated_by,
                 instance.status,
@@ -40,7 +40,7 @@ def send_new_member_request_organization_admin(sender, instance, created, **kwar
             email_template = get_template("new_member_request.txt")
             context = {"admin": admin, "member_request": instance}
             message = email_template.render(context)
-            admin.email_user("New member request mail", message)
+            admin.celery_email_user("New member request mail", message)
             admin.notify(
                 instance.created_by,
                 "created",
@@ -64,7 +64,7 @@ def send_member_request_acceptance_change_mail(sender, instance, created, **kwar
             return
         context = {"member_request": instance}
         message = email_template.render(context)
-        instance.created_by.email_user(subject, message)
+        instance.created_by.celery_email_user(subject, message)
         instance.created_by.notify(
             instance.organization,
             instance.status,

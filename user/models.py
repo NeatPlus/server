@@ -10,6 +10,8 @@ from neatplus.fields import LowerCharField, LowerEmailField
 from neatplus.managers import CustomUserManager
 from neatplus.models import TimeStampedModel
 
+from .tasks import background_send_mail
+
 
 class User(AbstractUser):
     username_validator = CustomASCIIUsernameValidator()
@@ -114,6 +116,11 @@ class User(AbstractUser):
             timestamp=timestamp,
             action_object_content_object=action_object,
             target_content_object=target,
+        )
+
+    def celery_email_user(self, subject, message, from_email=None, **kwargs):
+        background_send_mail.delay(
+            self.pk, subject, message, from_email=from_email, **kwargs
         )
 
 
