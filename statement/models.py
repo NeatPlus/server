@@ -42,6 +42,9 @@ class StatementTag(UserStampedModel, TimeStampedModel, OrderedModel):
         "StatementTagGroup", on_delete=models.CASCADE, related_name="tags"
     )
 
+    def __str__(self):
+        return self.title
+
     class Meta(OrderedModel.Meta):
         pass
 
