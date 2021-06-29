@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from user.models import User
 from user.serializers import UserSerializer
 
 from .models import Project, ProjectUser
@@ -35,7 +34,26 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        exclude = ("users", "organization")
+        exclude = ("users",)
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        organization_obj = data.get("organization")
+        if organization_obj:
+            if organization_obj.status != "accepted":
+                raise serializers.ValidationError(
+                    {
+                        "organization": "Cannot create project for not accepted organization"
+                    }
+                )
+        else:
+            if data["visibility"] == "public_within_organization":
+                raise serializers.ValidationError(
+                    {
+                        "visibility": "No organization project cannot have public_within_organization visibility"
+                    }
+                )
+        return data
 
 
 class UpsertProjectUserSerializer(serializers.ModelSerializer):

@@ -105,13 +105,13 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
                 serializer_class().run_validation(
                     GEOSGeometry(data["answer"], srid=4326)
                 )
-            except:
+            except Exception:
                 raise serializers.ValidationError({"answer": "Invalid point field"})
         elif serializer_class == ImageField:
             try:
                 with default_storage.open(data["answer"]) as file:
                     serializer_class().run_validation(file)
-            except:
+            except Exception:
                 raise serializers.ValidationError({"answer": "Invalid image answer"})
         else:
             serializer_class().run_validation(data["answer"])

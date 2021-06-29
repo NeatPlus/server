@@ -1,10 +1,10 @@
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import mixins, permissions, serializers, status, viewsets
+from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from neatplus.permissions import IsOwnerOrReadOnly
+from neatplus.permissions import IsOwnerOrReadOrCreateOnly
 from neatplus.views import UserStampedModelViewSetMixin
 from project.models import Project
 from project.serializers import CreateProjectSerializer
@@ -19,17 +19,9 @@ from .serializers import (
 )
 
 
-class OrganizationViewSet(
-    UserStampedModelViewSetMixin,
-    mixins.ListModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = OrganizationSerializer
+class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OrganizationFilter
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOrCreateOnly]
 
     def get_queryset(self):
         authenticated_user = self.request.user
@@ -39,36 +31,12 @@ class OrganizationViewSet(
             filter_statement = Q(status="accepted")
         return Organization.objects.filter(filter_statement)
 
-    @extend_schema(
-        responses=inline_serializer(
-            name="OrganizationCreateResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default="Successfully created organization"
-                )
-            },
-        )
-    )
-    @action(
-        methods=["post"],
-        detail=False,
-        permission_classes=[permissions.IsAuthenticated],
-        serializer_class=CreateOrganizationSerializer,
-    )
-    def create_organization(self, request, *args, **kwargs):
-        data = request.data
-        serializer = self.get_serializer(data=data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        validated_data = serializer.validated_data
-        organization = Organization.objects.create(
-            **validated_data, created_by=self.request.user
-        )
-        organization.admins.add(self.request.user)
-        return Response(
-            {"detail": "Successfully created organization"},
-            status=status.HTTP_201_CREATED,
-        )
+    def get_serializer_class(self):
+        if self.name and self.serializer_class:
+            return self.serializer_class
+        if self.action == "create":
+            return CreateOrganizationSerializer
+        return OrganizationSerializer
 
     @extend_schema(
         responses=inline_serializer(

@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
-from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, inline_serializer

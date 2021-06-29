@@ -2,8 +2,8 @@ from typing import OrderedDict
 
 from django.db import transaction
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import mixins, permissions, serializers, status, viewsets
-from rest_framework.decorators import action, permission_classes
+from rest_framework import permissions, serializers, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelViewSetMixin
@@ -16,11 +16,12 @@ from .models import ProjectUser
 from .permissions import (
     CanCreateSurveyForProject,
     CanEditProject,
-    CanEditProjectOrReadOnly,
+    CanEditProjectOrReadOrCreateOnly,
     IsProjectOrganizationAdmin,
 )
 from .serializers import (
     AccessLevelResponseSerializer,
+    CreateProjectSerializer,
     ProjectSerializer,
     ProjectUserSerializer,
     RemoveProjectUserSerializer,
@@ -29,23 +30,22 @@ from .serializers import (
 from .utils import read_allowed_project_for_user
 
 
-class ProjectViewSet(
-    UserStampedModelViewSetMixin,
-    mixins.ListModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
-):
-    permission_classes = [CanEditProjectOrReadOnly]
+class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = [CanEditProjectOrReadOrCreateOnly]
     filterset_class = ProjectFilter
-    serializer_class = ProjectSerializer
 
     def get_queryset(self):
         current_user = self.request.user
         return read_allowed_project_for_user(current_user).prefetch_related(
             "organization__admins"
         )
+
+    def get_serializer_class(self):
+        if self.name and self.serializer_class:
+            return self.serializer_class
+        if self.action == "create":
+            return CreateProjectSerializer
+        return ProjectSerializer
 
     @action(
         methods=["get"],
@@ -256,7 +256,7 @@ class ProjectViewSet(
                     SurveyResult.objects.create(
                         **result, created_by=request.user, survey=survey
                     )
-        except Exception as err:
+        except Exception:
             return Response(
                 {
                     "error": "Failed to create survey or survey answer due to invalid data"
