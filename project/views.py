@@ -208,7 +208,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             else:
                 access_level = "read_only"
         else:
-            access_level = "visibility_access"
+            access_level = "visibility"
         data = {"access_level": access_level}
         serializer = self.get_serializer(data=data)
         if not serializer.is_valid():

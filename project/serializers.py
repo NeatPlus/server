@@ -75,6 +75,6 @@ class AccessLevelResponseSerializer(serializers.Serializer):
             ("owner", "owner"),
             ("write", "write"),
             ("read_only", "read_only"),
-            ("visibility_level", "visibility_level"),
+            ("visibility", "visibility"),
         ]
     )
