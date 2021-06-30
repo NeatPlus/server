@@ -67,6 +67,7 @@ class Option(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 class Survey(UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
     project = models.ForeignKey("project.Project", on_delete=models.CASCADE)
+    config = models.JSONField(default=dict)
 
     def __str__(self):
         return self.title
