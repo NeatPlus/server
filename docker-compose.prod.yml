@@ -13,7 +13,7 @@ services:
   celery_worker:
     env_file: .env
     environment:
-      - CELERY_WORKER=true
+      CELERY_WORKER: true
     image: ghcr.io/neatplus/server:latest
     networks:
       - default
