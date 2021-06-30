@@ -1,6 +1,7 @@
 from django.db.models import Q
-from rest_framework import permissions, viewsets
+from rest_framework import mixins, permissions, viewsets
 
+from neatplus.permissions import IsOwnerOrReadOnly
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
 
@@ -32,9 +33,14 @@ class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OptionFilter
 
 
-class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
+class SurveyViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = SurveySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     filterset_class = SurveyFilter
 
     def get_queryset(self):
