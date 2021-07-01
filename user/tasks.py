@@ -12,6 +12,6 @@ from neatplus.celery import no_simultaneous_execution
 )
 @no_simultaneous_execution
 def background_send_mail(self, user_id, subject, message, from_email, **kwargs):
-    get_user_model().objects.get(id=user_id).send_mail(
+    get_user_model().objects.get(id=user_id).email_user(
         subject, message, from_email=from_email, **kwargs
     )
