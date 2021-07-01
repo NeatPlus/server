@@ -150,7 +150,7 @@ DATABASES = {
 }
 
 # CACHES
-CACHE = {"default": env.dj_cache_url("CACHE_URL", default="locmem://")}
+CACHE = {"default": env.dj_cache_url("CACHE_URL", default="dummy://")}
 
 # AUTH User model
 AUTH_USER_MODEL = "user.User"

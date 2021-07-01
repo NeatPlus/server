@@ -11,6 +11,7 @@ class Organization(TimeStampedModel, UserStampedModel):
         REJECTED = "rejected"
 
     title = models.CharField(max_length=255, unique=True)
+    acronym = models.CharField(max_length=50, null=True, blank=True, default=None)
     description = models.TextField(null=True, blank=True, default=None)
     logo = models.ImageField(
         upload_to="organization/organization/logos", null=True, blank=True, default=None
