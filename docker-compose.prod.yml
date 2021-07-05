@@ -11,9 +11,10 @@ services:
       - default
       - external-services
   celery_worker:
+    container_name: "${COMPOSE_PROJECT_NAME}-celery-worker"
     env_file: .env
     environment:
-      CELERY_WORKER: true
+      CELERY_WORKER: "true"
     image: ghcr.io/neatplus/server:latest
     networks:
       - default
