@@ -21,6 +21,12 @@ class TestAPI(FullTestCase):
         cls.notification_detail_url = cls.reverse(
             "notification-detail", kwargs={"version": "v1", "pk": cls.notification.pk}
         )
+        notices = cls.baker.make("notification.Notice", is_active=True, _quantity=5)
+        notice = notices.pop()
+        cls.notice_list_url = cls.reverse("notice-list", kwargs={"version": "v1"})
+        cls.notice_detail_url = cls.reverse(
+            "notice-detail", kwargs={"version": "v1", "pk": notice.pk}
+        )
 
     def test_get_notification_list(self):
         self.client.force_authenticate(self.user)
@@ -60,5 +66,18 @@ class TestAPI(FullTestCase):
         url = self.reverse("notification-mark-all-as-read", kwargs={"version": "v1"})
         response = self.client.post(
             url,
+        )
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_get_notice_list(self):
+        response = self.client.get(
+            self.notice_list_url,
+        )
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_get_notice_detail(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(
+            self.notice_detail_url,
         )
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)

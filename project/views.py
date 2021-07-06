@@ -197,7 +197,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     def access_level(self, request, *args, **kwargs):
         project = self.get_object()
         user = self.request.user
-        if user in project.organization.admins.all():
+        if project.organization and user in project.organization.admins.all():
             access_level = "organization_admin"
         elif user == project.created_by:
             access_level = "owner"

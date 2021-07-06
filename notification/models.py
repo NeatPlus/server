@@ -1,10 +1,11 @@
+from ckeditor.fields import RichTextField
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 
-from neatplus.models import TimeStampedModel
+from neatplus.models import TimeStampedModel, UserStampedModel
 
 
 class Notification(TimeStampedModel):
@@ -58,3 +59,19 @@ class Notification(TimeStampedModel):
 
     class Meta:
         ordering = ("-created_at",)
+
+
+class Notice(UserStampedModel, TimeStampedModel):
+    class NoticeTypeChoice(models.TextChoices):
+        USER = "user"
+        PUBLIC = "public"
+
+    title = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=True, default=None)
+    notice_type = models.CharField(
+        max_length=6, default="public", choices=NoticeTypeChoice.choices
+    )
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
