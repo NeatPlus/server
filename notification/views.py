@@ -4,8 +4,13 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Notification
-from .serializers import NotificationSerializer, UnReadCountResponseSerializer
+from .filters import NoticeFilter, NotificationFilter
+from .models import Notice, Notification
+from .serializers import (
+    NoticeSerializer,
+    NotificationSerializer,
+    UnReadCountResponseSerializer,
+)
 
 
 class NotificationViewSet(
@@ -16,6 +21,7 @@ class NotificationViewSet(
 ):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_class = NotificationFilter
 
     def get_queryset(self):
         return Notification.objects.filter(recipient=self.request.user)
@@ -73,3 +79,15 @@ class NotificationViewSet(
             has_read=True, modified_at=timezone.now()
         )
         return Response({"detail": "Successfully marked as read"})
+
+
+class NoticeViewSet(viewsets.ModelViewSet):
+    serializer_class = NoticeSerializer
+    filterset_class = NoticeFilter
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Notice.objects.filter(is_active=True)
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(notice_type="public")
+        return queryset

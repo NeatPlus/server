@@ -1,6 +1,6 @@
 from django_filters.rest_framework import FilterSet
 
-from .models import Notification
+from .models import Notice, Notification
 
 
 class NotificationFilter(FilterSet):
@@ -14,3 +14,9 @@ class NotificationFilter(FilterSet):
             "target_content_type__model": ["exact"],
             "action_object_content_type__model": ["exact"],
         }
+
+
+class NoticeFilter(FilterSet):
+    class Meta:
+        model = Notice
+        fields = {"title": ["exact"], "notice_type": ["exact"]}

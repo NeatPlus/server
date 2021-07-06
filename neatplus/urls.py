@@ -15,7 +15,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from context.views import ContextViewSet, ModuleViewSet
-from notification.views import NotificationViewSet
+from notification.views import NoticeViewSet, NotificationViewSet
 from organization.views import OrganizationMemberRequestViewSet, OrganizationViewSet
 from project.views import ProjectViewSet
 from statement.views import (
@@ -63,6 +63,7 @@ router.register(
 )
 router.register("mitigation", MitigationViewSet, basename="mitigation")
 router.register("module", ModuleViewSet, basename="module")
+router.register("notice", NoticeViewSet, basename="notice")
 router.register("notification", NotificationViewSet, basename="notification")
 router.register("opportunity", OpportunityViewSet, basename="opportunity")
 router.register("option", OptionViewSet, basename="option")

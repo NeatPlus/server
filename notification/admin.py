@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import Notification
+from neatplus.admin import UserStampedModelAdmin
+
+from .models import Notice, Notification
 
 
 @admin.register(Notification)
@@ -14,3 +16,8 @@ class NotificationAdmin(admin.ModelAdmin):
         "has_read",
     )
     autocomplete_fields = ("recipient",)
+
+
+@admin.register(Notice)
+class NoticeAdmin(UserStampedModelAdmin):
+    list_display = ("title", "notice_type", "is_active")

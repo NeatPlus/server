@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from .models import Notification
+from .models import Notice, Notification
 
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -46,3 +46,9 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class UnReadCountResponseSerializer(serializers.Serializer):
     unread_count = serializers.IntegerField()
+
+
+class NoticeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notice
+        fields = "__all__"
