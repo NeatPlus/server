@@ -16,6 +16,11 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
 
 
 class OrganizationMemberRequestSerializer(serializers.ModelSerializer):
+    is_organization_admin = serializers.SerializerMethodField()
+
     class Meta:
         model = OrganizationMemberRequest
         fields = "__all__"
+
+    def get_is_organization_admin(self, obj):
+        return self.context["request"].user in obj.organization.admins.all()

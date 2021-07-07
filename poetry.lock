@@ -423,11 +423,12 @@ qrcode = ["qrcode"]
 
 [[package]]
 name = "django-silk"
-version = "4.1.0"
+version = "4.1.1.dev24+g7e93d6c"
 description = "Silky smooth profiling for the Django Framework"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
+develop = false
 
 [package.dependencies]
 autopep8 = "*"
@@ -439,6 +440,12 @@ python-dateutil = "*"
 pytz = "*"
 requests = "*"
 sqlparse = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/jazzband/django-silk"
+reference = "7e93d6caecc83f8aad7cdb152b578f27787a59cc"
+resolved_reference = "7e93d6caecc83f8aad7cdb152b578f27787a59cc"
 
 [[package]]
 name = "django-storages"
@@ -1299,7 +1306,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e74be824884dc5d4f53120f348e8704ea8397465085a742e945126a2dbafa72c"
+content-hash = "0c3fcb54a0f80cb732aef97cb3523a9612a8fb14c1e3cb5c9408e81bf8b3a208"
 
 [metadata.files]
 amqp = [
@@ -1446,9 +1453,7 @@ django-otp = [
     {file = "django-otp-1.0.6.tar.gz", hash = "sha256:0d56dd2a7fbb6ee6e54557e036ca64add0bd3596f471794bad673b7637d5e935"},
     {file = "django_otp-1.0.6-py3-none-any.whl", hash = "sha256:01b5888f0bde5125e139433aacb947e52d5c406fa56c9db43c3e8d75b5c323c4"},
 ]
-django-silk = [
-    {file = "django_silk-4.1.0-py2.py3-none-any.whl", hash = "sha256:a331e55618fa62eaf3cf5a63f31bc1e91205efbeeca5e587c577498b0e251ed8"},
-]
+django-silk = []
 django-storages = [
     {file = "django-storages-1.11.1.tar.gz", hash = "sha256:c823dbf56c9e35b0999a13d7e05062b837bae36c518a40255d522fbe3750fbb4"},
     {file = "django_storages-1.11.1-py3-none-any.whl", hash = "sha256:f28765826d507a0309cfaa849bd084894bc71d81bf0d09479168d44785396f80"},
