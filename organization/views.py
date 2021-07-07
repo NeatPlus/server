@@ -8,7 +8,7 @@ from neatplus.views import UserStampedModelViewSetMixin
 from project.models import Project
 from project.serializers import CreateProjectSerializer
 
-from .filters import OrganizationFilter
+from .filters import OrganizationFilter, OrganizationMemberRequestFilter
 from .models import Organization, OrganizationMemberRequest
 from .permissions import (
     IsMemberRequestOrganizationAdmin,
@@ -88,7 +88,7 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         organization = self.get_object()
         user = self.request.user
         OrganizationMemberRequest.objects.create(
-            user=user, organization=organization, created_by=self.request.user
+            user=user, organization=organization, created_by=user
         )
         return Response(
             {"detail": "Successfully requested member access"},
@@ -98,11 +98,17 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
 class OrganizationMemberRequestViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = OrganizationMemberRequestSerializer
-    permission_classes = [IsMemberRequestOrganizationAdmin]
+    permission_classes = [permissions.IsAuthenticated]
+    filterset_class = OrganizationMemberRequestFilter
 
     def get_queryset(self):
-        return OrganizationMemberRequest.objects.filter(
-            organization__admins=self.request.user
+        user = self.request.user
+        return (
+            OrganizationMemberRequest.objects.filter(
+                Q(organization__admins=user) | Q(user=user)
+            )
+            .prefetch_related("organization__admins")
+            .distinct()
         )
 
     @extend_schema(
@@ -119,6 +125,7 @@ class OrganizationMemberRequestViewSet(viewsets.ReadOnlyModelViewSet):
         methods=["post"],
         detail=True,
         serializer_class=serializers.Serializer,
+        permission_classes=[IsMemberRequestOrganizationAdmin],
     )
     def accept(self, request, *args, **kwargs):
         member_request = self.get_object()
@@ -142,6 +149,7 @@ class OrganizationMemberRequestViewSet(viewsets.ReadOnlyModelViewSet):
         methods=["post"],
         detail=True,
         serializer_class=serializers.Serializer,
+        permission_classes=[IsMemberRequestOrganizationAdmin],
     )
     def reject(self, request, *args, **kwargs):
         member_request = self.get_object()
