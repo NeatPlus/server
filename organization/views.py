@@ -4,14 +4,16 @@ from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from neatplus.permissions import IsOwnerOrReadOrCreateOnly
 from neatplus.views import UserStampedModelViewSetMixin
 from project.models import Project
 from project.serializers import CreateProjectSerializer
 
 from .filters import OrganizationFilter
 from .models import Organization, OrganizationMemberRequest
-from .permissions import IsMemberRequestOrganizationAdmin
+from .permissions import (
+    IsMemberRequestOrganizationAdmin,
+    IsOrganizationAdminOrReadOrCreateOnly,
+)
 from .serializers import (
     CreateOrganizationSerializer,
     OrganizationMemberRequestSerializer,
@@ -21,7 +23,7 @@ from .serializers import (
 
 class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OrganizationFilter
-    permission_classes = [IsOwnerOrReadOrCreateOnly]
+    permission_classes = [IsOrganizationAdminOrReadOrCreateOnly]
 
     def get_queryset(self):
         authenticated_user = self.request.user
