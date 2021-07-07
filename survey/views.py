@@ -34,9 +34,10 @@ class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
 
 class SurveyViewSet(
-    mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = SurveySerializer
@@ -51,9 +52,15 @@ class SurveyViewSet(
         )
 
 
-class SurveyAnswerViewSet(viewsets.ReadOnlyModelViewSet):
+class SurveyAnswerViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = SurveyAnswerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     filterset_class = SurveyAnswerFilter
 
     def get_queryset(self):
