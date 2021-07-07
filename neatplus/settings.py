@@ -331,7 +331,7 @@ SILKY_INTERCEPT_PERCENT = env.float("SILKY_INTERCEPT_PERCENT", default=0.0)
 ENABLE_SENTRY = env.bool("ENABLE_SENTRY", default=False)
 if ENABLE_SENTRY:
     sentry_sdk.init(
-        dsn=env.url("SENTRY_DSN"),
+        dsn=env.str("SENTRY_DSN"),
         integrations=[DjangoIntegration(), CeleryIntegration()],
         traces_sample_rate=1.0,
         send_default_pii=True,
