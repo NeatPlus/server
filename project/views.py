@@ -14,10 +14,10 @@ from survey.serializers import WritableSurveySerializer
 from .filters import ProjectFilter
 from .models import ProjectUser
 from .permissions import (
+    CanAcceptRejectProject,
     CanCreateSurveyForProject,
     CanEditProject,
     CanEditProjectOrReadOrCreateOnly,
-    IsProjectOrganizationAdmin,
 )
 from .serializers import (
     AccessLevelResponseSerializer,
@@ -71,7 +71,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsProjectOrganizationAdmin],
+        permission_classes=[CanAcceptRejectProject],
         serializer_class=serializers.Serializer,
     )
     def accept(self, request, *args, **kwargs):
@@ -93,7 +93,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsProjectOrganizationAdmin],
+        permission_classes=[CanAcceptRejectProject],
         serializer_class=serializers.Serializer,
     )
     def reject(self, request, *args, **kwargs):

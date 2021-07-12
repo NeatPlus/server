@@ -13,5 +13,5 @@ class IsOrganizationAdminOrReadOrCreateOnly(permissions.IsAuthenticated):
         return (
             request.method in permissions.SAFE_METHODS
             or request.method == CREATE_METHOD
-            or request.user in obj.organization.admins.all()
+            or request.user in obj.admins.all()
         )
