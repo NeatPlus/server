@@ -6,9 +6,7 @@ from .models import Organization, OrganizationMemberRequest
 
 
 @receiver(post_save, sender=Organization)
-def send_organization_acceptance_change_change_mail(
-    sender, instance, created, **kwargs
-):
+def send_organization_acceptance_change_mail(sender, instance, created, **kwargs):
     update_fields = kwargs.get("update_fields")
     if update_fields and "status" in update_fields:
         if instance.status == "accepted":

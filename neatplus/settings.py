@@ -523,3 +523,6 @@ CKEDITOR_CONFIGS = {
         ),
     }
 }
+
+# Bakery custom baker class
+BAKER_CUSTOM_CLASS = "neatplus.bakery.UserStampedBaker"

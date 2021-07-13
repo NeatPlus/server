@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
 from django.template.loader import get_template
@@ -6,23 +7,26 @@ from .models import Project
 
 
 @receiver(post_save, sender=Project)
-def send_new_project_organization_admin(sender, instance, created, **kwargs):
+def send_new_project_notification_to_admin(sender, instance, created, **kwargs):
     if created or "status" in kwargs["update_fields"]:
         if not created and instance.status != "pending":
             return
         if instance.organization:
-            for admin in instance.organization.admins.all():
-                email_template = get_template("new_project.txt")
-                context = {"admin": admin, "project": instance}
-                message = email_template.render(context)
-                admin.celery_email_user("New project mail", message)
-                admin.notify(
-                    instance.created_by,
-                    "created",
-                    action_object=instance,
-                    target=instance.organization,
-                    notification_type="new_project",
-                )
+            admins = instance.organization.admins.all()
+        else:
+            admins = get_user_model().objects.filter(is_superuser=True)
+        for admin in admins:
+            email_template = get_template("new_project.txt")
+            context = {"admin": admin, "project": instance}
+            message = email_template.render(context)
+            admin.celery_email_user("New project mail", message)
+            admin.notify(
+                instance.created_by,
+                "created",
+                action_object=instance,
+                target=instance.organization,
+                notification_type="new_project",
+            )
 
 
 @receiver(post_save, sender=Project)

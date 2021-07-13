@@ -3,9 +3,12 @@ from rest_framework import permissions
 from project.models import ProjectUser
 
 
-class IsProjectOrganizationAdmin(permissions.IsAuthenticated):
+class CanAcceptRejectProject(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        return request.user in obj.organization.admins.all()
+        if obj.organization:
+            return request.user in obj.organization.admins.all()
+        else:
+            return request.user.is_superuser
 
 
 class CanEditProject(permissions.IsAuthenticated):
