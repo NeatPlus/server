@@ -36,8 +36,10 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         current_user = self.request.user
-        return read_allowed_project_for_user(current_user).prefetch_related(
-            "organization__admins"
+        return (
+            read_allowed_project_for_user(current_user)
+            .select_related("created_by")
+            .prefetch_related("organization__admins")
         )
 
     def get_serializer_class(self):

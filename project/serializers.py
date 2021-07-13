@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from organization.serializers import OrganizationSerializer
 from user.serializers import UserSerializer
 
 from .models import Project, ProjectUser
@@ -14,11 +15,17 @@ class ProjectUserSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer()
+    organization_title = serializers.SerializerMethodField(read_only=True)
     is_admin_or_owner = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Project
         fields = "__all__"
+
+    def get_organization_title(self, obj):
+        if obj.organization:
+            return obj.organization.title
 
     def get_is_admin_or_owner(self, obj):
         current_user = self.context["request"].user
