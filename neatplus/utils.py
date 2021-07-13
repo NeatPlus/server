@@ -1,12 +1,14 @@
-import random
+import secrets
 import string
 
-
-def random_N_digit_number(n):
-    range_start = 10 ** (n - 1)
-    range_end = (10 ** n) - 1
-    return random.randint(range_start, range_end)
+RANDOM_STRING_CHARS = string.ascii_letters + string.digits
 
 
-def random_N_length_string(n):
-    return "".join(random.choice(string.ascii_lowercase) for i in range(16))
+def gen_random_number(length):
+    range_start = 10 ** (length - 1)
+    range_end = (10 ** length) - 1
+    return secrets.choice(range(range_start, range_end))
+
+
+def gen_random_string(length, allowed_chars=RANDOM_STRING_CHARS):
+    return "".join(secrets.choice(allowed_chars) for _ in range(length))

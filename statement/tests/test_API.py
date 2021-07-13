@@ -7,7 +7,6 @@ class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = cls.baker.make(settings.AUTH_USER_MODEL)
         questions = cls.baker.make("survey.Question", _quantity=3)
         options = cls.baker.make("survey.Option", _quantity=3)
         statement_topic = cls.baker.make("statement.StatementTopic")
@@ -106,101 +105,81 @@ class APITest(FullTestCase):
         )
 
     def test_statement_topic_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_topic_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_topic_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_topic_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_tag_group_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_tag_group_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_tag_group_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_tag_group_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_tag_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_tag_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_tag_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_tag_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_statement_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.statement_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_mitigation_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.mitigation_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_mitigation_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.mitigation_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_opportunity_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.opportunity_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_opportunity_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.opportunity_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_question_statement_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.question_statement_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_question_statement_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.question_statement_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_statement_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_statement_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_statement_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_statement_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_mitigation_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_mitigation_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_mitigation_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_mitigation_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_opportunity_list(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_opportunity_list_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_option_opportunity_detail(self):
-        self.client.force_authenticate(self.user)
         response = self.client.get(self.option_opportunity_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)

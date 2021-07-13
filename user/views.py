@@ -11,7 +11,7 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from neatplus.utils import random_N_digit_number, random_N_length_string
+from neatplus.utils import gen_random_number, gen_random_string
 
 from .models import EmailConfirmationPin, PasswordResetPin
 from .serializers import (
@@ -185,9 +185,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        random_6_digit_pin = random_N_digit_number(6)
+        random_6_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
-        identifier = random_N_length_string(16)
+        identifier = gen_random_string(length=16)
         password_reset_pin_object, _ = PasswordResetPin.objects.update_or_create(
             user=user,
             defaults={
@@ -410,7 +410,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         email_confirm_pin = EmailConfirmationPin.objects.filter(user=user)
-        random_6_digit_pin = random_N_digit_number(6)
+        random_6_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         if not email_confirm_pin.first().is_active:
             return Response(
