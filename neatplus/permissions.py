@@ -13,12 +13,3 @@ class IsOwnerOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
         return (
             request.method in permissions.SAFE_METHODS or request.user == obj.created_by
         )
-
-
-class IsOwnerOrReadOrCreateOnly(permissions.IsAuthenticatedOrReadOnly):
-    def has_object_permission(self, request, view, obj):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or request.method == CREATE_METHOD
-            or request.user == obj.created_by
-        )

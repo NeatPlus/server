@@ -13,20 +13,18 @@ class CanAcceptRejectProject(permissions.IsAuthenticated):
 
 class CanEditProject(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        return (
-            request.user == obj.created_by
-            or request.user in obj.organization.admins.all()
-        )
+        is_created_by = request.user == obj.created_by
+        if obj.organization:
+            return is_created_by or request.user in obj.organization.admins.all()
+        else:
+            return is_created_by
 
 
-class CanEditProjectOrReadOrCreateOnly(permissions.IsAuthenticated):
+class CanEditProjectOrReadOnly(CanEditProject):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return (
-            request.user == obj.created_by
-            or request.user in obj.organization.admins.all()
-        )
+        return super().has_object_permission(request, view, obj)
 
 
 class CanCreateSurveyForProject(permissions.IsAuthenticated):

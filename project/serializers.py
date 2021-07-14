@@ -29,10 +29,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def get_is_admin_or_owner(self, obj):
         current_user = self.context["request"].user
-        return (
-            current_user == obj.created_by
-            or current_user in obj.organization.admins.all()
-        )
+        is_created_by = current_user == obj.created_by
+        if obj.organization:
+            return is_created_by or current_user in obj.organization.admins.all()
+        else:
+            return is_created_by
 
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)

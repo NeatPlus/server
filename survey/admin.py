@@ -70,7 +70,7 @@ class ProjectAutoCompleteFilter(AutocompleteFilter):
 
 @admin.register(Survey)
 class SurveyAdmin(UserStampedModelAdmin, OrderedModelAdmin):
-    list_display = ("title", "project", "move_up_down_links")
+    list_display = ("title", "project", "is_shared_publicly", "move_up_down_links")
     list_filter = (ProjectAutoCompleteFilter,)
     autocomplete_fields = ("project",)
     search_fields = ("title",)
