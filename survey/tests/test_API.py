@@ -1,4 +1,5 @@
 from django.conf import settings
+from model_bakery import random_gen
 
 from neatplus.tests import FullTestCase
 
@@ -98,3 +99,77 @@ class APITest(FullTestCase):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_answer_detail_url)
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_share_survey(self):
+        self.client.force_authenticate(self.user)
+        survey = self.baker.make("survey.Survey", created_by=self.user)
+        url = self.reverse(
+            "survey-share-link", kwargs={"version": "v1", "pk": survey.pk}
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_unshare_survey(self):
+        self.client.force_authenticate(self.user)
+        survey = self.baker.make(
+            "survey.Survey",
+            created_by=self.user,
+            is_shared_publicly=True,
+            shared_link_identifier=random_gen.gen_string(10),
+        )
+        url = self.reverse(
+            "survey-unshare-link", kwargs={"version": "v1", "pk": survey.pk}
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_update_share_survey(self):
+        self.client.force_authenticate(self.user)
+        survey_1 = self.baker.make(
+            "survey.Survey",
+            created_by=self.user,
+            is_shared_publicly=True,
+            shared_link_identifier=random_gen.gen_string(10),
+        )
+        url = self.reverse(
+            "survey-update-link", kwargs={"version": "v1", "pk": survey_1.pk}
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        survey_2 = self.baker.make(
+            "survey.Survey",
+            created_by=self.user,
+        )
+        url = self.reverse(
+            "survey-update-link", kwargs={"version": "v1", "pk": survey_2.pk}
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_400_BAD_REQUEST)
+
+    def test_get_identifier_survey(self):
+        shared_link_identifier = random_gen.gen_string(10)
+        survey = self.baker.make(
+            "survey.Survey",
+            is_shared_publicly=True,
+            shared_link_identifier=shared_link_identifier,
+        )
+        url = self.reverse(
+            "survey-identifier",
+            kwargs={
+                "version": "v1",
+                "shared_link_identifier": shared_link_identifier,
+            },
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        survey.is_shared_publicly = False
+        survey.save()
+        url = self.reverse(
+            "survey-identifier",
+            kwargs={
+                "version": "v1",
+                "shared_link_identifier": shared_link_identifier,
+            },
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)

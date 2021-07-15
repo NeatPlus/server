@@ -17,7 +17,7 @@ from .permissions import (
     CanAcceptRejectProject,
     CanCreateSurveyForProject,
     CanEditProject,
-    CanEditProjectOrReadOrCreateOnly,
+    CanEditProjectOrReadOnly,
 )
 from .serializers import (
     AccessLevelResponseSerializer,
@@ -31,7 +31,7 @@ from .utils import read_allowed_project_for_user
 
 
 class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
-    permission_classes = [CanEditProjectOrReadOrCreateOnly]
+    permission_classes = [CanEditProjectOrReadOnly]
     filterset_class = ProjectFilter
 
     def get_queryset(self):

@@ -10,10 +10,7 @@ from project.serializers import CreateProjectSerializer
 
 from .filters import OrganizationFilter, OrganizationMemberRequestFilter
 from .models import Organization, OrganizationMemberRequest
-from .permissions import (
-    IsMemberRequestOrganizationAdmin,
-    IsOrganizationAdminOrReadOrCreateOnly,
-)
+from .permissions import IsMemberRequestOrganizationAdmin, IsOrganizationAdminOrReadOnly
 from .serializers import (
     CreateOrganizationSerializer,
     OrganizationMemberRequestSerializer,
@@ -23,7 +20,7 @@ from .serializers import (
 
 class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OrganizationFilter
-    permission_classes = [IsOrganizationAdminOrReadOrCreateOnly]
+    permission_classes = [IsOrganizationAdminOrReadOnly]
 
     def get_queryset(self):
         authenticated_user = self.request.user

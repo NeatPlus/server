@@ -12,6 +12,9 @@ class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel)
     def __str__(self):
         return self.code + "-" + self.title
 
+    class Meta(OrderedModel.Meta):
+        pass
+
 
 class AnswerTypeChoices(models.TextChoices):
     BOOLEAN = "boolean"
@@ -68,6 +71,15 @@ class Survey(UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(max_length=255)
     project = models.ForeignKey("project.Project", on_delete=models.CASCADE)
     config = models.JSONField(default=dict)
+    is_shared_publicly = models.BooleanField(default=False)
+    shared_link_identifier = models.CharField(
+        max_length=10,
+        unique=True,
+        null=True,
+        blank=True,
+        default=None,
+        editable=False,
+    )
 
     def __str__(self):
         return self.title
