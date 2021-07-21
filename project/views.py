@@ -1,4 +1,4 @@
-from typing import OrderedDict
+from collections import OrderedDict
 
 from django.db import transaction
 from drf_spectacular.utils import extend_schema, inline_serializer

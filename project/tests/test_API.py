@@ -5,7 +5,7 @@ from neatplus.tests import FullTestCase
 from project.models import ProjectUser
 
 
-class TestAPI(FullTestCase):
+class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

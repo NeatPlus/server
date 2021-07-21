@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from neatplus.tests import FullTestCase
 
 
-class TestAPI(FullTestCase):
+class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

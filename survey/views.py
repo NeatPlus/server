@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
@@ -8,6 +10,8 @@ from neatplus.permissions import IsOwner, IsOwnerOrReadOnly
 from neatplus.utils import gen_random_string
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
+from summary.models import SurveyResult
+from summary.serializers import WritableSurveyResultSerializer
 
 from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFilter
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
@@ -18,6 +22,7 @@ from .serializers import (
     SharedSurveySerializer,
     SurveyAnswerSerializer,
     SurveySerializer,
+    WritableSurveyAnswerSerializer,
 )
 
 
@@ -150,6 +155,91 @@ class SurveyViewSet(
             return Response(
                 {"error": "Identifier not found"}, status=status.HTTP_404_NOT_FOUND
             )
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="AddSurveyAnswerResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Successfully added survey answers"
+                )
+            },
+        )
+    )
+    @action(
+        methods=["post"],
+        detail=True,
+        permission_classes=[IsOwner],
+        serializer_class=WritableSurveyAnswerSerializer,
+    )
+    def add_answers(self, request, *args, **kwargs):
+        survey = self.get_object()
+        user = self.request.user
+        data = request.data
+        if isinstance(data, dict):
+            serializer = self.get_serializer(data=data)
+        else:
+            serializer = self.get_serializer(data=data, many=True)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        validated_data = serializer.validated_data
+        if isinstance(validated_data, OrderedDict):
+            validated_data = [validated_data]
+
+        for validated_datum in validated_data:
+            options = validated_datum.pop("options", None)
+            survey_answer = SurveyAnswer.objects.create(
+                **validated_datum, survey=survey, created_by=user
+            )
+            if options:
+                survey_answer.options.add(*options)
+        return Response(
+            {"detail": "Successfully added survey answers"},
+            status=status.HTTP_201_CREATED,
+        )
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="AddSurveyResultResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default="Successfully added survey results"
+                )
+            },
+        )
+    )
+    @action(
+        methods=["post"],
+        detail=True,
+        permission_classes=[IsOwner],
+        serializer_class=WritableSurveyResultSerializer,
+    )
+    def add_results(self, request, *args, **kwargs):
+        survey = self.get_object()
+        user = self.request.user
+        data = request.data
+
+        if isinstance(data, dict):
+            serializer = self.get_serializer(data=data)
+        else:
+            serializer = self.get_serializer(data=data, many=True)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        validated_data = serializer.validated_data
+        if isinstance(validated_data, OrderedDict):
+            validated_data = [validated_data]
+
+        for validated_datum in validated_data:
+            SurveyResult.objects.create(
+                **validated_datum, survey=survey, created_by=user
+            )
+        return Response(
+            {"detail": "Successfully added survey results"},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class SurveyAnswerViewSet(

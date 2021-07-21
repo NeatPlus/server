@@ -3,7 +3,7 @@ from django.conf import settings
 from neatplus.tests import FullTestCase
 
 
-class TestAPI(FullTestCase):
+class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -23,10 +23,12 @@ class APITest(FullTestCase):
             "survey.Question", group=question_group, answer_type="single_option"
         )
         option = cls.baker.make("survey.Option", question=question)
-        survey = cls.baker.make("survey.Survey", project=project)
+        cls.survey = cls.baker.make(
+            "survey.Survey", project=project, created_by=cls.user
+        )
         survey_answer = cls.baker.make(
             "survey.SurveyAnswer",
-            survey=survey,
+            survey=cls.survey,
             answer_type="single_option",
             question=question,
             options=[option],
@@ -47,7 +49,7 @@ class APITest(FullTestCase):
         )
         cls.survey_list_url = cls.reverse("survey-list", kwargs={"version": "v1"})
         cls.survey_detail_url = cls.reverse(
-            "survey-detail", kwargs={"version": "v1", "pk": survey.pk}
+            "survey-detail", kwargs={"version": "v1", "pk": cls.survey.pk}
         )
         cls.survey_answer_list_url = cls.reverse(
             "survey-answer-list", kwargs={"version": "v1"}
@@ -173,3 +175,79 @@ class APITest(FullTestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)
+
+    def test_add_survey_answers(self):
+        url = self.reverse(
+            "survey-add-answers", kwargs={"version": "v1", "pk": self.survey.pk}
+        )
+        question_1 = self.baker.make("survey.Question", answer_type="location")
+        question_2 = self.baker.make("survey.Question", answer_type="number")
+        question_3 = self.baker.make("survey.Question", answer_type="boolean")
+        question_4 = self.baker.make("survey.Question", answer_type="single_option")
+        question_4_option = self.baker.make("survey.Option", question=question_4)
+        question_5 = self.baker.make("survey.Question", answer_type="multiple_option")
+        question_5_option_1 = self.baker.make("survey.Option", question=question_5)
+        question_5_option_2 = self.baker.make("survey.Option", question=question_5)
+        multiple_data = [
+            {
+                "question": question_1.pk,
+                "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
+                "answerType": "location",
+            },
+            {
+                "question": question_2.pk,
+                "answer": 2,
+                "answerType": "number",
+            },
+            {
+                "question": question_3.pk,
+                "answer": "true",
+                "answerType": "boolean",
+            },
+            {
+                "question": question_4.pk,
+                "answerType": "single_option",
+                "options": [question_4_option.pk],
+            },
+        ]
+        single_data = {
+            "question": question_5.pk,
+            "answerType": "multiple_option",
+            "options": [question_5_option_1.pk, question_5_option_2.pk],
+        }
+        self.client.force_authenticate(self.user)
+        multiple_response = self.client.post(url, data=multiple_data, format="json")
+        self.assertEqual(
+            multiple_response.status_code, self.status_code.HTTP_201_CREATED
+        )
+        single_response = self.client.post(url, single_data)
+        self.assertEqual(single_response.status_code, self.status_code.HTTP_201_CREATED)
+
+    def test_add_survey_results(self):
+        url = self.reverse(
+            "survey-add-results", kwargs={"version": "v1", "pk": self.survey.pk}
+        )
+        statement_1, statement_2, statement_3 = self.baker.make(
+            "statement.Statement", _quantity=3
+        )
+        multiple_data = [
+            {
+                "statement": statement_1.pk,
+                "score": 0.90,
+            },
+            {
+                "statement": statement_2.pk,
+                "score": 0.67,
+            },
+        ]
+        single_data = {
+            "statement": statement_3.pk,
+            "score": 0.90,
+        }
+        self.client.force_authenticate(self.user)
+        multiple_response = self.client.post(url, data=multiple_data, format="json")
+        self.assertEqual(
+            multiple_response.status_code, self.status_code.HTTP_201_CREATED
+        )
+        single_response = self.client.post(url, single_data)
+        self.assertEqual(single_response.status_code, self.status_code.HTTP_201_CREATED)
