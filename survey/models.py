@@ -46,6 +46,7 @@ class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     )
     is_required = models.BooleanField(default=True)
     skip_logic = models.TextField(null=True, blank=True, default=None)
+    acronym = models.CharField(max_length=50, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.code + "-" + self.title
