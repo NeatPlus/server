@@ -110,6 +110,7 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # MIDDLEWARE
 MIDDLEWARE = [
+    "django.middleware.gzip.GZipMiddleware",
     "silk.middleware.SilkyMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
