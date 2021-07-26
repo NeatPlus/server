@@ -42,6 +42,7 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
     context = models.ForeignKey(
         "context.Context", on_delete=models.CASCADE, related_name="projects"
     )
+    share_analytics_with_neat = models.BooleanField(default=False)
 
     class Meta(OrderedModel.Meta):
         pass
