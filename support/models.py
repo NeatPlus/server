@@ -10,6 +10,7 @@ from neatplus.models import TimeStampedModel, UserStampedModel
 class LegalDocumentTypeChoice(models.TextChoices):
     TERMS_AND_CONDITIONS = "terms-and-conditions"
     PRIVACY_POLICY = "privacy-policy"
+    COOKIE_POLICY = "cookie-policy"
 
 
 class LegalDocument(UserStampedModel, TimeStampedModel):

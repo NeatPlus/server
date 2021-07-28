@@ -5,7 +5,10 @@ from django.utils.translation import gettext_lazy as _
 from .models import User
 
 ADDITIONAL_USER_FIELDS = (
-    (_("Additional Fields"), {"fields": ("organization", "role")}),
+    (
+        _("Additional Fields"),
+        {"fields": ("organization", "role", "has_accepted_terms_and_privacy_policy")},
+    ),
 )
 
 

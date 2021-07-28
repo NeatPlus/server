@@ -19,6 +19,7 @@ class PrivateUserSerializer(UserSerializer):
             "last_name",
             "organization",
             "role",
+            "has_accepted_terms_and_privacy_policy",
         )
 
 
