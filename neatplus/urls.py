@@ -34,6 +34,7 @@ from summary.views import SurveyResultViewSet
 from support.views import (
     ActionViewSet,
     FrequentlyAskedQuestionViewSet,
+    LegalDocumentViewSet,
     ResourceTagViewSet,
     ResourceViewSet,
 )
@@ -61,6 +62,7 @@ router.register(
     FrequentlyAskedQuestionViewSet,
     basename="frequently-asked-question",
 )
+router.register("legal-document", LegalDocumentViewSet, basename="legal-document")
 router.register("mitigation", MitigationViewSet, basename="mitigation")
 router.register("module", ModuleViewSet, basename="module")
 router.register("notice", NoticeViewSet, basename="notice")
