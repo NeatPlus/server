@@ -1,6 +1,11 @@
 from modeltranslation import translator
 
-from .models import Action, FrequentlyAskedQuestion, Resource
+from .models import Action, FrequentlyAskedQuestion, LegalDocument, Resource
+
+
+@translator.register(LegalDocument)
+class LegalDocumentTranslationOptions(translator.TranslationOptions):
+    fields = ("description",)
 
 
 @translator.register(FrequentlyAskedQuestion)

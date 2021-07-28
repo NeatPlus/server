@@ -19,7 +19,7 @@ class RichTextUploadingSerializerField(CharField):
         return data
 
 
-class RichTextModelSerializer(ModelSerializer):
+class RichTextUploadingModelSerializer(ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.serializer_field_mapping[
             RichTextUploadingField

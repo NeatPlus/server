@@ -4,7 +4,18 @@ from ordered_model.admin import OrderedModelAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import Action, FrequentlyAskedQuestion, Resource, ResourceTag
+from .models import (
+    Action,
+    FrequentlyAskedQuestion,
+    LegalDocument,
+    Resource,
+    ResourceTag,
+)
+
+
+@admin.register(LegalDocument)
+class LegalDocumentAdmin(UserStampedModelAdmin, TranslationAdmin):
+    list_display = ("document_type",)
 
 
 @admin.register(FrequentlyAskedQuestion)

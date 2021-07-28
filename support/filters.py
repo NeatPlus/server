@@ -1,6 +1,12 @@
 from django_filters.rest_framework import FilterSet
 
-from .models import Resource
+from .models import LegalDocument, Resource
+
+
+class LegalDocumentFilter(FilterSet):
+    class Meta:
+        model = LegalDocument
+        fields = {"document_type": ["exact"]}
 
 
 class ResourceFilter(FilterSet):

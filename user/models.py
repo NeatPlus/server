@@ -46,6 +46,7 @@ class User(AbstractUser):
     # Custom
     organization = models.CharField(max_length=255, null=True, blank=True, default=None)
     role = models.CharField(max_length=50, null=True, blank=True, default=None)
+    has_accepted_terms_and_privacy_policy = models.BooleanField(default=True)
 
     objects = CustomUserManager()
 

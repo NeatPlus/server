@@ -5,10 +5,18 @@ class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        legal_document = cls.baker.make("support.LegalDocument")
         frequently_asked_question = cls.baker.make("support.FrequentlyAskedQuestion")
         resource_tag = cls.baker.make("support.ResourceTag")
         resource = cls.baker.make("support.Resource")
         action = cls.baker.make("support.Action")
+        cls.legal_document_list_url = cls.reverse(
+            "legal-document-list", kwargs={"version": "v1"}
+        )
+        cls.legal_document_detail_url = cls.reverse(
+            "legal-document-detail",
+            kwargs={"version": "v1", "pk": legal_document.pk},
+        )
         cls.frequently_asked_question_list_url = cls.reverse(
             "frequently-asked-question-list", kwargs={"version": "v1"}
         )
@@ -33,6 +41,14 @@ class APITest(FullTestCase):
             "action-detail",
             kwargs={"version": "v1", "pk": action.pk},
         )
+
+    def test_legal_document_list(self):
+        response = self.client.get(self.legal_document_list_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+
+    def test_legal_document_detail(self):
+        response = self.client.get(self.legal_document_detail_url)
+        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_frequently_asked_question_list(self):
         response = self.client.get(self.frequently_asked_question_list_url)
