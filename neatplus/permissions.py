@@ -8,7 +8,7 @@ class IsOwner(permissions.IsAuthenticated):
         return request.user == obj.created_by
 
 
-class IsOwnerOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
+class IsOwnerOrReadOnly(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         return (
             request.method in permissions.SAFE_METHODS or request.user == obj.created_by
