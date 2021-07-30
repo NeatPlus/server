@@ -55,6 +55,12 @@ class SurveyViewSet(
     filterset_class = SurveyFilter
 
     def get_queryset(self):
+        # if self.action value is identifier then queryset can be none since
+        # that api can be accessed by anyone.
+        # Not setting it to none will cause survey/identifier/<survey_identifier>
+        # API to fail with 500 error code for non authenticated user
+        if self.action == "identifier":
+            return Survey.objects.none()
         current_user = self.request.user
         projects = read_allowed_project_for_user(current_user)
         return Survey.objects.filter(
