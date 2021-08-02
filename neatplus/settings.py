@@ -528,6 +528,10 @@ CKEDITOR_CONFIGS = {
 # Bakery custom baker class
 BAKER_CUSTOM_CLASS = "neatplus.bakery.UserStampedBaker"
 
-# Django and Proxy communication for proper protocol and host determination
+# Determination of proper protocol and host
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Secure cookie related settings
+SESSION_COOKIE_SECURE = IS_SERVER_SECURE
+CSRF_COOKIE_SECURE = IS_SERVER_SECURE

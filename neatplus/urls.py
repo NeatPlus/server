@@ -54,7 +54,11 @@ def get_api_path(path):
     return r"^api/(?P<version>({}))/{}".format(API_VERSION, path)
 
 
-router = routers.DefaultRouter()
+class CustomDefaultRouter(routers.DefaultRouter):
+    include_root_view = not settings.IS_SERVER_SECURE
+
+
+router = CustomDefaultRouter()
 router.register("action", ActionViewSet, basename="action")
 router.register("context", ContextViewSet, basename="context")
 router.register(
