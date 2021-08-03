@@ -1,0 +1,13 @@
+Dear {{ email_change_object.user.username }},
+
+Recently you have requested to change your email address.
+We have send this email to verify your email address.
+
+If you haven't requested recently to change email address to this mail you can safely ignore this email.
+
+
+Your email change request confirmation pin is {{ email_change_object.pin }}
+Your pin will expire in 1 hour at {{email_change_object.pin_expiry_time }} UTC
+
+Thanks,
+Neat+ team

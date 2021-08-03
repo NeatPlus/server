@@ -10,6 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PrivateUserSerializer(UserSerializer):
+    email = serializers.EmailField(read_only=True)
+    password = serializers.CharField(write_only=True)
+
     class Meta(UserSerializer.Meta):
         fields = (
             "id",
@@ -20,7 +23,17 @@ class PrivateUserSerializer(UserSerializer):
             "organization",
             "role",
             "has_accepted_terms_and_privacy_policy",
+            "password",
         )
+
+    def validate(self, attrs):
+        password = attrs.pop("password", None)
+        if not password:
+            raise serializers.ValidationError({"password": "Password field missing"})
+        user = self.context["request"].user
+        if not user.check_password(password):
+            raise serializers.ValidationError({"password": "Invalid password for user"})
+        return super().validate(attrs)
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -28,9 +41,37 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField()
     re_new_password = serializers.CharField()
 
+    def validate(self, attrs):
+        password = attrs.get("old_password")
+        user = self.context["request"].user
+        if not user.check_password(password):
+            raise serializers.ValidationError(
+                {"old_password": "Invalid password for user"}
+            )
+        return super().validate(attrs)
+
 
 class UserNameSerializer(serializers.Serializer):
     username = serializers.CharField()
+
+
+class EmailChangeSerializer(serializers.Serializer):
+    new_email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        password = attrs.get("password")
+        new_email = attrs.get("new_email")
+        user = self.context["request"].user
+        if User.objects.filter(email=new_email).exists():
+            raise serializers.ValidationError({"new_email": "Email is already used"})
+        if not user.check_password(password):
+            raise serializers.ValidationError({"password": "Invalid password for user"})
+        return super().validate(attrs)
+
+
+class EmailChangePinVerifySerializer(serializers.Serializer):
+    pin = serializers.IntegerField()
 
 
 class PinVerifySerializer(serializers.Serializer):
@@ -45,15 +86,31 @@ class PasswordResetPasswordChangeSerializer(serializers.Serializer):
     re_password = serializers.CharField()
 
 
-class UserRegisterSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    email = serializers.EmailField()
+class UserRegisterSerializer(UserSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    password = serializers.CharField()
     re_password = serializers.CharField()
     organization = serializers.CharField()
     role = serializers.CharField()
+
+    class Meta(UserSerializer.Meta):
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "password",
+            "re_password",
+            "organization",
+            "role",
+        )
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["re_password"]:
+            raise serializers.ValidationError(
+                {"error": "Password and re_password doesn't match"}
+            )
+        return super().validate(attrs)
 
 
 class UploadImageSerializer(serializers.Serializer):

@@ -1,7 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
 from django.template.loader import get_template
+
+from user.models import User
 
 from .models import Project
 
@@ -14,7 +15,7 @@ def send_new_project_notification_to_admin(sender, instance, created, **kwargs):
         if instance.organization:
             admins = instance.organization.admins.all()
         else:
-            admins = get_user_model().objects.filter(is_superuser=True)
+            admins = User.objects.filter(is_superuser=True)
         for admin in admins:
             email_template = get_template("new_project.txt")
             context = {"admin": admin, "project": instance}
