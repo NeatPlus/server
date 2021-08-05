@@ -1,6 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
+
+from user.models import User
 
 from .models import LegalDocument, LegalDocumentTypeChoice
 
@@ -16,6 +17,4 @@ def update_user_terms_and_privacy_acceptance_status(
         LegalDocumentTypeChoice.TERMS_AND_CONDITIONS,
         LegalDocumentTypeChoice.PRIVACY_POLICY,
     ]:
-        get_user_model().objects.all().update(
-            has_accepted_terms_and_privacy_policy=False
-        )
+        User.objects.all().update(has_accepted_terms_and_privacy_policy=False)

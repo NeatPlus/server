@@ -11,7 +11,7 @@ from .models import EmailConfirmationPin
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def send_email_confiramtion_pin(sender, instance, created, **kwargs):
-    if created or "email" in kwargs["update_fields"]:
+    if created:
         six_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         email_confirm_object, _ = EmailConfirmationPin.objects.update_or_create(

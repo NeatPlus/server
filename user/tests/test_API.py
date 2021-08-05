@@ -11,7 +11,12 @@ class APITest(FullTestCase):
     def setUpClass(cls):
         super().setUpClass()
         users = cls.baker.make(settings.AUTH_USER_MODEL, is_active=True, _quantity=4)
-        cls.activated_user = users[0]
+        cls.activated_initial_password = get_user_model().objects.make_random_password()
+        users[0].set_password(cls.activated_initial_password)
+        users[0].save()
+        cls.activated_user = authenticate(
+            username=users[0].username, password=cls.activated_initial_password
+        )
 
     def test_list_users(self):
         self.client.force_authenticate(self.activated_user)
@@ -26,17 +31,15 @@ class APITest(FullTestCase):
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
 
     def test_user_me_patch(self):
-        user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
-        self.client.force_authenticate(user)
-        self.assertTrue(user.is_active)
-        new_email = random_gen.gen_email().lower()
-        data = {"email": new_email}
+        self.client.force_authenticate(self.activated_user)
+        self.assertTrue(self.activated_user.is_active)
+        new_name = random_gen.gen_string(max_length=20)
+        data = {"first_name": new_name, "password": self.activated_initial_password}
         url = self.reverse("user-me", kwargs={"version": "v1"})
-        response = self.client.patch(url, data=data)
+        response = self.client.patch(url, data=data, format="json")
         self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
-        updated_user = get_user_model().objects.get(pk=user.pk)
-        self.assertEqual(updated_user.email, new_email)
-        self.assertFalse(user.is_active)
+        updated_user = get_user_model().objects.get(pk=self.activated_user.pk)
+        self.assertEqual(updated_user.first_name, new_name)
 
     def test_user_change_password(self):
         user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
@@ -101,6 +104,7 @@ class APITest(FullTestCase):
         self.assertTrue(email_verified.check_password(non_activated_user_pass))
 
     def test_password_reset_flow(self):
+        user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
         password_reset_url = self.reverse(
             "user-password-reset", kwargs={"version": "v1"}
         )
@@ -111,17 +115,15 @@ class APITest(FullTestCase):
             "user-password-reset-change", kwargs={"version": "v1"}
         )
         password_reset_send = self.client.post(
-            password_reset_url, data={"username": self.activated_user.username}
+            password_reset_url, data={"username": user.username}
         )
         self.assertEqual(password_reset_send.status_code, self.status_code.HTTP_200_OK)
         password_reset_pin = (
-            apps.get_model("user", "PasswordResetPin")
-            .objects.get(user=self.activated_user)
-            .pin
+            apps.get_model("user", "PasswordResetPin").objects.get(user=user).pin
         )
         password_reset_verify = self.client.post(
             password_reset_verify_url,
-            data={"username": self.activated_user.username, "pin": password_reset_pin},
+            data={"username": user.username, "pin": password_reset_pin},
         )
         self.assertEqual(
             password_reset_verify.status_code, self.status_code.HTTP_200_OK
@@ -131,7 +133,7 @@ class APITest(FullTestCase):
         password_reset_change = self.client.post(
             password_reset_change_url,
             data={
-                "username": self.activated_user.username,
+                "username": user.username,
                 "identifier": identifier,
                 "password": new_pass,
                 "re_password": new_pass,
@@ -140,5 +142,37 @@ class APITest(FullTestCase):
         self.assertEqual(
             password_reset_change.status_code, self.status_code.HTTP_200_OK
         )
-        user = authenticate(username=self.activated_user.username, password=new_pass)
+        user = authenticate(username=user.username, password=new_pass)
         self.assertIsNotNone(user)
+
+    def test_email_change_flow(self):
+        self.client.force_authenticate(self.activated_user)
+        email_change_url = self.reverse("user-email-change", kwargs={"version": "v1"})
+        email_change_verify_url = self.reverse(
+            "user-email-change-verify", kwargs={"version": "v1"}
+        )
+        new_email = random_gen.gen_email().lower()
+        email_change_data = {
+            "new_email": new_email,
+            "password": self.activated_initial_password,
+        }
+        email_change_response = self.client.post(
+            email_change_url, data=email_change_data
+        )
+        self.assertEqual(
+            email_change_response.status_code, self.status_code.HTTP_200_OK
+        )
+        email_change_pin = (
+            apps.get_model("user", "EmailChangePin")
+            .objects.get(user=self.activated_user)
+            .pin
+        )
+        email_change_verify_data = {"pin": email_change_pin}
+        email_change_verify_response = self.client.post(
+            email_change_verify_url, data=email_change_verify_data
+        )
+        self.assertEqual(
+            email_change_verify_response.status_code, self.status_code.HTTP_200_OK
+        )
+        user = get_user_model().objects.get(pk=self.activated_user.pk)
+        self.assertEqual(new_email, user.email)

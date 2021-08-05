@@ -10,7 +10,7 @@ from neatplus.fields import LowerCharField, LowerEmailField
 from neatplus.managers import CustomUserManager
 from neatplus.models import TimeStampedModel
 
-from .tasks import background_send_mail
+from .tasks import send_user_mail
 
 
 class User(AbstractUser):
@@ -67,9 +67,6 @@ class User(AbstractUser):
                         changed_fields.append(field_name)
                 except Exception:
                     pass
-            if "email" in changed_fields:
-                self.is_active = False
-                changed_fields.append("is_active")
             kwargs["update_fields"] = changed_fields
         super().save(*args, **kwargs)
 
@@ -121,7 +118,7 @@ class User(AbstractUser):
 
     def celery_email_user(self, subject, message, from_email=None, **kwargs):
         if settings.ENABLE_CELERY:
-            background_send_mail.delay(
+            send_user_mail.delay(
                 self.pk, subject, message, from_email=from_email, **kwargs
             )
         else:
@@ -154,4 +151,19 @@ class EmailConfirmationPin(TimeStampedModel):
         validators=[MinLengthValidator(6), MaxLengthValidator(6)]
     )
     pin_expiry_time = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+
+
+class EmailChangePin(TimeStampedModel):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="email_change_pin",
+    )
+    no_of_incorrect_attempts = models.PositiveIntegerField(default=0)
+    pin = models.PositiveIntegerField(
+        validators=[MinLengthValidator(6), MaxLengthValidator(6)]
+    )
+    pin_expiry_time = models.DateTimeField()
+    new_email = LowerEmailField()
     is_active = models.BooleanField(default=True)

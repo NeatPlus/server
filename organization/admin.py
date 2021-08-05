@@ -15,6 +15,6 @@ class OrganizationAdmin(UserStampedModelAdmin, AcceptRejectModelAdmin):
 
 @admin.register(OrganizationMemberRequest)
 class OrganizationMemberRequestAdmin(UserStampedModelAdmin, AcceptRejectModelAdmin):
-    list_display = ("user", "organization", "status")
+    list_display = ("created_at", "user", "organization", "status")
     autocomplete_fields = ("user", "organization")
     change_form_template = "organization_member_request_change_form.html"
