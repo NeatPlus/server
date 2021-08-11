@@ -16,6 +16,7 @@ from neatplus.utils import gen_random_number, gen_random_string
 from .models import EmailChangePin, EmailConfirmationPin, PasswordResetPin, User
 from .serializers import (
     ChangePasswordSerializer,
+    CurrentlyEnabledUserRegisterSerializer,
     EmailChangePinVerifySerializer,
     EmailChangeSerializer,
     PasswordResetPasswordChangeSerializer,
@@ -23,7 +24,6 @@ from .serializers import (
     PrivateUserSerializer,
     UploadImageSerializer,
     UserNameSerializer,
-    UserRegisterSerializer,
     UserSerializer,
 )
 
@@ -106,7 +106,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         methods=["post"],
         detail=False,
         permission_classes=[permissions.AllowAny],
-        serializer_class=UserRegisterSerializer,
+        serializer_class=CurrentlyEnabledUserRegisterSerializer,
     )
     def register(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
