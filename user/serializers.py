@@ -1,3 +1,5 @@
+from django.conf import settings
+from drf_recaptcha.fields import ReCaptchaV3Field
 from rest_framework import serializers
 
 from .models import User
@@ -111,6 +113,24 @@ class UserRegisterSerializer(UserSerializer):
                 {"error": "Password and re_password doesn't match"}
             )
         return super().validate(attrs)
+
+
+class RecaptchaEnabledUserRegisterSerializer(UserRegisterSerializer):
+    recaptcha = ReCaptchaV3Field(action="register")
+
+    class Meta(UserRegisterSerializer.Meta):
+        fields = UserRegisterSerializer.Meta.fields + ("recaptcha",)
+
+    def validate(self, attrs):
+        attrs.pop("recaptcha")
+        return super().validate(attrs)
+
+
+CurrentlyEnabledUserRegisterSerializer = (
+    RecaptchaEnabledUserRegisterSerializer
+    if settings.ENABLE_RECAPTCHA
+    else UserRegisterSerializer
+)
 
 
 class UploadImageSerializer(serializers.Serializer):

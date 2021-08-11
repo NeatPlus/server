@@ -5,7 +5,7 @@ from pathlib import Path
 import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from environs import Env
-from marshmallow.validate import OneOf
+from marshmallow.validate import OneOf, Range
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -97,6 +97,7 @@ THIRD_PARTY_APPS = [
     "ckeditor_uploader",
     "rest_framework_gis",
     "admin_auto_filters",
+    "drf_recaptcha",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
@@ -325,7 +326,9 @@ CORS_ALLOWED_ORIGIN_REGEXES = env.list(
 SILKY_AUTHENTICATION = True
 SILKY_AUTHORISATION = True
 SILKY_META = True
-SILKY_INTERCEPT_PERCENT = env.float("SILKY_INTERCEPT_PERCENT", default=0.0)
+SILKY_INTERCEPT_PERCENT = env.float(
+    "SILKY_INTERCEPT_PERCENT", default=0.0, validate=Range(min=0.0, max=100.0)
+)
 
 
 # Sentry
@@ -535,3 +538,15 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Secure cookie related settings
 SESSION_COOKIE_SECURE = IS_SERVER_SECURE
 CSRF_COOKIE_SECURE = IS_SERVER_SECURE
+
+
+# Recaptcha
+ENABLE_RECAPTCHA = env.bool("ENABLE_RECAPTCHA", default=False)
+if ENABLE_RECAPTCHA:
+    DRF_RECAPTCHA_SECRET_KEY = env.str("RECAPTCHA_SECRET_KEY")
+    DRF_RECAPTCHA_DEFAULT_V3_SCORE = env.float(
+        "RECAPTCHA_SCORE", default=0.5, validate=Range(min=0.0, max=1.0)
+    )
+else:
+    DRF_RECAPTCHA_SECRET_KEY = None
+    DRF_RECAPTCHA_TESTING = True
