@@ -22,7 +22,7 @@ def send_email_confiramtion_pin(sender, instance, created, **kwargs):
                 "is_active": True,
             },
         )
-        email_template = get_template("email_confirm.txt")
+        email_template = get_template("mail/email_confirm.txt")
         context = {"user": instance, "email_confirm_object": email_confirm_object}
         message = email_template.render(context)
         instance.celery_email_user("Email confirmation mail", message)

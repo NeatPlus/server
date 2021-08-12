@@ -4,7 +4,7 @@ services:
   server:
     container_name: "${COMPOSE_PROJECT_NAME}"
     env_file: .env
-    image: ghcr.io/neatplus/server:latest
+    image: ghcr.io/neatplus/server:${COMPOSE_PROJECT_VERSION}
     ports:
       - "8000:8000"
     networks:
@@ -15,7 +15,7 @@ services:
     env_file: .env
     environment:
       CELERY_WORKER: "true"
-    image: ghcr.io/neatplus/server:latest
+    image: ghcr.io/neatplus/server:${COMPOSE_PROJECT_VERSION}
     networks:
       - default
       - external-services

@@ -17,7 +17,7 @@ def send_new_project_notification_to_admin(sender, instance, created, **kwargs):
         else:
             admins = User.objects.filter(is_superuser=True)
         for admin in admins:
-            email_template = get_template("new_project.txt")
+            email_template = get_template("mail/new_project.txt")
             context = {"admin": admin, "project": instance}
             message = email_template.render(context)
             admin.celery_email_user("New project mail", message)
@@ -35,10 +35,10 @@ def send_project_acceptance_change_mail(sender, instance, created, **kwargs):
     update_fields = kwargs.get("update_fields")
     if update_fields and "status" in update_fields:
         if instance.status == "accepted":
-            email_template = get_template("accept_project.txt")
+            email_template = get_template("mail/accept_project.txt")
             subject = "Project acceptance mail"
         elif instance.status == "rejected":
-            email_template = get_template("reject_project.txt")
+            email_template = get_template("mail/reject_project.txt")
             subject = "Project rejection mail"
         else:
             return

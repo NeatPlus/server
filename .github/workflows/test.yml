@@ -22,7 +22,7 @@ jobs:
       - name: Initial docker related setup
         run: |
           docker network create external-services
-          ln -s docker-compose.test.yml docker-compose.yml
+          ln -s docker/docker-compose.test.yml docker-compose.yml
       - name: Run test
         run: |
           docker-compose up --exit-code-from server
