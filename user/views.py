@@ -181,7 +181,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "identifier": identifier,
             },
         )
-        template = get_template("password_reset.txt")
+        template = get_template("mail/password_reset.txt")
         message = template.render(
             {"user": user, "password_reset_object": password_reset_pin_object}
         )
@@ -409,7 +409,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "is_active": True,
             },
         )
-        template = get_template("email_confirm.txt")
+        template = get_template("mail/email_confirm.txt")
         context = {"user": user, "email_confirm_object": email_confirm_pin_object}
         message = template.render(context)
         user.email_user("Email confirmation mail", message)
@@ -535,7 +535,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "new_email": data["new_email"],
             },
         )
-        email_template = get_template("email_change.txt")
+        email_template = get_template("mail/email_change.txt")
         context = {"email_change_object": email_change_pin_object}
         message = email_template.render(context)
         send_mail(
