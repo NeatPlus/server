@@ -1,6 +1,6 @@
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import permissions, serializers, status, viewsets
+from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -93,7 +93,9 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         )
 
 
-class OrganizationMemberRequestViewSet(viewsets.ReadOnlyModelViewSet):
+class OrganizationMemberRequestViewSet(
+    mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet
+):
     serializer_class = OrganizationMemberRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_class = OrganizationMemberRequestFilter
