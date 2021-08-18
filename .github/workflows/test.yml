@@ -17,7 +17,7 @@ jobs:
         with:
           env-prefix: 'ENV_'
         env:
-          ENV_COMPOSE_PROJECT_NAME: "neatplus-server"
+          ENV_PROJECT_NAME: "neatplus"
           ENV_SERVER_ENVIRONMENT: "testing"
       - name: Initial docker related setup
         run: |

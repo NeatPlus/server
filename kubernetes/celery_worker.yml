@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker-deployment
+  labels:
+    app: celery-worker
+spec:
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      name: neatplus-celery-worker-pod
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+      - name: neatplus-container
+        image: ghcr.io/neatplus/server:latest
+        env:
+          - name: CELERY_WORKER
+            value: "true"
+        envFrom:
+          - secretRef:
+              name: neatplus-server-secret
