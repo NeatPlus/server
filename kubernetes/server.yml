@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+  labels:
+    app: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      name: neatplus-server-pod
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: neatplus-container
+        image: ghcr.io/neatplus/server:latest
+        ports:
+          - containerPort: 8000
+        envFrom:
+          - secretRef:
+              name: neatplus-server-secret

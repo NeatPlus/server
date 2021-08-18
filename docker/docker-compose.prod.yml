@@ -2,20 +2,20 @@ version: "3.7"
 
 services:
   server:
-    container_name: "${COMPOSE_PROJECT_NAME}"
+    container_name: "${PROJECT_NAME}"
     env_file: .env
-    image: ghcr.io/neatplus/server:${COMPOSE_PROJECT_VERSION}
+    image: ghcr.io/neatplus/server:${PROJECT_VERSION}
     ports:
       - "8000:8000"
     networks:
       - default
       - external-services
   celery_worker:
-    container_name: "${COMPOSE_PROJECT_NAME}-celery-worker"
+    container_name: "${PROJECT_NAME}-celery-worker"
     env_file: .env
     environment:
       CELERY_WORKER: "true"
-    image: ghcr.io/neatplus/server:${COMPOSE_PROJECT_VERSION}
+    image: ghcr.io/neatplus/server:${PROJECT_VERSION}
     networks:
       - default
       - external-services

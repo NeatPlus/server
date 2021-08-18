@@ -1,0 +1,60 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
+  - https://github.com/jetstack/cert-manager/releases/download/v1.5.1/cert-manager.yaml
+  - server.yml
+  - celery_worker.yml
+  - server_service.yml
+  - cert_issuer.yml
+  - ingress.yml
+commonLabels:
+  project: ${PROJECT_NAME}
+namePrefix: ${PROJECT_NAME}-
+secretGenerator:
+  - name: server-secret
+    envs:
+      - .env
+    type: Opaque
+replicas:
+  - name: server-deployment
+    count: ${SERVER_REPLICA_COUNT}
+  - name: celery-worker-deployment
+    count: ${CELERY_WORKER_REPLICA_COUNT}
+images:
+  - name: ghcr.io/neatplus/server
+    newTag: ${PROJECT_VERSION}
+patches:
+  - patch: |-
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: ingress
+      spec:
+        tls:
+        - hosts:
+          - ${PROJECT_HOST_URL}
+          secretName: neatplus-ingress-secret
+        rules:
+          - host: ${PROJECT_HOST_URL}
+            http:
+              paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: server-service
+                    port:
+                      name: http
+    target:
+      labelSelector: "app.kubernetes.io/name=ingress"
+  - patch: |-
+      apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: letsencrypt-issuer
+      spec:
+        acme:
+          email: ${CERT_EMAIL_ADDRESS}
+    target:
+      labelSelector: "app.kubernetes.io/name=issuer"

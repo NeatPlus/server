@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  labels:
+    app.kubernetes.io/name: ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    certmanager.k8s.io/cluster-issuer: neatplus-letsencrypt-issuer
+spec:
+  tls:
+  - hosts:
+    - example.com
+    secretName: neatplus-ingress-secret
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: server-service
+            port:
+              name: http
