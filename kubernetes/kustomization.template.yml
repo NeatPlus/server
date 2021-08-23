@@ -6,11 +6,9 @@ resources:
   - server.yml
   - celery_worker.yml
   - server_service.yml
-  - cert_issuer.yml
-  - ingress.yml
-commonLabels:
-  project: ${PROJECT_NAME}
-namePrefix: ${PROJECT_NAME}-
+  # Currently disabled for creation using kustomize
+  # - cert_issuer.yml
+  # - ingress.yml
 secretGenerator:
   - name: server-secret
     envs:
@@ -34,7 +32,7 @@ patches:
         tls:
         - hosts:
           - ${PROJECT_HOST_URL}
-          secretName: neatplus-ingress-secret
+          secretName: ingress-secret
         rules:
           - host: ${PROJECT_HOST_URL}
             http:

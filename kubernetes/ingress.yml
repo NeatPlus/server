@@ -5,13 +5,13 @@ metadata:
   labels:
     app.kubernetes.io/name: ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    certmanager.k8s.io/cluster-issuer: neatplus-letsencrypt-issuer
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-issuer
 spec:
   tls:
   - hosts:
     - example.com
-    secretName: neatplus-ingress-secret
+    secretName: ingress-secret
   rules:
   - host: example.com
     http:

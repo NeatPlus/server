@@ -4,22 +4,26 @@ metadata:
   name: celery-worker-deployment
   labels:
     app: celery-worker
+    project: neatplus
 spec:
   selector:
     matchLabels:
       app: celery-worker
+      project: neatplus
   template:
     metadata:
-      name: neatplus-celery-worker-pod
+      name: celery-worker-pod
       labels:
         app: celery-worker
+        project: neatplus
+        role: backend
     spec:
       containers:
-      - name: neatplus-container
+      - name: container
         image: ghcr.io/neatplus/server:latest
         env:
           - name: CELERY_WORKER
             value: "true"
         envFrom:
           - secretRef:
-              name: neatplus-server-secret
+              name: server-secret
