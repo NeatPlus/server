@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: server-service
+  name: server-clusterip-service
 spec:
   selector:
     app: backend

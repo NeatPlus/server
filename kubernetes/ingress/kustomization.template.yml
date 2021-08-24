@@ -3,25 +3,8 @@ kind: Kustomization
 resources:
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
   - https://github.com/jetstack/cert-manager/releases/download/v1.5.1/cert-manager.yaml
-  - server.yml
-  - celery_worker.yml
-  - server_service.yml
-  # Currently disabled for creation using kustomize
-  # - cert_issuer.yml
-  # - ingress.yml
-secretGenerator:
-  - name: server-secret
-    envs:
-      - .env
-    type: Opaque
-replicas:
-  - name: server-deployment
-    count: ${SERVER_REPLICA_COUNT}
-  - name: celery-worker-deployment
-    count: ${CELERY_WORKER_REPLICA_COUNT}
-images:
-  - name: ghcr.io/neatplus/server
-    newTag: ${PROJECT_VERSION}
+  - cert_issuer.yml
+  - ingress.yml
 patches:
   - patch: |-
       apiVersion: networking.k8s.io/v1
@@ -41,7 +24,7 @@ patches:
                 pathType: Prefix
                 backend:
                   service:
-                    name: server-service
+                    name: server-clusterip-service
                     port:
                       name: http
     target:

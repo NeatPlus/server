@@ -20,6 +20,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: server-service
+            name: server-clusterip-service
             port:
               name: http
