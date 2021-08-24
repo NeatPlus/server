@@ -26,14 +26,9 @@ output "rds_address" {
   description = "Address of RDS"
 }
 
-output "redis_primary_address" {
+output "redis_address" {
   value       = aws_elasticache_replication_group.redis.primary_endpoint_address
-  description = "Address of master redis"
-}
-
-output "redis_reader_address" {
-  value       = aws_elasticache_replication_group.redis.reader_endpoint_address
-  description = "Address of read only replica redis"
+  description = "Address of redis"
 }
 
 output "s3_bucket_name" {
