@@ -4,21 +4,25 @@ metadata:
   name: server-deployment
   labels:
     app: server
+    project: neatplus
 spec:
   selector:
     matchLabels:
       app: server
+      project: neatplus
   template:
     metadata:
-      name: neatplus-server-pod
+      name: server-pod
       labels:
         app: server
+        project: neatplus
+        role: backend
     spec:
       containers:
-      - name: neatplus-container
+      - name: container
         image: ghcr.io/neatplus/server:latest
         ports:
           - containerPort: 8000
         envFrom:
           - secretRef:
-              name: neatplus-server-secret
+              name: server-secret

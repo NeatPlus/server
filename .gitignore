@@ -14,3 +14,9 @@ static/
 
 # docker related
 docker-compose.yml
+
+# terraform related
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup

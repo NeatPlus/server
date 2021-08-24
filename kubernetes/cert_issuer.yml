@@ -9,7 +9,7 @@ spec:
     email: user@example.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: neatplus-issuer-private-key
+      name: issuer-private-key
     solvers:
     - http01:
         ingress:
