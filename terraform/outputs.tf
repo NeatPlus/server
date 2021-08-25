@@ -4,19 +4,19 @@ output "cluster_name" {
 }
 
 output "rds_username" {
-  value       = "user${random_string.rds.result}"
+  value       = local.rds_username
   sensitive   = true
   description = "Username for RDS database"
 }
 
 output "rds_password" {
-  value       = "pass${random_password.rds.result}"
+  value       = local.rds_password
   sensitive   = true
   description = "Password for database"
 }
 
 output "redis_password" {
-  value       = "pass${random_password.redis.result}"
+  value       = local.redis_password
   sensitive   = true
   description = "Password for redis"
 }

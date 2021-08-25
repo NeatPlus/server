@@ -61,19 +61,19 @@ resource "aws_security_group_rule" "redis_eks_egress" {
 resource "aws_elasticache_replication_group" "redis" {
   replication_group_id          = "redis-${local.suffix}"
   replication_group_description = "redis cluster managed by terraform"
-  auth_token                    = "pass${random_password.redis.result}"
+  auth_token                    = local.redis_password
   auto_minor_version_upgrade    = true
   automatic_failover_enabled    = false
   engine                        = "redis"
   engine_version                = "6.x"
-  final_snapshot_identifier     = "${time_static.current.unix}-redis-final-snapshot-${local.suffix}"
+  final_snapshot_identifier     = "redis-final-snapshot-${time_static.current.unix}-${local.suffix}"
   maintenance_window            = "Sat:00:00-Sat:02:00"
   multi_az_enabled              = false
   node_type                     = var.redis_instance_class
   number_cache_clusters         = 1
   port                          = var.redis_port
   security_group_ids            = [aws_security_group.redis.id]
-  snapshot_retention_limit      = 14
+  snapshot_retention_limit      = 7
   snapshot_window               = "03:00-04:00"
   subnet_group_name             = aws_elasticache_subnet_group.main.name
   transit_encryption_enabled    = true

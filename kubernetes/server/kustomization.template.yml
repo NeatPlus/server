@@ -1,13 +1,20 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.0/deploy/static/provider/aws/deploy.yaml
+  - https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
   - server.yml
   - celery_worker.yml
   - service.yml
+  - external-dns.yml
 secretGenerator:
   - name: server-secret
     envs:
-      - .env
+      - server.env
+    type: Opaque
+  - name: cloudflare-secret
+    envs:
+      - cloudflare.env
     type: Opaque
 replicas:
   - name: server-deployment

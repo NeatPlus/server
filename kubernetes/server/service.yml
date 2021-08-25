@@ -4,7 +4,7 @@ metadata:
   name: server-clusterip-service
 spec:
   selector:
-    app: backend
+    app: server
   ports:
     - name: http
       protocol: TCP

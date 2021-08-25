@@ -1,4 +1,4 @@
-# Terraform s3 backend
+# Terraform remote backend
 terraform {
-  backend "s3" {}
+  backend "remote" {}
 }

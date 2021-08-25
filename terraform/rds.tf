@@ -60,29 +60,29 @@ resource "aws_security_group_rule" "rds_eks_egress" {
 
 # create RDS DB instance
 resource "aws_db_instance" "postgresql" {
-  allocated_storage                   = 20
+  allocated_storage                   = 50
   auto_minor_version_upgrade          = true
-  backup_retention_period             = 14
+  backup_retention_period             = 7
   backup_window                       = "03:00-04:00"
   db_subnet_group_name                = aws_db_subnet_group.main.id
   delete_automated_backups            = true
   engine                              = "postgres"
-  final_snapshot_identifier           = "${time_static.current.unix}-postgresql-final-snapshot-${local.suffix}"
+  final_snapshot_identifier           = "postgresql-final-snapshot-${time_static.current.unix}-${local.suffix}"
   iam_database_authentication_enabled = false
   identifier                          = "postgres-${local.suffix}"
   instance_class                      = var.rds_instance_class
   maintenance_window                  = "Sat:00:00-Sat:02:00"
-  max_allocated_storage               = 50
+  max_allocated_storage               = 100
   multi_az                            = false
   name                                = var.rds_database_name
   parameter_group_name                = "default.postgres13"
-  password                            = "pass${random_password.rds.result}"
+  password                            = local.rds_password
   port                                = var.rds_port
   publicly_accessible                 = false
   skip_final_snapshot                 = false
   storage_encrypted                   = true
   storage_type                        = "gp2"
-  username                            = "user${random_string.rds.result}"
+  username                            = local.rds_username
   vpc_security_group_ids              = [aws_security_group.rds.id]
 
   tags = {
