@@ -570,7 +570,7 @@ djangorestframework = ">=3.9,<4.0"
 
 [[package]]
 name = "drf-spectacular"
-version = "0.17.3"
+version = "0.18.0"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
 category = "main"
 optional = false
@@ -1364,7 +1364,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ed9b03a757f0531935716a2d28a689c6424e308a61fc19a93b9100f98bd1629a"
+content-hash = "a9ad8681f600dad1c677a547a06d8ce6bd64b06ef0c3896585e939a7884def63"
 
 [metadata.files]
 amqp = [
@@ -1548,8 +1548,8 @@ drf-recaptcha = [
     {file = "drf_recaptcha-2.0.4-py3-none-any.whl", hash = "sha256:ded63a89a91efe41064aac9069959abb879921bf37434fb405422adb46169153"},
 ]
 drf-spectacular = [
-    {file = "drf-spectacular-0.17.3.tar.gz", hash = "sha256:fb19aa69fcfcd37b0c9dfb9989c0671e1bb47af332ca2171378c7f840263788c"},
-    {file = "drf_spectacular-0.17.3-py3-none-any.whl", hash = "sha256:f080128c42183fcaed6b9e8e5afcd2e5cd68426b1f80bfc85938f25e62db7fe5"},
+    {file = "drf-spectacular-0.18.0.tar.gz", hash = "sha256:5b1c27de127c86564be5a967a6fa195cfe161b552d98364282ae9e6ed3d75a85"},
+    {file = "drf_spectacular-0.18.0-py3-none-any.whl", hash = "sha256:8588706c27f44adfbb3405bae9ef9cd6506f4b59d4cbd66c59780dce035602d9"},
 ]
 environs = [
     {file = "environs-9.3.3-py2.py3-none-any.whl", hash = "sha256:ee5466156b50fe03aa9fec6e720feea577b5bf515d7f21b2c46608272557ba26"},
