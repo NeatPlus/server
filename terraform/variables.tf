@@ -123,14 +123,14 @@ variable "redis_port" {
 
 variable "eks_private_instance_types" {
   type        = list(string)
-  default     = ["t4g.medium"]
-  description = "Instance types of EKs private"
+  default     = ["t3.medium"]
+  description = "Instance types of EKS private"
 }
 
 variable "eks_public_instance_types" {
   type        = list(string)
-  default     = ["t4g.medium"]
-  description = "Instance types of EKs public"
+  default     = ["t3.medium"]
+  description = "Instance types of EKS public"
 }
 
 variable "rds_instance_class" {
@@ -161,4 +161,25 @@ variable "eks_cluster_version" {
   type        = string
   default     = "1.21"
   description = "Version of cluster"
+}
+
+variable "rds_username" {
+  type        = string
+  default     = null
+  description = "Default RDS username if not provided random will be used"
+  sensitive   = true
+}
+
+variable "rds_password" {
+  type        = string
+  default     = null
+  description = "Default RDS password if not provided random will be used"
+  sensitive   = true
+}
+
+variable "redis_password" {
+  type        = string
+  default     = null
+  description = "Default redis password if not provided random will be used"
+  sensitive   = true
 }

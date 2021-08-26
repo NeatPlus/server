@@ -70,7 +70,6 @@ resource "aws_security_group_rule" "eks_ingress_rule" {
   security_group_id        = aws_security_group.eks.id
 }
 
-
 # Create EKS cluster
 resource "aws_eks_cluster" "eks" {
   name     = local.cluster_name

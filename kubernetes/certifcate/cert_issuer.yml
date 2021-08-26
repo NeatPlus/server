@@ -3,11 +3,11 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-issuer
   labels:
-    app.kubernetes.io/name: issuer
+    app.kubernetes.io/name: letsencrypt-issuer
 spec:
   acme:
     email: user@example.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: issuer-private-key
     solvers:

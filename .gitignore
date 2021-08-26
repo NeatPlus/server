@@ -14,9 +14,15 @@ static/
 
 # docker related
 docker-compose.yml
+docker-compose.yaml
 
 # terraform related
 .terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
+backend.hcl
+
+# Kubrnetes related
+kubernetes/**/*.env
+kubernetes/**/kustomization.yml
+kubernetes/**/kustomization.yaml

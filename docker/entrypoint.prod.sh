@@ -10,5 +10,5 @@ then
 else
     poetry run ./manage.py collectstatic --no-input
     poetry run ./manage.py migrate --no-input
-    poetry run gunicorn neatplus.asgi:application -k uvicorn.workers.UvicornWorker
+    poetry run gunicorn neatplus.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
 fi

@@ -5,11 +5,13 @@ metadata:
   labels:
     app: server
     project: neatplus
+    role: backend
 spec:
   selector:
     matchLabels:
       app: server
       project: neatplus
+      role: backend
   template:
     metadata:
       name: server-pod

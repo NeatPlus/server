@@ -357,6 +357,8 @@ if ENABLE_CELERY:
     if CELERY_BROKER_TYPE == "redis":
         CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
         CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+        if CELERY_BROKER_URL.startswith("rediss://"):
+            CELERY_REDIS_BACKEND_USE_SSL = {"ssl_cert_reqs": "CERT_OPTIONAL"}
 
     if CELERY_BROKER_TYPE == "filesystem":
         CELERY_BROKER_URL = "filesystem://"

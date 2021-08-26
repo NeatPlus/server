@@ -5,11 +5,13 @@ metadata:
   labels:
     app: celery-worker
     project: neatplus
+    role: backend
 spec:
   selector:
     matchLabels:
       app: celery-worker
       project: neatplus
+      role: backend
   template:
     metadata:
       name: celery-worker-pod
