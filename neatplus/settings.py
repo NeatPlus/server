@@ -397,7 +397,7 @@ SPECTACULAR_SETTINGS = {
 CKEDITOR_UPLOAD_PATH = "ckeditor-uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 if USE_S3_STORAGE:
-    CKEDITOR_STORAGE_BACKEND = "mero_guru.storage_backends.CKEditorStorage"
+    CKEDITOR_STORAGE_BACKEND = "neatplus.storage_backends.CKEditorStorage"
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_CONFIGS = {
     "default": {
