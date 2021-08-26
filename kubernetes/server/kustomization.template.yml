@@ -6,7 +6,7 @@ resources:
   - server.yml
   - celery_worker.yml
   - service.yml
-  - external-dns.yml
+  - external_dns.yml
 secretGenerator:
   - name: server-secret
     envs:
