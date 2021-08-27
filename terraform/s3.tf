@@ -28,6 +28,12 @@ resource "aws_s3_bucket" "storage" {
   bucket = "${var.s3_bucket_name}-${local.suffix}"
   acl    = "private"
 
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["https://*.neatplus.org"]
+    max_age_seconds = 3600
+  }
+
   tags = {
     "Name" = "${var.s3_bucket_name}-${local.suffix}"
   }
