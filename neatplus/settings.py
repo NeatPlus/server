@@ -238,36 +238,33 @@ if ENABLE_SYSLOG:
 # Static file and media file settings
 STATIC_LOCATION = "static"
 MEDIA_LOCATION = "media"
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
 USE_S3_STORAGE = env.bool("USE_S3_STORAGE", default=False)
 if USE_S3_STORAGE:
     AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY")
+
     AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME")
     CACHE_CONTROL_MAX_AGE = env.int("AWS_S3_CACHE_CONTROL_MAX_AGE", default=86400)
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": f"max-age={CACHE_CONTROL_MAX_AGE}"}
     AWS_S3_REGION_NAME = env.str("AWS_S3_REGION_NAME")
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+
     USE_CLOUDFRONT_CDN = env.bool("USE_CLOUDFRONT_CDN", default=False)
     if USE_CLOUDFRONT_CDN:
         AWS_S3_CUSTOM_DOMAIN = env.str("CLOUDFRONT_CDN_URL")
-    else:
-        AWS_S3_CUSTOM_DOMAIN = (
-            f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
-        )
     UPLOAD_STATIC_TO_S3 = env.bool("UPLOAD_STATIC_TO_S3", default=True)
+    # s3 media settings
+    DEFAULT_FILE_STORAGE = "neatplus.storage_backends.MediaStorage"
     # s3 static settings
     if UPLOAD_STATIC_TO_S3:
-        STATIC_URL = f"{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
         STATICFILES_STORAGE = "neatplus.storage_backends.StaticStorage"
     else:
-        STATIC_URL = "/static/"
         STATIC_ROOT = os.path.join(BASE_DIR, "static")
-    # s3 media settings
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
-    DEFAULT_FILE_STORAGE = "neatplus.storage_backends.MediaStorage"
 else:
-    STATIC_URL = "/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
-    MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
@@ -552,3 +549,6 @@ if ENABLE_RECAPTCHA:
 else:
     DRF_RECAPTCHA_SECRET_KEY = None
     DRF_RECAPTCHA_TESTING = True
+
+# silenced system checks
+SILENCED_SYSTEM_CHECKS = ["drf_spectacular.W001"]
