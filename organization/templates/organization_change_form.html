@@ -2,7 +2,7 @@
 
 {% block accept_reject_submit_row %}
 
-{% if request.user.is_superuser %}
+{% if perms.organization.change_organization %}
 {{ block.super }}
 {% endif %}
 
