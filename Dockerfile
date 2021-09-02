@@ -39,7 +39,7 @@ ENV PYTHONUNBUFFERED=1 \
 # add poetry home to path
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# OS dependencies for buling poetry and python dependencies
+# OS dependencies for installing poetry and project dependencies
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     curl \

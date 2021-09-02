@@ -8,6 +8,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: testing
+      cache_from:
+        - ghcr.io/neatplus/server:latest
     volumes:
       - .:/code
     networks:
