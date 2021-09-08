@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "storage" {
 
   cors_rule {
     allowed_methods = ["GET"]
-    allowed_origins = ["https://*.neatplus.org"]
+    allowed_origins = ["https://*.neatplus.org", "https://neatplus.org"]
     max_age_seconds = 3600
   }
 
