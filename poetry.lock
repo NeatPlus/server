@@ -332,7 +332,7 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-admin-autocomplete-filter"
-version = "0.7"
+version = "0.7.1"
 description = "A simple Django app to render list filters in django admin using autocomplete widget"
 category = "main"
 optional = false
@@ -1421,7 +1421,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5880f22f764c9fb8433ff53b4a5fdc414bf0ee57e6597c5bf4bf06fe5775afd6"
+content-hash = "6d92d18b0c57fe10e1f047fa6495c68addf13859390dd2105148e00b43747009"
 
 [metadata.files]
 amqp = [
@@ -1528,8 +1528,8 @@ django = [
     {file = "Django-3.2.7.tar.gz", hash = "sha256:95b318319d6997bac3595517101ad9cc83fe5672ac498ba48d1a410f47afecd2"},
 ]
 django-admin-autocomplete-filter = [
-    {file = "django-admin-autocomplete-filter-0.7.tar.gz", hash = "sha256:20246758625f0aabab26c54e0972c0db5fd4742ff9eb89621cb460d4f2021c82"},
-    {file = "django_admin_autocomplete_filter-0.7-py3-none-any.whl", hash = "sha256:430034ba93e8ee7ef601dc67a5885b4fec39642939da12933841d415cfc3a758"},
+    {file = "django-admin-autocomplete-filter-0.7.1.tar.gz", hash = "sha256:5a8c9a7016e03104627b80b40811dcc567f26759971e4407f933951546367ba0"},
+    {file = "django_admin_autocomplete_filter-0.7.1-py3-none-any.whl", hash = "sha256:b2a71be2c4a68f828289eb51f71316dbdfac00a1843f53df1fbe4767aad2e3c0"},
 ]
 django-admin-interface = [
     {file = "django-admin-interface-0.16.3.tar.gz", hash = "sha256:8e979c88475e5bcebb13236eb25090c75d25ef584a67411b878f4f9b0c5a5d25"},

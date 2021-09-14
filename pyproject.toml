@@ -42,7 +42,7 @@ drf-spectacular = "^0.18.2"
 Pillow = "^8.3.2"
 django-ckeditor = "^6.1.0"
 djangorestframework-gis = "^0.17"
-django-admin-autocomplete-filter = "0.7"
+django-admin-autocomplete-filter = "0.7.1"
 drf-recaptcha = "^2.0.4"
 
 [tool.poetry.dev-dependencies]
