@@ -469,7 +469,7 @@ python-versions = "*"
 
 [[package]]
 name = "django-otp"
-version = "1.0.6"
+version = "1.1.0"
 description = "A pluggable framework for adding two-factor authentication to Django using one-time passwords."
 category = "main"
 optional = false
@@ -1421,7 +1421,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7c0e4be508404addb30ff3d95384fbe827520e1c0cac78d84f780879edcff204"
+content-hash = "5880f22f764c9fb8433ff53b4a5fdc414bf0ee57e6597c5bf4bf06fe5775afd6"
 
 [metadata.files]
 amqp = [
@@ -1581,8 +1581,8 @@ django-ordered-model = [
     {file = "django_ordered_model-3.4.3-py3-none-any.whl", hash = "sha256:5aa58277b81b4ca93fb18caf15069af604bac5c5146d2c29aae56da07a86ef1b"},
 ]
 django-otp = [
-    {file = "django-otp-1.0.6.tar.gz", hash = "sha256:0d56dd2a7fbb6ee6e54557e036ca64add0bd3596f471794bad673b7637d5e935"},
-    {file = "django_otp-1.0.6-py3-none-any.whl", hash = "sha256:01b5888f0bde5125e139433aacb947e52d5c406fa56c9db43c3e8d75b5c323c4"},
+    {file = "django-otp-1.1.0.tar.gz", hash = "sha256:44b7dfbf0fb10223f708fa5c0ec182c248e1c251bb35a872375fcd8c29615f17"},
+    {file = "django_otp-1.1.0-py3-none-any.whl", hash = "sha256:d19da92a825a1387c86d2e529418efea0f9b7025d882d2d3c1d05b958cf55fc5"},
 ]
 django-silk = []
 django-storages = [
