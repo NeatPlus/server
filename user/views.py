@@ -638,7 +638,10 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         file = request.data["file"]
-        upload_path = os.path.join("user_uploaded_file", f"{username}", file.name)
+        upload_file_name = default_storage.get_valid_name(file.name)
+        upload_path = os.path.join(
+            "user_uploaded_file", f"{username}", upload_file_name
+        )
         saved_file = default_storage.save(upload_path, file)
         url = request.build_absolute_uri(default_storage.url(saved_file))
         data = {"name": saved_file, "url": url}
