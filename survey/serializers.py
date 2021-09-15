@@ -41,6 +41,10 @@ class SurveySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ImageListField(serializers.ListField):
+    child = serializers.ImageField()
+
+
 class SurveyAnswerSerializer(serializers.ModelSerializer):
     formatted_answer = serializers.SerializerMethodField()
 
@@ -48,7 +52,8 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
         AnswerTypeChoices.BOOLEAN.value: serializers.BooleanField,
         AnswerTypeChoices.DATE.value: serializers.DateField,
         AnswerTypeChoices.DESCRIPTION.value: None,
-        AnswerTypeChoices.IMAGE.value: serializers.ImageField,
+        AnswerTypeChoices.SINGLE_IMAGE.value: serializers.ImageField,
+        AnswerTypeChoices.MULTIPLE_IMAGE.value: ImageListField,
         AnswerTypeChoices.LOCATION.value: GeometryField,
         AnswerTypeChoices.NUMBER.value: serializers.FloatField,
         AnswerTypeChoices.TEXT.value: serializers.CharField,
@@ -74,7 +79,7 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
         serializer_class = self.answer_type_serializer_mapping[answer_type]
         if serializer_class is None and data.get("answer") is not None:
             raise serializers.ValidationError(
-                {"answer": "answer field cannot be present for answer type"}
+                {"answer": "answer field cannot be present for provided answer type"}
             )
         if answer_type in [
             AnswerTypeChoices.SINGLE_OPTION.value,
@@ -99,38 +104,61 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
                     }
                 )
         if serializer_class is None:
-            pass
+            validation_data = None
         elif serializer_class == GeometryField:
-            try:
-                serializer_class().run_validation(
-                    GEOSGeometry(data["answer"], srid=4326)
+            validation_data = GEOSGeometry(data["answer"], srid=4326)
+        elif serializer_class in [ImageField, ImageListField]:
+            image_paths = data["answer"].split(",")
+            if serializer_class == ImageField and len(image_paths) != 1:
+                raise serializers.ValidationError(
+                    {"answer": "only one image is supported for question"}
                 )
-            except Exception:
-                raise serializers.ValidationError({"answer": "Invalid point field"})
-        elif serializer_class == ImageField:
-            try:
-                with default_storage.open(data["answer"]) as file:
-                    serializer_class().run_validation(file)
-            except Exception:
-                raise serializers.ValidationError({"answer": "Invalid image answer"})
+            if serializer_class == ImageField:
+                serializer_class_object = serializer_class()
+            elif serializer_class == ImageListField:
+                serializer_class_object = serializer_class.child
+            errors = {}
+            for i, image_path in enumerate(image_paths):
+                try:
+                    with default_storage.open(image_path) as file:
+                        serializer_class_object.run_validation(file)
+                except Exception:
+                    errors[i] = "invalid image file or image doesn't exists"
+            if errors:
+                raise serializers.ValidationError({"answer": errors})
+            validation_data = None
         else:
-            serializer_class().run_validation(data["answer"])
+            validation_data = data["answer"]
+        if validation_data is not None:
+            serializer_class().run_validation(validation_data)
         return data
 
     def get_formatted_answer(self, instance):
         serializer_class = self.answer_type_serializer_mapping[instance.answer_type]
         if serializer_class is None:
-            return None
+            representation_val = None
         elif serializer_class == GeometryField:
-            return serializer_class().to_representation(
-                GEOSGeometry(instance.answer, srid=4326)
-            )
+            representation_val = GEOSGeometry(instance.answer, srid=4326)
         elif serializer_class == ImageField:
             return self.context["request"].build_absolute_uri(
                 default_storage.url(instance.answer)
             )
+        elif serializer_class == ImageListField:
+            image_paths = instance.answer.split(",")
+            urls = []
+            for image_path in image_paths:
+                urls.append(
+                    self.context["request"].build_absolute_uri(
+                        default_storage.url(image_path)
+                    )
+                )
+            return urls
         else:
-            return serializer_class().to_representation(instance.answer)
+            representation_val = instance.answer
+        if representation_val is not None:
+            return serializer_class().to_representation(representation_val)
+        else:
+            return None
 
 
 class WritableSurveyAnswerSerializer(SurveyAnswerSerializer):

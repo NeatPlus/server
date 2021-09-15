@@ -4,12 +4,6 @@ variable "project_name" {
   description = "Name of project"
 }
 
-variable "project_environment" {
-  type        = string
-  default     = "devlopment"
-  description = "Environment of project"
-}
-
 variable "region" {
   type        = string
   default     = "eu-central-1"
