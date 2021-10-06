@@ -18,7 +18,7 @@ authors = ["Your Name <you@example.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 Django = "^3.2.8"
-environs = {version = "^9.3.3", extras = ["django"]}
+environs = {version = "^9.3.4", extras = ["django"]}
 marshmallow = "^3.13.0"
 uvicorn = {version = "^0.15.0", extras = ["standard"], optional=true}
 gunicorn = {version="^20.1.0", optional=true}

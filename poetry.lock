@@ -624,7 +624,7 @@ uritemplate = ">=2.0.0"
 
 [[package]]
 name = "environs"
-version = "9.3.3"
+version = "9.3.4"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
@@ -1421,7 +1421,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b479c227976bafa0408c5659b15b860f356e1fe7aedc6df2af3ab43e28aa4e50"
+content-hash = "70042bba88e6d354a00f5d2c8674848af1f9656db273f1616b226f967d88fde6"
 
 [metadata.files]
 amqp = [
@@ -1617,8 +1617,8 @@ drf-spectacular = [
     {file = "drf_spectacular-0.19.0-py3-none-any.whl", hash = "sha256:65df818226477cdfa629947ea52bc0cc13eb40550b192eeccec64a6b782651fd"},
 ]
 environs = [
-    {file = "environs-9.3.3-py2.py3-none-any.whl", hash = "sha256:ee5466156b50fe03aa9fec6e720feea577b5bf515d7f21b2c46608272557ba26"},
-    {file = "environs-9.3.3.tar.gz", hash = "sha256:72b867ff7b553076cdd90f3ee01ecc1cf854987639c9c459f0ed0d3d44ae490c"},
+    {file = "environs-9.3.4-py2.py3-none-any.whl", hash = "sha256:7412eca2996027a0a1eafd89bbfec872568e7b4ca75fc980817bfd7788cb5a1f"},
+    {file = "environs-9.3.4.tar.gz", hash = "sha256:eecf57fb1b91f1166a8a16344a3fd12ea55b7a0f233c906d86506bdb40738a0f"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
