@@ -11,7 +11,9 @@ class APITest(FullTestCase):
     def setUpClass(cls):
         super().setUpClass()
         users = cls.baker.make(settings.AUTH_USER_MODEL, is_active=True, _quantity=4)
-        cls.activated_initial_password = get_user_model().objects.make_random_password()
+        cls.activated_initial_password = get_user_model().objects.make_random_password(
+            length=12
+        )
         users[0].set_password(cls.activated_initial_password)
         users[0].save()
         cls.activated_user = authenticate(
@@ -43,13 +45,13 @@ class APITest(FullTestCase):
 
     def test_user_change_password(self):
         user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
-        user_initial_password = get_user_model().objects.make_random_password()
+        user_initial_password = get_user_model().objects.make_random_password(length=12)
         user.set_password(user_initial_password)
         user.save()
         user = authenticate(username=user.username, password=user_initial_password)
         self.assertIsNotNone(user)
         self.client.force_authenticate(user)
-        new_password = get_user_model().objects.make_random_password()
+        new_password = get_user_model().objects.make_random_password(length=12)
         data = {
             "old_password": user_initial_password,
             "new_password": new_password,
@@ -62,7 +64,9 @@ class APITest(FullTestCase):
         self.assertIsNotNone(user)
 
     def test_user_email_verify(self):
-        non_activated_user_pass = get_user_model().objects.make_random_password()
+        non_activated_user_pass = get_user_model().objects.make_random_password(
+            length=12
+        )
         non_activated_user_username = random_gen.gen_string(15)
         user_data = {
             "username": non_activated_user_username,

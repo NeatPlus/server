@@ -1,6 +1,9 @@
 import string
 
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ImproperlyConfigured, ValidationError
+
+from .models import UserOldPassword
 
 DEFAULT_CHARACTER_CLASSES = [
     string.ascii_uppercase,
@@ -33,3 +36,32 @@ class CharacterClassValidator:
 
     def get_help_text(self):
         return f"Password must contain minimum {self.minimum_class} character classes from {self.character_classes}"
+
+
+class OldPasswordValidator:
+    def __init__(self, count=5):
+        self.count = count
+
+    def validate(self, password, user=None):
+        if user is None:
+            return None
+        user_old_passwords = UserOldPassword.objects.filter(user=user).order_by(
+            "-created_at"
+        )[: self.count]
+        for user_old_password in user_old_passwords:
+            is_old_password = check_password(password, user_old_password.password)
+            if is_old_password:
+                raise ValidationError(
+                    f"Cannot use last {self.count} password",
+                    code="password_resuse",
+                    params={"count": self.count},
+                )
+
+    def password_changed(self, password, user=None):
+        if user is None:
+            return None
+        hashed_password = make_password(password)
+        UserOldPassword.objects.create(user=user, password=hashed_password)
+
+    def get_help_text(self):
+        return f"Your password must not contain last {self.count} password."
