@@ -5,6 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    # Disable pip version update due to noise of Dependabot PR to repo
+    open-pull-requests-limit: 0
   # maintain github actions dependencies daily
   - package-ecosystem: "github-actions"
     directory: "/"
