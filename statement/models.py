@@ -65,6 +65,7 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     options = models.ManyToManyField(
         "survey.Option", related_name="statements", through="OptionStatement"
     )
+    is_experimental = models.BooleanField(default=False)
 
     def __str__(self):
         return self.code + "-" + self.title
