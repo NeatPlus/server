@@ -8,4 +8,7 @@ class SurveyResult(UserStampedModel, TimeStampedModel):
     survey = models.ForeignKey(
         "survey.Survey", on_delete=models.CASCADE, related_name="results"
     )
+    module = models.ForeignKey(
+        "context.Module", on_delete=models.CASCADE, related_name="results"
+    )
     score = models.FloatField()

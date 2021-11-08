@@ -19,10 +19,14 @@ class APITest(FullTestCase):
             status="accepted",
         )
         question_group = cls.baker.make("survey.QuestionGroup")
-        question = cls.baker.make(
-            "survey.Question", group=question_group, answer_type="single_option"
+        module = cls.baker.make("context.Module")
+        cls.question = cls.baker.make(
+            "survey.Question",
+            group=question_group,
+            module=module,
+            answer_type="single_option",
         )
-        option = cls.baker.make("survey.Option", question=question)
+        option = cls.baker.make("survey.Option", question=cls.question)
         cls.survey = cls.baker.make(
             "survey.Survey", project=project, created_by=cls.user
         )
@@ -30,7 +34,7 @@ class APITest(FullTestCase):
             "survey.SurveyAnswer",
             survey=cls.survey,
             answer_type="single_option",
-            question=question,
+            question=cls.question,
             options=[option],
         )
         cls.question_group_list_url = cls.reverse(
@@ -41,7 +45,7 @@ class APITest(FullTestCase):
         )
         cls.question_list_url = cls.reverse("question-list", kwargs={"version": "v1"})
         cls.question_detail_url = cls.reverse(
-            "question-detail", kwargs={"version": "v1", "pk": question.pk}
+            "question-detail", kwargs={"version": "v1", "pk": cls.question.pk}
         )
         cls.option_list_url = cls.reverse("option-list", kwargs={"version": "v1"})
         cls.option_detail_url = cls.reverse(
@@ -234,15 +238,18 @@ class APITest(FullTestCase):
             {
                 "statement": statement_1.pk,
                 "score": 0.90,
+                "module": self.question.module.pk,
             },
             {
                 "statement": statement_2.pk,
                 "score": 0.67,
+                "module": self.question.module.pk,
             },
         ]
         single_data = {
             "statement": statement_3.pk,
             "score": 0.90,
+            "module": self.question.module.pk,
         }
         self.client.force_authenticate(self.user)
         multiple_response = self.client.post(url, data=multiple_data, format="json")
