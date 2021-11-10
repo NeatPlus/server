@@ -230,7 +230,10 @@ class APITest(FullTestCase):
         url = self.reverse(
             "project-create-survey", kwargs={"version": "v1", "pk": self.project.pk}
         )
-        question_1 = self.baker.make("survey.Question", answer_type="location")
+        module = self.baker.make("context.Module")
+        question_1 = self.baker.make(
+            "survey.Question", answer_type="location", module=module
+        )
         question_2 = self.baker.make("survey.Question", answer_type="number")
         question_3 = self.baker.make("survey.Question", answer_type="boolean")
         question_4 = self.baker.make("survey.Question", answer_type="single_option")
@@ -272,6 +275,7 @@ class APITest(FullTestCase):
                 {
                     "statement": statement.pk,
                     "score": 0.90,
+                    "module": question_1.module.pk,
                 },
             ],
         }
