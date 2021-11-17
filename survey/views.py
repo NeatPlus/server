@@ -15,6 +15,7 @@ from summary.serializers import WritableSurveyResultSerializer
 
 from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFilter
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
+from .permissions import CanWriteSurvey, CanWriteSurveyOrReadOnly
 from .serializers import (
     OptionSerializer,
     QuestionGroupSerializer,
@@ -175,7 +176,7 @@ class SurveyViewSet(
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsOwner],
+        permission_classes=[CanWriteSurvey],
         serializer_class=WritableSurveyAnswerSerializer,
     )
     def add_answers(self, request, *args, **kwargs):
@@ -218,7 +219,7 @@ class SurveyViewSet(
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsOwner],
+        permission_classes=[CanWriteSurvey],
         serializer_class=WritableSurveyResultSerializer,
     )
     def add_results(self, request, *args, **kwargs):
@@ -256,7 +257,7 @@ class SurveyAnswerViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SurveyAnswerSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [CanWriteSurveyOrReadOnly]
     filterset_class = SurveyAnswerFilter
 
     def get_queryset(self):

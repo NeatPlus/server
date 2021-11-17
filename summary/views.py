@@ -1,9 +1,9 @@
 from django.db.models import Q
-from rest_framework import mixins, permissions, viewsets
+from rest_framework import mixins, viewsets
 
-from neatplus.permissions import IsOwnerOrReadOnly
 from project.utils import read_allowed_project_for_user
 from survey.models import Survey
+from survey.permissions import CanWriteSurveyOrReadOnly
 
 from .filters import SurveyResultFilter
 from .models import SurveyResult
@@ -18,7 +18,7 @@ class SurveyResultViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SurveyResultSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [CanWriteSurveyOrReadOnly]
     filterset_class = SurveyResultFilter
 
     def get_queryset(self):
