@@ -15,6 +15,8 @@ static/
 # docker related
 docker-compose.yml
 docker-compose.yaml
+external-services.yml
+external-services.yaml
 
 # terraform related
 .terraform/

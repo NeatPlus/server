@@ -29,10 +29,18 @@ class CanEditProjectOrReadOnly(CanEditProject):
 
 class CanCreateSurveyForProject(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        return (
-            request.user == obj.created_by
-            or request.user in obj.organization.admins.all()
-            or ProjectUser.objects.filter(
-                project=obj, user=request.user, permission="write"
-            ).exists()
-        )
+        if obj.organization:
+            return (
+                request.user == obj.created_by
+                or request.user in obj.organization.admins.all()
+                or ProjectUser.objects.filter(
+                    project=obj, user=request.user, permission="write"
+                ).exists()
+            )
+        else:
+            return (
+                request.user == obj.created_by
+                or ProjectUser.objects.filter(
+                    project=obj, user=request.user, permission="write"
+                ).exists()
+            )
