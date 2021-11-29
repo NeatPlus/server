@@ -26,7 +26,7 @@ resource "aws_iam_role_policy_attachment" "node-group-AmazonEKS_CNI_Policy" {
   role       = aws_iam_role.node_group.name
 }
 
-# IAM policy attachment for AMa
+# IAM policy attachment for AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "node-group-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.node_group.name
@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "eks_nodes_self_ingress_rule" {
   security_group_id = aws_security_group.eks_nodes.id
 }
 
-# Allow control plane and eks control plane communication
+# Allow control plane and eks nodes communication
 resource "aws_security_group_rule" "eks_nodes_control_plane_ingress_rule" {
   type                     = "ingress"
   from_port                = 0
@@ -102,7 +102,7 @@ resource "aws_eks_node_group" "node" {
 
 # Policy for cluster auto scaling
 resource "aws_iam_policy" "cluster_auto_scaler" {
-  name = "eks-node-group-auto-scaler"
+  name = "eks-node-group-auto-scaler-${local.suffix}"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
