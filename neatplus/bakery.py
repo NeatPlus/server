@@ -29,10 +29,20 @@ class UserStampedBaker(Baker):
         # field is not passed as parameter since model bakery cannot handle such case
         # properly
         for field in self.get_fields():
-            if field.unique and field.choices and field.name not in self.passed_attrs:
-                instance = self.model.objects.first()
-                if instance:
-                    return instance
+            try:
+                if (
+                    field.unique
+                    and field.choices
+                    and field.name not in self.passed_attrs
+                ):
+                    instance = self.model.objects.first()
+                    if instance:
+                        return instance
+            # ignore attribute error while getting fields since some field may not have
+            # desired attribute specially generic foreign key and many to many rel
+            except AttributeError as _:
+                pass
+        # for userstampedmodel pass user model if field is missing
         if issubclass(self.model, UserStampedModel):
             created_by_field = attrs.get("created_by", None)
             if created_by_field is None:
