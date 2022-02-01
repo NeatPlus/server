@@ -122,13 +122,16 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {"error": "User with username/email already exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        user_password = data.pop("re_password")
+        data.pop("re_password")
+        user_password = data.pop("password")
         try:
             validate_password(password=user_password)
         except ValidationError as e:
             errors = list(e.messages)
             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
-        User.objects.create_user(**data)
+        user = User.objects.create_user(**data)
+        user.set_password(user_password)
+        user.save()
         return Response(
             {
                 "detail": "User successfully registered and email send to user's email address"

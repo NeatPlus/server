@@ -9,7 +9,7 @@ class TestAdmin(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_pass = get_user_model().objects.make_random_password()
+        cls.user_pass = get_user_model().objects.make_random_password(length=12)
         user = cls.baker.make(
             settings.AUTH_USER_MODEL, is_superuser=True, is_staff=True, is_active=True
         )

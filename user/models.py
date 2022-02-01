@@ -167,3 +167,10 @@ class EmailChangePin(TimeStampedModel):
     pin_expiry_time = models.DateTimeField()
     new_email = LowerEmailField()
     is_active = models.BooleanField(default=True)
+
+
+class UserOldPassword(TimeStampedModel):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="old_passwords"
+    )
+    password = models.CharField(max_length=128)
