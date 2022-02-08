@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from neatplus.tests import FullTestCase
+from neatplus.utils import gen_random_password
 
 
 class APITest(FullTestCase):
@@ -11,7 +12,7 @@ class APITest(FullTestCase):
         user = cls.baker.make(
             settings.AUTH_USER_MODEL, is_superuser=True, is_active=True
         )
-        cls.user_pass = get_user_model().objects.make_random_password(length=12)
+        cls.user_pass = gen_random_password(user=user)
         user.set_password(cls.user_pass)
         user.save()
         cls.user = user

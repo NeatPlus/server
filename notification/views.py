@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
@@ -49,7 +50,7 @@ class NotificationViewSet(
             name="MarkAllAsReadResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully marked all notification as read"
+                    default=_("Successfully marked all notification as read")
                 )
             },
         )
@@ -60,7 +61,7 @@ class NotificationViewSet(
             has_read=True, modified_at=timezone.now()
         )
         return Response(
-            {"detail": "Successfully marked all notification as read"},
+            {"detail": _("Successfully marked all notification as read")},
             status=status.HTTP_200_OK,
         )
 
@@ -68,7 +69,9 @@ class NotificationViewSet(
         responses=inline_serializer(
             name="MarkAsReadResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Successfully marked as read")
+                "detail": serializers.CharField(
+                    default=_("Successfully marked as read")
+                )
             },
         )
     )
@@ -78,7 +81,7 @@ class NotificationViewSet(
         Notification.objects.filter(pk=notification.pk).update(
             has_read=True, modified_at=timezone.now()
         )
-        return Response({"detail": "Successfully marked as read"})
+        return Response({"detail": _("Successfully marked as read")})
 
 
 class NoticeViewSet(viewsets.ModelViewSet):

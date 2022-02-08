@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from neatplus.auth_validators import CustomASCIIUsernameValidator
 from neatplus.fields import LowerCharField, LowerEmailField
@@ -18,35 +19,45 @@ class User(AbstractUser):
 
     # Abstract user modification
     username = LowerCharField(
-        "username",
+        _("username"),
         max_length=20,
         unique=True,
-        help_text="Required. Length can be between 5 to 20. Letters, digits and ./-/_ only.",
+        help_text=_(
+            "Required. Length can be between 5 to 20. Letters, digits and ./-/_ only."
+        ),
         validators=[
             username_validator,
             MinLengthValidator(limit_value=5),
         ],
         error_messages={
-            "unique": "A user with that username already exists.",
+            "unique": _("A user with that username already exists."),
         },
     )
     email = LowerEmailField(
-        "email address",
+        _("email address"),
         unique=True,
         error_messages={
-            "unique": "A user with that email already exists.",
+            "unique": _("A user with that email already exists."),
         },
     )
     is_active = models.BooleanField(
-        "active",
+        _("active"),
         default=False,
-        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+        help_text=_(
+            "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+        ),
     )
 
     # Custom
-    organization = models.CharField(max_length=255, null=True, blank=True, default=None)
-    role = models.CharField(max_length=50, null=True, blank=True, default=None)
-    has_accepted_terms_and_privacy_policy = models.BooleanField(default=True)
+    organization = models.CharField(
+        _("organization"), max_length=255, null=True, blank=True, default=None
+    )
+    role = models.CharField(
+        _("role"), max_length=50, null=True, blank=True, default=None
+    )
+    has_accepted_terms_and_privacy_policy = models.BooleanField(
+        _("accepted terms and privacy policy"), default=True
+    )
 
     objects = CustomUserManager()
 
@@ -130,14 +141,17 @@ class PasswordResetPin(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="password_reset_pin",
+        verbose_name=_("user"),
     )
-    no_of_incorrect_attempts = models.PositiveIntegerField(default=0)
+    no_of_incorrect_attempts = models.PositiveIntegerField(
+        _("number of incorrect attempts"), default=0
+    )
     pin = models.PositiveIntegerField(
-        validators=[MinLengthValidator(6), MaxLengthValidator(6)]
+        _("pin"), validators=[MinLengthValidator(6), MaxLengthValidator(6)]
     )
-    pin_expiry_time = models.DateTimeField()
-    is_active = models.BooleanField(default=True)
-    identifier = models.CharField(max_length=16)
+    pin_expiry_time = models.DateTimeField(_("pin expiry time"))
+    is_active = models.BooleanField(_("active"), default=True)
+    identifier = models.CharField(_("identifier"), max_length=16)
 
 
 class EmailConfirmationPin(TimeStampedModel):
@@ -145,13 +159,16 @@ class EmailConfirmationPin(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="email_confirm_pin",
+        verbose_name=_("user"),
     )
-    no_of_incorrect_attempts = models.PositiveIntegerField(default=0)
+    no_of_incorrect_attempts = models.PositiveIntegerField(
+        _("number of incorrect attempts"), default=0
+    )
     pin = models.PositiveIntegerField(
-        validators=[MinLengthValidator(6), MaxLengthValidator(6)]
+        _("pin"), validators=[MinLengthValidator(6), MaxLengthValidator(6)]
     )
-    pin_expiry_time = models.DateTimeField()
-    is_active = models.BooleanField(default=True)
+    pin_expiry_time = models.DateTimeField(_("pin expiry time"))
+    is_active = models.BooleanField(_("active"), default=True)
 
 
 class EmailChangePin(TimeStampedModel):
@@ -159,18 +176,24 @@ class EmailChangePin(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="email_change_pin",
+        verbose_name=_("user"),
     )
-    no_of_incorrect_attempts = models.PositiveIntegerField(default=0)
+    no_of_incorrect_attempts = models.PositiveIntegerField(
+        _("number of incorrect attempts"), default=0
+    )
     pin = models.PositiveIntegerField(
-        validators=[MinLengthValidator(6), MaxLengthValidator(6)]
+        _("pin"), validators=[MinLengthValidator(6), MaxLengthValidator(6)]
     )
-    pin_expiry_time = models.DateTimeField()
-    new_email = LowerEmailField()
-    is_active = models.BooleanField(default=True)
+    pin_expiry_time = models.DateTimeField(_("pin expiry time"))
+    new_email = LowerEmailField(_("new email"))
+    is_active = models.BooleanField(_("active"), default=True)
 
 
 class UserOldPassword(TimeStampedModel):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="old_passwords"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="old_passwords",
+        verbose_name=_("user"),
     )
-    password = models.CharField(max_length=128)
+    password = models.CharField(_("password"), max_length=128)

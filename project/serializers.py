@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from organization.serializers import OrganizationSerializer
@@ -51,14 +52,18 @@ class CreateProjectSerializer(serializers.ModelSerializer):
             if organization_obj.status != "accepted":
                 raise serializers.ValidationError(
                     {
-                        "organization": "Cannot create project for not accepted organization"
+                        "organization": _(
+                            "Cannot create project for not accepted organization"
+                        )
                     }
                 )
         else:
             if data["visibility"] == "public_within_organization":
                 raise serializers.ValidationError(
                     {
-                        "visibility": "No organization project cannot have public_within_organization visibility"
+                        "visibility": _(
+                            "No organization project cannot have public_within_organization visibility"
+                        )
                     }
                 )
         return data

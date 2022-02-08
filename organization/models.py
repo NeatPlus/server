@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
 from neatplus.models import TimeStampedModel, UserStampedModel
@@ -11,25 +12,41 @@ class Organization(MPTTModel, TimeStampedModel, UserStampedModel):
         ACCEPTED = "accepted"
         REJECTED = "rejected"
 
-    title = models.CharField(max_length=255, unique=True)
-    acronym = models.CharField(max_length=50, null=True, blank=True, default=None)
-    description = models.TextField(null=True, blank=True, default=None)
+    title = models.CharField(_("title"), max_length=255, unique=True)
+    acronym = models.CharField(
+        _("acronym"), max_length=50, null=True, blank=True, default=None
+    )
+    description = models.TextField(
+        _("description"), null=True, blank=True, default=None
+    )
     logo = models.ImageField(
-        upload_to="organization/organization/logos", null=True, blank=True, default=None
+        _("logo"),
+        upload_to="organization/organization/logos",
+        null=True,
+        blank=True,
+        default=None,
     )
     admins = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="admin_organizations"
+        settings.AUTH_USER_MODEL,
+        related_name="admin_organizations",
+        verbose_name=_("admins"),
     )
     members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="member_organizations", blank=True
+        settings.AUTH_USER_MODEL,
+        related_name="member_organizations",
+        blank=True,
+        verbose_name=_("members"),
     )
     status = models.CharField(
+        _("status"),
         max_length=8,
         choices=StatusChoice.choices,
         default=StatusChoice.PENDING,
         editable=False,
     )
-    point_of_contact = models.TextField(null=True, blank=True, default=None)
+    point_of_contact = models.TextField(
+        _("point of contact"), null=True, blank=True, default=None
+    )
     parent = TreeForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -37,6 +54,7 @@ class Organization(MPTTModel, TimeStampedModel, UserStampedModel):
         blank=True,
         default=None,
         related_name="childerns",
+        verbose_name=_("organization parent"),
     )
 
     class MPTTMeta:
@@ -76,11 +94,16 @@ class OrganizationMemberRequest(UserStampedModel, TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="member_requests",
+        verbose_name=_("user"),
     )
     organization = models.ForeignKey(
-        "Organization", on_delete=models.CASCADE, related_name="member_requests"
+        "Organization",
+        on_delete=models.CASCADE,
+        related_name="member_requests",
+        verbose_name=_("organization"),
     )
     status = models.CharField(
+        _("status"),
         max_length=8,
         choices=StatusChoice.choices,
         default=StatusChoice.PENDING,

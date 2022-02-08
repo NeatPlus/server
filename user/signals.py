@@ -14,7 +14,7 @@ def send_email_confiramtion_pin(sender, instance, created, **kwargs):
     if created:
         six_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
-        email_confirm_object, _ = EmailConfirmationPin.objects.update_or_create(
+        email_confirm_object, _created = EmailConfirmationPin.objects.update_or_create(
             user=instance,
             defaults={
                 "pin": six_digit_pin,

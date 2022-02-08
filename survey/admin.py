@@ -1,5 +1,6 @@
 from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
 
@@ -19,6 +20,10 @@ class QuestionGroupAdmin(
         "code",
         "title",
     )
+
+    class Meta:
+        verbose_name = _("question group")
+        verbose_plural_name = _("question groups")
 
 
 class OptionInline(admin.StackedInline):
@@ -48,6 +53,10 @@ class QuestionAdmin(
     )
     inlines = (OptionInline,)
 
+    class Meta:
+        verbose_name = _("question")
+        verbose_plural_name = _("questions")
+
 
 @admin.register(Option)
 class OptionAdmin(
@@ -62,6 +71,10 @@ class OptionAdmin(
         "title",
     )
 
+    class Meta:
+        verbose_name = _("option")
+        verbose_plural_name = _("options")
+
 
 class ProjectAutoCompleteFilter(AutocompleteFilter):
     title = "Project"
@@ -75,8 +88,16 @@ class SurveyAdmin(UserStampedModelAdmin, OrderedModelAdmin):
     autocomplete_fields = ("project",)
     search_fields = ("title",)
 
+    class Meta:
+        verbose_name = _("survey")
+        verbose_plural_name = _("surveys")
+
 
 @admin.register(SurveyAnswer)
 class SurveyAnswerAdmin(UserStampedModelAdmin):
     list_display = ("question", "survey", "answer")
     autocomplete_fields = ("question", "survey", "options")
+
+    class Meta:
+        verbose_name = _("survey answer")
+        verbose_plural_name = _("survey answers")

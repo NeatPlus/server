@@ -3,6 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.template import Context, Template
+from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
 
 from neatplus.models import TimeStampedModel, UserStampedModel
@@ -17,9 +18,12 @@ class LegalDocumentTypeChoice(models.TextChoices):
 class LegalDocument(UserStampedModel, TimeStampedModel):
 
     document_type = models.CharField(
-        max_length=20, choices=LegalDocumentTypeChoice.choices, unique=True
+        _("document type"),
+        max_length=20,
+        choices=LegalDocumentTypeChoice.choices,
+        unique=True,
     )
-    description = RichTextField()
+    description = RichTextField(_("description"))
 
     def __str__(self):
         return self.document_type
@@ -46,8 +50,8 @@ class LegalDocument(UserStampedModel, TimeStampedModel):
 
 
 class FrequentlyAskedQuestion(UserStampedModel, TimeStampedModel, OrderedModel):
-    question = models.TextField()
-    answer = models.TextField()
+    question = models.TextField(_("question"))
+    answer = models.TextField(_("answer"))
 
     def __str__(self):
         return self.question
@@ -57,7 +61,7 @@ class FrequentlyAskedQuestion(UserStampedModel, TimeStampedModel, OrderedModel):
 
 
 class ResourceTag(UserStampedModel, TimeStampedModel, OrderedModel):
-    title = models.CharField(max_length=50)
+    title = models.CharField(_("title"), max_length=50)
 
     def __str__(self):
         return self.title
@@ -71,12 +75,16 @@ class Resource(UserStampedModel, TimeStampedModel, OrderedModel):
         ATTACHMENT = "attachment"
         VIDEO = "video"
 
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    resource_type = models.CharField(max_length=10, choices=ResourceTypeChoices.choices)
-    video_url = models.URLField(null=True, blank=True, default=None)
-    attachment = models.FileField(null=True, blank=True, default=None)
-    tags = models.ManyToManyField("ResourceTag", related_name="resources")
+    title = models.CharField(_("title"), max_length=255)
+    description = models.TextField(_("description"))
+    resource_type = models.CharField(
+        _("resource type"), max_length=10, choices=ResourceTypeChoices.choices
+    )
+    video_url = models.URLField(_("video url"), null=True, blank=True, default=None)
+    attachment = models.FileField(_("attachment"), null=True, blank=True, default=None)
+    tags = models.ManyToManyField(
+        "ResourceTag", related_name="resources", verbose_name=_("resource tags")
+    )
 
     def __str__(self):
         return self.title
@@ -86,7 +94,7 @@ class Resource(UserStampedModel, TimeStampedModel, OrderedModel):
 
 
 class Action(UserStampedModel, TimeStampedModel, OrderedModel):
-    title = models.CharField(max_length=255)
+    title = models.CharField(_("title"), max_length=255)
     context = models.ForeignKey(
         "context.Context",
         on_delete=models.CASCADE,
@@ -94,11 +102,12 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
         blank=False,
         default=None,
         related_name="actions",
+        verbose_name=_("context"),
     )
-    organization = models.CharField(max_length=255)
-    summary = models.TextField()
-    description = RichTextUploadingField()
-    point = PointField()
+    organization = models.CharField(_("organization"), max_length=255)
+    summary = models.TextField(_("summary"))
+    description = RichTextUploadingField(_("description"))
+    point = PointField(_("point"))
 
     def __str__(self):
         return self.title
@@ -108,10 +117,10 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
 
 
 class EmailTemplate(models.Model):
-    identifier = models.CharField(max_length=50, unique=True)
-    subject = models.CharField(max_length=255)
-    html_message = RichTextField()
-    text_message = models.TextField()
+    identifier = models.CharField(_("identifier"), max_length=50, unique=True)
+    subject = models.CharField(_("subject"), max_length=255)
+    html_message = RichTextField(_("html mesaage"))
+    text_message = models.TextField(_("text message"))
 
     def __str__(self):
         return self.identifier

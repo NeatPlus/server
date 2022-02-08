@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from neatplus.admin import UserStampedModelAdmin
 
@@ -17,7 +18,15 @@ class NotificationAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ("recipient",)
 
+    class Meta:
+        verbose_name = _("notification")
+        verbose_plural_name = _("notifications")
+
 
 @admin.register(Notice)
 class NoticeAdmin(UserStampedModelAdmin):
     list_display = ("title", "notice_type", "is_active")
+
+    class Meta:
+        verbose_name = _("notice")
+        verbose_plural_name = _("notices")

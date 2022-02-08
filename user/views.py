@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
@@ -62,7 +63,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         responses=inline_serializer(
             name="ChangePasswordResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Password successfully updated")
+                "detail": serializers.CharField(
+                    default=_("Password successfully updated")
+                )
             },
         )
     )
@@ -85,19 +88,21 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         re_new_password = data["re_new_password"]
         if re_new_password != new_password:
             return Response(
-                {"error": "New password and re new password doesn't match"},
+                {"error": _("New password and re new password doesn't match")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         user.set_password(new_password)
         user.save()
-        return Response({"detail": "Password successfully updated"})
+        return Response({"detail": _("Password successfully updated")})
 
     @extend_schema(
         responses=inline_serializer(
             name="RegisterUserResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="User successfully registered and email send to user's email address"
+                    default=_(
+                        "User successfully registered and email send to user's email address"
+                    )
                 )
             },
         )
@@ -119,7 +124,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user_exists = User.objects.filter_by_username(data["username"]).exists()
         if user_exists:
             return Response(
-                {"error": "User with username/email already exists"},
+                {"error": _("User with username/email already exists")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data.pop("re_password")
@@ -134,7 +139,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user.save()
         return Response(
             {
-                "detail": "User successfully registered and email send to user's email address"
+                "detail": _(
+                    "User successfully registered and email send to user's email address"
+                )
             },
             status=status.HTTP_201_CREATED,
         )
@@ -144,7 +151,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             name="PasswordResetResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Password reset email successfully send"
+                    default=_("Password reset email successfully send")
                 )
             },
         )
@@ -168,14 +175,16 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not user:
             return Response(
                 {
-                    "error": "No active user present for username/email your account may be blocked"
+                    "error": _(
+                        "No active user present for username/email your account may be blocked"
+                    )
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
         random_6_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
         identifier = gen_random_string(length=16)
-        password_reset_pin_object, _ = PasswordResetPin.objects.update_or_create(
+        password_reset_pin_object, _created = PasswordResetPin.objects.update_or_create(
             user=user,
             defaults={
                 "pin": random_6_digit_pin,
@@ -190,7 +199,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             context={"user": user, "password_reset_object": password_reset_pin_object}
         )
         user.email_user(subject, text_message, html_message=html_message)
-        return Response({"detail": "Password reset email successfully send"})
+        return Response({"detail": _("Password reset email successfully send")})
 
     @extend_schema(
         responses=inline_serializer(
@@ -217,7 +226,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user = User.objects.filter_by_username(username, is_active=True).first()
         if not user:
             return Response(
-                {"error": "No active user present for username/email"},
+                {"error": _("No active user present for username/email")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         pin = data["pin"]
@@ -238,28 +247,28 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 user_only_password_reset_object.save()
                 if not user.is_active:
                     return Response(
-                        {"error": "User is inactive"},
+                        {"error": _("User is inactive")},
                         status=status.status.HTTP_400_BAD_REQUEST,
                     )
                 elif user_only_password_reset_object.no_of_incorrect_attempts >= 5:
                     user.is_active = False
                     user.save()
                     return Response(
-                        {"error": "User is now inactive for trying too many times"},
+                        {"error": _("User is now inactive for trying too many times")},
                         status=status.HTTP_429_TOO_MANY_REQUESTS,
                     )
                 elif user_only_password_reset_object.pin != pin:
                     return Response(
-                        {"error": "Password reset pin is incorrect"},
+                        {"error": _("Password reset pin is incorrect")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 else:
                     return Response(
-                        {"error": "Password reset pin has expired"},
+                        {"error": _("Password reset pin has expired")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             return Response(
-                {"error": "No matching active user pin found"},
+                {"error": _("No matching active user pin found")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
@@ -272,7 +281,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         responses=inline_serializer(
             name="PasswordResetChangeResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Password successfully changed")
+                "detail": serializers.CharField(
+                    default=_("Password successfully changed")
+                )
             },
         )
     )
@@ -295,7 +306,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user = User.objects.filter_by_username(username, is_active=True).first()
         if not user:
             return Response(
-                {"error": "No active user present for username/email"},
+                {"error": _("No active user present for username/email")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         identifier = data["identifier"]
@@ -303,7 +314,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         re_password = data["re_password"]
         if re_password != password:
             return Response(
-                {"error": "Password and re_password doesn't match"},
+                {"error": _("Password and re_password doesn't match")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         current_time = timezone.now()
@@ -323,28 +334,28 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 user_only_password_reset_object.save()
                 if not user.is_active:
                     return Response(
-                        {"error": "User is inactive"},
+                        {"error": _("User is inactive")},
                         status=status.status.HTTP_400_BAD_REQUEST,
                     )
                 elif user_only_password_reset_object.no_of_incorrect_attempts >= 5:
                     user.is_active = False
                     user.save()
                     return Response(
-                        {"error": "User is now inactive for trying too many times"},
+                        {"error": _("User is now inactive for trying too many times")},
                         status=status.HTTP_429_TOO_MANY_REQUESTS,
                     )
                 elif user_only_password_reset_object.identifier != identifier:
                     return Response(
-                        {"error": "Password reset identifier is incorrect"},
+                        {"error": _("Password reset identifier is incorrect")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 else:
                     return Response(
-                        {"error": "Password reset pin has expired"},
+                        {"error": _("Password reset pin has expired")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             return Response(
-                {"error": "No matching active user pin found"},
+                {"error": _("No matching active user pin found")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
@@ -358,14 +369,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
             user.set_password(password)
             user.save()
-            return Response({"detail": "Password successfully changed"})
+            return Response({"detail": _("Password successfully changed")})
 
     @extend_schema(
         responses=inline_serializer(
             name="EmailConfirmResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Email confirmation mail successfully send"
+                    default=_("Email confirmation mail successfully sent")
                 )
             },
         )
@@ -388,24 +399,27 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user = User.objects.filter_by_username(username).first()
         if not user:
             return Response(
-                {"error": "No user present with given email address/username"},
+                {"error": _("No user present with given email address/username")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         email_confirm_pin = EmailConfirmationPin.objects.filter(user=user).first()
         if email_confirm_pin:
             if email_confirm_pin.no_of_incorrect_attempts >= 5:
                 return Response(
-                    {"error": "User is inactive for trying too many times"},
+                    {"error": _("User is inactive for trying too many times")},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             if not email_confirm_pin.is_active:
                 return Response(
-                    {"error": "Email address has already been confirmed"},
+                    {"error": _("Email address has already been confirmed")},
                     status=status.HTTP_404_NOT_FOUND,
                 )
         random_6_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
-        email_confirm_pin_object, _ = EmailConfirmationPin.objects.update_or_create(
+        (
+            email_confirm_pin_object,
+            _created,
+        ) = EmailConfirmationPin.objects.update_or_create(
             user=user,
             defaults={
                 "pin": random_6_digit_pin,
@@ -419,13 +433,15 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             {"user": user, "email_confirm_object": email_confirm_pin_object}
         )
         user.email_user(subject, text_message, html_message=html_message)
-        return Response({"detail": "Email confirmation mail successfully send"})
+        return Response({"detail": _("Email confirmation mail successfully sent")})
 
     @extend_schema(
         responses=inline_serializer(
             name="EmailConfirmVerifyResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Email successfully confirmed")
+                "detail": serializers.CharField(
+                    default=_("Email successfully confirmed")
+                )
             },
         )
     )
@@ -448,7 +464,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         user = User.objects.filter_by_username(username, is_active=False).first()
         if not user:
             return Response(
-                {"error": "No inactive user present for username"},
+                {"error": _("No inactive user present for username")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         pin = data["pin"]
@@ -466,28 +482,28 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             if user_only_email_confirm_mail_object:
                 if not user_only_email_confirm_mail_object.is_active:
                     return Response(
-                        {"error": "Email is already confirmed for user"},
+                        {"error": _("Email is already confirmed for user")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 user_only_email_confirm_mail_object.no_of_incorrect_attempts += 1
                 user_only_email_confirm_mail_object.save()
                 if user_only_email_confirm_mail_object.no_of_incorrect_attempts >= 5:
                     return Response(
-                        {"error": "User is now inactive for trying too many times"},
+                        {"error": _("User is now inactive for trying too many times")},
                         status=status.HTTP_429_TOO_MANY_REQUESTS,
                     )
                 elif user_only_email_confirm_mail_object.pin != pin:
                     return Response(
-                        {"error": "Email confirmation pin is incorrect"},
+                        {"error": _("Email confirmation pin is incorrect")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 else:
                     return Response(
-                        {"error": "Email confirmation pin has expired"},
+                        {"error": _("Email confirmation pin has expired")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             return Response(
-                {"error": "No matching active username/email found"},
+                {"error": _("No matching active username/email found")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
@@ -496,14 +512,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             email_confirmation_mail_object.save()
             user.is_active = True
             user.save()
-            return Response({"detail": "Email successfully confirmed"})
+            return Response({"detail": _("Email successfully confirmed")})
 
     @extend_schema(
         responses=inline_serializer(
             name="EmailChangeResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Email change mail successfully send"
+                    default=_("Email change mail successfully sent")
                 )
             },
         )
@@ -527,12 +543,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if email_change_pin:
             if email_change_pin.no_of_incorrect_attempts >= 5:
                 return Response(
-                    {"error": "User is inactive for trying too many times"},
+                    {"error": _("User is inactive for trying too many times")},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         random_6_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)
-        email_change_pin_object, _ = EmailChangePin.objects.update_or_create(
+        email_change_pin_object, _created = EmailChangePin.objects.update_or_create(
             user=user,
             defaults={
                 "pin": random_6_digit_pin,
@@ -551,13 +567,13 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             recipient_list=[email_change_pin_object.new_email],
             html_message=html_message,
         )
-        return Response({"detail": "Email change mail successfully send"})
+        return Response({"detail": _("Email change mail successfully sent")})
 
     @extend_schema(
         responses=inline_serializer(
             name="EmailChangeVerifyResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Email successfully changed")
+                "detail": serializers.CharField(default=_("Email successfully changed"))
             },
         )
     )
@@ -592,28 +608,28 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             if user_only_email_change_mail_object:
                 if not user_only_email_change_mail_object.is_active:
                     return Response(
-                        {"error": "Email is already changed for user"},
+                        {"error": _("Email is already changed for user")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 user_only_email_change_mail_object.no_of_incorrect_attempts += 1
                 user_only_email_change_mail_object.save()
                 if user_only_email_change_mail_object.no_of_incorrect_attempts >= 5:
                     return Response(
-                        {"error": "User is now inactive for trying too many times"},
+                        {"error": _("User is now inactive for trying too many times")},
                         status=status.HTTP_429_TOO_MANY_REQUESTS,
                     )
                 elif user_only_email_change_mail_object.pin != pin:
                     return Response(
-                        {"error": "Email change pin is incorrect"},
+                        {"error": _("Email change pin is incorrect")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 else:
                     return Response(
-                        {"error": "Email change pin has expired"},
+                        {"error": _("Email change pin has expired")},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             return Response(
-                {"error": "No matching active change change request found"},
+                {"error": _("No matching active change change request found")},
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
@@ -622,12 +638,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             email_change_mail_object.save()
             if User.objects.filter(email=email_change_mail_object.new_email).exists():
                 return Response(
-                    {"error": "email already used for account creation"},
+                    {"error": _("email already used for account creation")},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             user.email = email_change_mail_object.new_email
             user.save()
-            return Response({"detail": "Email successfully changed"})
+            return Response({"detail": _("Email successfully changed")})
 
     @extend_schema(
         responses=inline_serializer(

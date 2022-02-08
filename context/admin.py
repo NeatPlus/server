@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
 
@@ -19,6 +20,10 @@ class ContextAdmin(
         "title",
     )
 
+    class Meta:
+        verbose_name = _("context")
+        verbose_plural_name = _("contexts")
+
 
 @admin.register(Module)
 class ModuleAdmin(
@@ -32,3 +37,7 @@ class ModuleAdmin(
         "code",
         "title",
     )
+
+    class Meta:
+        verbose_name = _("module")
+        verbose_plural_name = _("modules")
