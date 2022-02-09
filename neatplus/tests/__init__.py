@@ -6,6 +6,8 @@ from rest_framework.test import APILiveServerTestCase, APITestCase
 
 
 class FullTestCase(APITestCase, APILiveServerTestCase):
+    fixtures = ["support/content/email.yaml"]
+
     baker = baker
     baker.generators.add("neatplus.fields.LowerCharField", random_gen.gen_string)
     baker.generators.add("neatplus.fields.LowerEmailField", random_gen.gen_email)

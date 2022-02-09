@@ -1,6 +1,0 @@
-Dear {{ member_request.user.username }},
-
-Sorry, Your member request for organization {{ member_request.organization }} is rejected.
-
-Thanks,
-Neat+ Team

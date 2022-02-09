@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
-from django.template.loader import get_template
+
+from support.models import EmailTemplate
 
 from .models import Organization, OrganizationMemberRequest
 
@@ -10,17 +11,16 @@ def send_organization_acceptance_change_mail(sender, instance, created, **kwargs
     update_fields = kwargs.get("update_fields")
     if update_fields and "status" in update_fields:
         if instance.status == "accepted":
-            email_template = get_template("mail/accept_organization.txt")
-            subject = "Organization acceptance mail"
+            email = EmailTemplate.objects.get(identifier="accept_organization")
         elif instance.status == "rejected":
-            email_template = get_template("mail/reject_organization.txt")
-            subject = "Organization rejection mail"
+            email = EmailTemplate.objects.get(identifier="reject_organization")
         else:
             return
         for admin in instance.admins.all():
-            context = {"organization": instance, "admin": admin}
-            message = email_template.render(context)
-            admin.celery_email_user(subject, message)
+            subject, html_message, text_message = email.get_email_contents(
+                {"organization": instance, "admin": admin}
+            )
+            admin.celery_email_user(subject, text_message, html_message=html_message)
             admin.notify(
                 instance.updated_by,
                 instance.status,
@@ -35,10 +35,10 @@ def send_new_member_request_organization_admin(sender, instance, created, **kwar
         if not created and instance.status != "pending":
             return
         for admin in instance.organization.admins.all():
-            email_template = get_template("mail/new_member_request.txt")
-            context = {"admin": admin, "member_request": instance}
-            message = email_template.render(context)
-            admin.celery_email_user("New member request mail", message)
+            subject, html_message, text_message = EmailTemplate.objects.get(
+                identifier="new_member_request"
+            ).get_email_contents({"admin": admin, "member_request": instance})
+            admin.celery_email_user(subject, text_message, html_message=html_message)
             admin.notify(
                 instance.created_by,
                 "created",
@@ -53,16 +53,18 @@ def send_member_request_acceptance_change_mail(sender, instance, created, **kwar
     update_fields = kwargs.get("update_fields")
     if update_fields and "status" in update_fields:
         if instance.status == "accepted":
-            email_template = get_template("mail/accept_member_request.txt")
-            subject = "Member request acceptance mail"
+            subject, html_message, text_message = EmailTemplate.objects.get(
+                identifier="accept_member_request"
+            ).get_email_contents({"member_request": instance})
         elif instance.status == "rejected":
-            email_template = get_template("mail/reject_member_request.txt")
-            subject = "Member request rejection mail"
+            subject, html_message, text_message = EmailTemplate.objects.get(
+                identifier="reject_member_request"
+            ).get_email_contents({"member_request": instance})
         else:
             return
-        context = {"member_request": instance}
-        message = email_template.render(context)
-        instance.created_by.celery_email_user(subject, message)
+        instance.created_by.celery_email_user(
+            subject, text_message, html_message=html_message
+        )
         instance.created_by.notify(
             instance.organization,
             instance.status,

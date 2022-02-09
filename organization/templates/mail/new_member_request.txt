@@ -1,6 +1,0 @@
-Dear {{ admin.username }},
-
-Recently new member request was requested by {{ member_request.user }} . Please visit website to accept member request.
-
-Thanks,
-Neat+ Team
