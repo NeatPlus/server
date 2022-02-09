@@ -4,7 +4,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
-from django.template.loader import get_template
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
@@ -12,6 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from neatplus.utils import gen_random_number, gen_random_string
+from support.models import EmailTemplate
 
 from .models import EmailChangePin, EmailConfirmationPin, PasswordResetPin, User
 from .serializers import (
@@ -184,11 +184,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "identifier": identifier,
             },
         )
-        template = get_template("mail/password_reset.txt")
-        message = template.render(
-            {"user": user, "password_reset_object": password_reset_pin_object}
+        subject, html_message, text_message = EmailTemplate.objects.get(
+            identifier="password_reset"
+        ).get_email_contents(
+            context={"user": user, "password_reset_object": password_reset_pin_object}
         )
-        user.email_user("Password reset pin", message)
+        user.email_user(subject, text_message, html_message=html_message)
         return Response({"detail": "Password reset email successfully send"})
 
     @extend_schema(
@@ -412,10 +413,12 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "is_active": True,
             },
         )
-        template = get_template("mail/email_confirm.txt")
-        context = {"user": user, "email_confirm_object": email_confirm_pin_object}
-        message = template.render(context)
-        user.email_user("Email confirmation mail", message)
+        subject, html_message, text_message = EmailTemplate.objects.get(
+            identifier="email_confirm"
+        ).get_email_contents(
+            {"user": user, "email_confirm_object": email_confirm_pin_object}
+        )
+        user.email_user(subject, text_message, html_message=html_message)
         return Response({"detail": "Email confirmation mail successfully send"})
 
     @extend_schema(
@@ -538,14 +541,15 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "new_email": data["new_email"],
             },
         )
-        email_template = get_template("mail/email_change.txt")
-        context = {"email_change_object": email_change_pin_object}
-        message = email_template.render(context)
+        subject, html_message, text_message = EmailTemplate.objects.get(
+            identifier="email_change"
+        ).get_email_contents({"email_change_object": email_change_pin_object})
         send_mail(
-            "Email change mail",
-            message,
+            subject,
+            text_message,
             from_email=None,
             recipient_list=[email_change_pin_object.new_email],
+            html_message=html_message,
         )
         return Response({"detail": "Email change mail successfully send"})
 

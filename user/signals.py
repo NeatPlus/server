@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
-from django.template.loader import get_template
 from django.utils import timezone
 
 from neatplus.utils import gen_random_number
+from support.models import EmailTemplate
 
 from .models import EmailConfirmationPin
 
@@ -22,7 +22,9 @@ def send_email_confiramtion_pin(sender, instance, created, **kwargs):
                 "is_active": True,
             },
         )
-        email_template = get_template("mail/email_confirm.txt")
-        context = {"user": instance, "email_confirm_object": email_confirm_object}
-        message = email_template.render(context)
-        instance.celery_email_user("Email confirmation mail", message)
+        subject, html_message, text_message = EmailTemplate.objects.get(
+            identifier="email_confirm"
+        ).get_email_contents(
+            {"user": instance, "email_confirm_object": email_confirm_object}
+        )
+        instance.celery_email_user(subject, text_message, html_message=html_message)

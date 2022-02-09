@@ -1,0 +1,160 @@
+# Special type of fixture files which is imported initially by using custom management command import_default_email_template.
+# Since fixture override content of model we need some way to handle old email template and also import new email template
+- model: support.EmailTemplate
+  pk: 1
+  fields:
+    identifier: email_change
+    subject: Email change mail
+    html_message: &email_change_content |
+      Dear {{ email_change_object.user.username }},
+
+      Recently you have requested to change your email address.
+      We have send this email to verify your email address.
+
+      If you haven't requested recently to change email address to this mail you can safely ignore this email.
+
+      Your email change request confirmation pin is {{ email_change_object.pin }}
+      Your pin will expire in 1 hour at {{email_change_object.pin_expiry_time }} UTC
+
+      Thanks,
+      Neat+ team
+    text_message: *email_change_content
+- model: support.EmailTemplate
+  pk: 2
+  fields:
+    identifier: email_confirm
+    subject: Email confirmation mail
+    html_message: &email_confirm_content |
+      Dear {{ user.username }}
+      Welcome to Neat+,
+      Recently you have created new account with us.
+      We have send this email to verify your email address.
+
+      If you haven't sign up recently you can safely ignore this email. Your email address will not be used by anyone without verification.
+
+      Your email confirmation pin is {{ email_confirm_object.pin }}
+      Your pin will expire in 1 hour at {{email_confirm_object.pin_expiry_time }} UTC
+
+      Thanks,
+      Neat+ team
+    text_message: *email_confirm_content
+- model: support.EmailTemplate
+  pk: 3
+  fields:
+    identifier: password_reset
+    subject: Password reset pin mail
+    html_message: &password_reset_content |
+      Dear {{ user.username }}
+      You have recently requested for password reset email
+      If you have not requested password reset email you can safely ignore this email.
+
+      Your password reset pin is {{ password_reset_object.pin }}
+      Your pin will expire in 1 hour at {{password_reset_object.pin_expiry_time }} UTC
+
+      Thanks,
+      Neat+ team
+    text_message: *password_reset_content
+- model: support.EmailTemplate
+  pk: 4
+  fields:
+    identifier: accept_member_request
+    subject: Accept member request mail
+    html_message: &accept_member_request_content |
+      Dear {{ member_request.user.username }},
+
+      Your member request for organization {{ member_request.organization }} is accepted.
+
+      Thanks,
+      Neat+ Team
+    text_message: *accept_member_request_content
+- model: support.EmailTemplate
+  pk: 5
+  fields:
+    identifier: accept_organization
+    subject: Accept organization mail
+    html_message: &accept_organization_content |
+      Dear {{ admin }},
+
+      Your organization {{ organization }} is accepted by Neat+ admin team.
+
+      Thanks,
+      Neat+ Team
+    text_message: *accept_organization_content
+- model: support.EmailTemplate
+  pk: 6
+  fields:
+    identifier: accept_project
+    subject: Accept project mail
+    html_message: &accept_project_content |
+      Dear {{ project.created_by.username }},
+
+      Your project with title {{project.title }} is accepted by {{ project.organization }} admins.
+
+      Thanks,
+      Neat+ Team
+    text_message: *accept_project_content
+- model: support.EmailTemplate
+  pk: 7
+  fields:
+    identifier: new_member_request
+    subject: New member request mail
+    html_message: &new_member_request_content |
+      Dear {{ admin.username }},
+
+      {{ member_request.user }} has requested to become member. Please visit website to accept member request.
+
+      Thanks,
+      Neat+ Team
+    text_message: *new_member_request_content
+- model: support.EmailTemplate
+  pk: 8
+  fields:
+    identifier: new_project
+    subject: New project mail
+    html_message: &new_project_content |
+      Dear {{ admin.username }},
+
+      Project {{ project.title }} was created by {{project.created_by}} recently. Please visit website to accept project.
+
+      Thanks,
+      Neat+ Team
+    text_message: *new_project_content
+- model: support.EmailTemplate
+  pk: 9
+  fields:
+    identifier: reject_member_request
+    subject: Reject member request mail
+    html_message: &reject_member_request_content |
+      Dear {{ member_request.user.username }},
+
+      Sorry, Your member request for organization {{ member_request.organization }} is rejected by admins.
+
+      Thanks,
+      Neat+ Team
+    text_message: *reject_member_request_content
+- model: support.EmailTemplate
+  pk: 10
+  fields:
+    identifier: reject_organization
+    subject: Reject organization mail
+    html_message: &reject_organization_content |
+      Dear {{ admin }},
+
+      Sorry, Your organization {{ organization }} is rejected by Neat+ admin team.
+
+      Thanks,
+      Neat+ Team
+    text_message: *reject_organization_content
+- model: support.EmailTemplate
+  pk: 11
+  fields:
+    identifier: reject_project
+    subject: Reject project mail
+    html_message: &reject_project_content |
+      Dear {{ project.created_by.username }},
+
+      Sorry, Your project with title {{project.title }} is rejected by {{ project.organization }} admins.
+
+      Thanks,
+      Neat+ Team
+    text_message: *reject_project_content

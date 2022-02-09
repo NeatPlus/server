@@ -2,6 +2,7 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.gis.db.models import PointField
 from django.db import models
+from django.template import Context, Template
 from ordered_model.models import OrderedModel
 
 from neatplus.models import TimeStampedModel, UserStampedModel
@@ -104,3 +105,20 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
 
     class Meta(OrderedModel.Meta):
         pass
+
+
+class EmailTemplate(models.Model):
+    identifier = models.CharField(max_length=50, unique=True)
+    subject = models.CharField(max_length=255)
+    html_message = RichTextField()
+    text_message = models.TextField()
+
+    def __str__(self):
+        return self.identifier
+
+    def get_email_contents(self, context):
+        html_template = Template(self.html_message)
+        text_template = Template(self.text_message)
+        html_message = html_template.render(Context(context))
+        text_message = text_template.render(Context(context))
+        return self.subject, html_message, text_message

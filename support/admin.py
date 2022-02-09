@@ -6,6 +6,7 @@ from neatplus.admin import UserStampedModelAdmin
 
 from .models import (
     Action,
+    EmailTemplate,
     FrequentlyAskedQuestion,
     LegalDocument,
     Resource,
@@ -47,3 +48,14 @@ class ResourceAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
 class ActionAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
     list_display = ("title", "context", "organization", "point", "move_up_down_links")
     autocomplete_fields = ("context",)
+
+
+@admin.register(EmailTemplate)
+class ActionAdmin(admin.ModelAdmin):
+    list_display = ("identifier",)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
