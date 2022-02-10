@@ -1,4 +1,5 @@
 from django.contrib import admin
+from mptt.admin import DraggableMPTTAdmin
 
 from neatplus.admin import AcceptRejectModelAdmin, UserStampedModelAdmin
 
@@ -6,9 +7,11 @@ from .models import Organization, OrganizationMemberRequest
 
 
 @admin.register(Organization)
-class OrganizationAdmin(UserStampedModelAdmin, AcceptRejectModelAdmin):
-    list_display = ("title", "status")
-    autocomplete_fields = ("admins", "members")
+class OrganizationAdmin(
+    DraggableMPTTAdmin, UserStampedModelAdmin, AcceptRejectModelAdmin
+):
+    list_display = ("tree_actions", "indented_title", "title", "status", "parent")
+    autocomplete_fields = ("admins", "members", "parent")
     search_fields = ("title",)
     change_form_template = "organization_change_form.html"
 

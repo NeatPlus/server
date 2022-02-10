@@ -98,6 +98,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_gis",
     "admin_auto_filters",
     "drf_recaptcha",
+    "mptt",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
