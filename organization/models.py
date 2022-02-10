@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 from neatplus.models import TimeStampedModel, UserStampedModel
 
 
-class Organization(TimeStampedModel, UserStampedModel):
+class Organization(MPTTModel, TimeStampedModel, UserStampedModel):
     class StatusChoice(models.TextChoices):
         PENDING = "pending"
         ACCEPTED = "accepted"
@@ -29,6 +30,17 @@ class Organization(TimeStampedModel, UserStampedModel):
         editable=False,
     )
     point_of_contact = models.TextField(null=True, blank=True, default=None)
+    parent = TreeForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None,
+        related_name="childerns",
+    )
+
+    class MPTTMeta:
+        order_insertion_by = ["title"]
 
     def __str__(self):
         return self.title
