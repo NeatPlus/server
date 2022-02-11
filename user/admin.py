@@ -33,5 +33,9 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
+    class Meta:
+        verbose_name = _("user")
+        verbose_plural_name = _("users")
+
 
 admin.site.register(User, CustomUserAdmin)

@@ -1,5 +1,6 @@
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.files.storage import default_storage
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.fields import ImageField
 from rest_framework_gis.fields import GeometryField
@@ -73,13 +74,15 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
         if answer_type != question_obj.answer_type:
             raise serializers.ValidationError(
                 {
-                    "answer_type": "answer type of question and provided answer type doesn't matched"
+                    "answer_type": _(
+                        "Answer type of question and provided answer_type value doesn't match"
+                    )
                 }
             )
         serializer_class = self.answer_type_serializer_mapping[answer_type]
         if serializer_class is None and data.get("answer") is not None:
             raise serializers.ValidationError(
-                {"answer": "answer field cannot be present for provided answer type"}
+                {"answer": _("answer field cannot be present for provided answer_type")}
             )
         if answer_type in [
             AnswerTypeChoices.SINGLE_OPTION.value,
@@ -87,12 +90,12 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
         ]:
             if options is None:
                 raise serializers.ValidationError(
-                    {"options": "options should be present for answer type"}
+                    {"options": _("options should be present for provided answer_type")}
                 )
             for option in options:
                 if option.question != question_obj:
                     raise serializers.ValidationError(
-                        {"options": "Invalid option for question"}
+                        {"options": _("Invalid option for question")}
                     )
             if (
                 answer_type == AnswerTypeChoices.SINGLE_OPTION.value
@@ -100,7 +103,9 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
             ):
                 raise serializers.ValidationError(
                     {
-                        "options": "only one option in list form is supported for question"
+                        "options": _(
+                            "Only one option in list form is supported for question"
+                        )
                     }
                 )
         if serializer_class is None:
@@ -111,7 +116,7 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
             image_paths = data["answer"].split(",")
             if serializer_class == ImageField and len(image_paths) != 1:
                 raise serializers.ValidationError(
-                    {"answer": "only one image is supported for question"}
+                    {"answer": _("Only one image is supported for question")}
                 )
             if serializer_class == ImageField:
                 serializer_class_object = serializer_class()
@@ -123,7 +128,7 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
                     with default_storage.open(image_path) as file:
                         serializer_class_object.run_validation(file)
                 except Exception:
-                    errors[i] = "invalid image file or image doesn't exists"
+                    errors[image_path] = "Invalid image file or image doesn't exists"
             if errors:
                 raise serializers.ValidationError({"answer": errors})
             validation_data = None

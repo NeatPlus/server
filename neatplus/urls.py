@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
@@ -114,10 +115,11 @@ if settings.IS_SERVER_SECURE:
 
     admin.site.__class__ = OTPAdmin
 
+urlpatterns = i18n_patterns(  # admin
+    path("admin/", admin.site.urls), prefix_default_language=False
+)
 
-urlpatterns = [
-    # admin
-    path("admin/", admin.site.urls),
+urlpatterns += [
     # DRF router
     re_path(get_api_path(""), include(router.urls)),
     # jwt

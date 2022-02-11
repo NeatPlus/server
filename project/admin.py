@@ -1,5 +1,6 @@
 from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from ordered_model.admin import OrderedModelAdmin
 
 from neatplus.admin import AcceptRejectModelAdmin, UserStampedModelAdmin
@@ -29,8 +30,16 @@ class ProjectAdmin(UserStampedModelAdmin, OrderedModelAdmin, AcceptRejectModelAd
     search_fields = ("title",)
     change_form_template = "project_change_form.html"
 
+    class Meta:
+        verbose_name = _("project")
+        verbose_plural_name = _("projects")
+
 
 @admin.register(ProjectUser)
 class ProjectUserAdmin(UserStampedModelAdmin):
     list_display = ("project", "user", "permission")
     autocomplete_fields = ("project", "user")
+
+    class Meta:
+        verbose_name = _("project user")
+        verbose_plural_name = _("project users")

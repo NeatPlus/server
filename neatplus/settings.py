@@ -4,6 +4,7 @@ from pathlib import Path
 
 import sentry_sdk
 from django.core.management.utils import get_random_secret_key
+from django.utils.translation import gettext_lazy as _
 from environs import Env
 from marshmallow.validate import OneOf, Range
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -123,6 +124,7 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "neatplus.urls"
@@ -215,6 +217,20 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
+
+gettext = lambda s: s
+
+LANGUAGES = (
+    ("en", _("English")),
+    ("es", _("Spanish")),
+    ("fr", _("French")),
+)
+
+# Model translation
+MODELTRANSLATION_PREPOPULATE_LANGUAGE = "en"
+MODELTRANSLATION_AUTO_POPULATE = True
 
 
 # Logging
@@ -386,12 +402,6 @@ if ENABLE_CELERY:
 
 # Default auto field
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
-# Model translation
-MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
-MODELTRANSLATION_LANGUAGES = ("en", "es", "fr")
-MODELTRANSLATION_PREPOPULATE_LANGUAGE = "en"
-MODELTRANSLATION_AUTO_POPULATE = True
 
 # SPECTAULAR
 SPECTACULAR_SETTINGS = {

@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
@@ -41,7 +42,9 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         responses=inline_serializer(
             name="OrganizationProjectCreateResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Successfully created project")
+                "detail": serializers.CharField(
+                    default=_("Successfully created project")
+                )
             },
         )
     )
@@ -62,7 +65,8 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             **validated_data, organization=organization, created_by=self.request.user
         )
         return Response(
-            {"detail": "Successfully created project"}, status=status.HTTP_201_CREATED
+            {"detail": _("Successfully created project")},
+            status=status.HTTP_201_CREATED,
         )
 
     @extend_schema(
@@ -70,7 +74,7 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             name="OrganizationMemberRequestResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully requested member access"
+                    default=_("Successfully requested member access")
                 )
             },
         )
@@ -88,7 +92,7 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             user=user, organization=organization, created_by=user
         )
         return Response(
-            {"detail": "Successfully requested member access"},
+            {"detail": _("Successfully requested member access")},
             status=status.HTTP_200_OK,
         )
 
@@ -112,10 +116,10 @@ class OrganizationMemberRequestViewSet(
 
     @extend_schema(
         responses=inline_serializer(
-            name="OrganizationMemeberRequestAcceptResponseSerializer",
+            name="OrganizationMemberRequestAcceptResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Member request successfully accepted"
+                    default=_("Member request successfully accepted")
                 )
             },
         )
@@ -132,14 +136,14 @@ class OrganizationMemberRequestViewSet(
             member_request.updated_by = request.user
             member_request.status = "accepted"
             member_request.save()
-        return Response({"detail": "Member request successfully accepted"})
+        return Response({"detail": _("Member request successfully accepted")})
 
     @extend_schema(
         responses=inline_serializer(
-            name="OrganizationMemeberRequestRejectResponseSerializer",
+            name="OrganizationMemberRequestRejectResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Member request successfully rejected"
+                    default=_("Member request successfully rejected")
                 )
             },
         )
@@ -156,4 +160,4 @@ class OrganizationMemberRequestViewSet(
             member_request.updated_by = request.user
             member_request.status = "rejected"
             member_request.save()
-        return Response({"detail": "Member request successfully rejected"})
+        return Response({"detail": _("Member request successfully rejected")})

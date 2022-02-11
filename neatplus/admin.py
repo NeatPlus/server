@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.http.response import HttpResponseRedirect
+from django.utils.translation import gettext_lazy as _
 
 
 class UserStampedModelAdmin(admin.ModelAdmin):
@@ -20,11 +21,15 @@ class AcceptRejectModelAdmin(admin.ModelAdmin):
         if "_reject" in request.POST:
             obj.status = "rejected"
             obj.save()
-            self.message_user(request, f"{self.model_name} rejected")
+            self.message_user(
+                request, _("{name} rejected").format(name=self.model_name)
+            )
             return HttpResponseRedirect(".")
         if "_accept" in request.POST:
             obj.status = "accepted"
             obj.save()
-            self.message_user(request, f"{self.model_name} accepted")
+            self.message_user(
+                request, _("{name} accepted").format(name=self.model_name)
+            )
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)

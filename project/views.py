@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
@@ -66,7 +67,9 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         responses=inline_serializer(
             name="ProjectAcceptResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Project successfully accepted")
+                "detail": serializers.CharField(
+                    default=_("Project successfully accepted")
+                )
             },
         )
     )
@@ -82,13 +85,15 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             project.updated_by = request.user
             project.status = "accepted"
             project.save()
-        return Response({"detail": "Project successfully accepted"})
+        return Response({"detail": _("Project successfully accepted")})
 
     @extend_schema(
         responses=inline_serializer(
             name="ProjectRejectResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Project successfully rejected")
+                "detail": serializers.CharField(
+                    default=_("Project successfully rejected")
+                )
             },
         )
     )
@@ -104,14 +109,14 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             project.updated_by = request.user
             project.status = "rejected"
             project.save()
-        return Response({"detail": "Project successfully rejected"})
+        return Response({"detail": _("Project successfully rejected")})
 
     @extend_schema(
         responses=inline_serializer(
             name="ProjectUpsertResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully modified users list for project"
+                    default=_("Successfully modified users list for project")
                 )
             },
         )
@@ -151,14 +156,14 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 project_user = ProjectUser.objects.create(
                     project=project, user=user, **validated_datum
                 )
-        return Response({"detail": "Successfully modified users list for project"})
+        return Response({"detail": _("Successfully modified users list for project")})
 
     @extend_schema(
         responses=inline_serializer(
             name="ProjectRemoveUserResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully removed users from project"
+                    default=_("Successfully removed users from project")
                 )
             },
         )
@@ -188,7 +193,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         for validated_datum in validated_data:
             user_obj = validated_datum.pop("user")
             project.users.remove(user_obj)
-        return Response({"detail": "Successfully removed users from project"})
+        return Response({"detail": _("Successfully removed users from project")})
 
     @action(
         methods=["get"],
@@ -223,7 +228,9 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         responses=inline_serializer(
             name="ProjectSurveySubmitResponseSerializer",
             fields={
-                "detail": serializers.CharField(default="Successfully submitted survey")
+                "detail": serializers.CharField(
+                    default=_("Successfully submitted survey")
+                )
             },
         )
     )
@@ -261,10 +268,13 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         except Exception:
             return Response(
                 {
-                    "error": "Failed to create survey or survey answer due to invalid data"
+                    "error": _(
+                        "Failed to create survey or survey answer due to invalid data"
+                    )
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(
-            {"detail": "Successfully submitted survey"}, status=status.HTTP_201_CREATED
+            {"detail": _("Successfully submitted survey")},
+            status=status.HTTP_201_CREATED,
         )

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from drf_recaptcha.fields import ReCaptchaV3Field
 from rest_framework import serializers
 
@@ -31,10 +32,12 @@ class PrivateUserSerializer(UserSerializer):
     def validate(self, attrs):
         password = attrs.pop("password", None)
         if not password:
-            raise serializers.ValidationError({"password": "Password field missing"})
+            raise serializers.ValidationError({"password": _("Password field missing")})
         user = self.context["request"].user
         if not user.check_password(password):
-            raise serializers.ValidationError({"password": "Invalid password for user"})
+            raise serializers.ValidationError(
+                {"password": _("Invalid password for user")}
+            )
         return super().validate(attrs)
 
 
@@ -48,7 +51,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         user = self.context["request"].user
         if not user.check_password(password):
             raise serializers.ValidationError(
-                {"old_password": "Invalid password for user"}
+                {"old_password": _("Invalid password for user")}
             )
         return super().validate(attrs)
 
@@ -66,9 +69,11 @@ class EmailChangeSerializer(serializers.Serializer):
         new_email = attrs.get("new_email")
         user = self.context["request"].user
         if User.objects.filter(email=new_email).exists():
-            raise serializers.ValidationError({"new_email": "Email is already used"})
+            raise serializers.ValidationError({"new_email": _("Email is already used")})
         if not user.check_password(password):
-            raise serializers.ValidationError({"password": "Invalid password for user"})
+            raise serializers.ValidationError(
+                {"password": _("Invalid password for user")}
+            )
         return super().validate(attrs)
 
 
@@ -110,7 +115,7 @@ class UserRegisterSerializer(UserSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["re_password"]:
             raise serializers.ValidationError(
-                {"error": "Password and re_password doesn't match"}
+                {"error": _("Password and re_password doesn't match")}
             )
         return super().validate(attrs)
 

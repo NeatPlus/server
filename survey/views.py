@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
@@ -120,14 +121,14 @@ class SurveyViewSet(
             return Response({"shared_link_identifier": shared_link_identifier})
         else:
             return Response(
-                {"error": "cannot update link of not shared survey"},
+                {"error": _("Cannot update link of not shared survey")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
     @extend_schema(
         responses=inline_serializer(
             name="SurveyUnShareLinkResponseSerializer",
-            fields={"detail": "Successfully unshared survey"},
+            fields={"detail": _("Successfully unshared survey")},
         )
     )
     @action(
@@ -141,7 +142,7 @@ class SurveyViewSet(
         survey.is_shared_publicly = False
         survey.shared_link_identifier = None
         survey.save()
-        return Response({"detail": "Successfully unshared survey"})
+        return Response({"detail": _("Successfully unshared survey")})
 
     @action(
         methods=["get"],
@@ -160,7 +161,7 @@ class SurveyViewSet(
             return Response(serializer.data)
         else:
             return Response(
-                {"error": "Identifier not found"}, status=status.HTTP_404_NOT_FOUND
+                {"error": _("Identifier not found")}, status=status.HTTP_404_NOT_FOUND
             )
 
     @extend_schema(
@@ -168,7 +169,7 @@ class SurveyViewSet(
             name="AddSurveyAnswerResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully added survey answers"
+                    default=_("Successfully added survey answers")
                 )
             },
         )
@@ -202,7 +203,7 @@ class SurveyViewSet(
             if options:
                 survey_answer.options.add(*options)
         return Response(
-            {"detail": "Successfully added survey answers"},
+            {"detail": _("Successfully added survey answers")},
             status=status.HTTP_201_CREATED,
         )
 
@@ -211,7 +212,7 @@ class SurveyViewSet(
             name="AddSurveyResultResponseSerializer",
             fields={
                 "detail": serializers.CharField(
-                    default="Successfully added survey results"
+                    default=_("Successfully added survey results")
                 )
             },
         )
@@ -244,7 +245,7 @@ class SurveyViewSet(
                 **validated_datum, survey=survey, created_by=user
             )
         return Response(
-            {"detail": "Successfully added survey results"},
+            {"detail": _("Successfully added survey results")},
             status=status.HTTP_201_CREATED,
         )
 

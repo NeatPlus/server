@@ -2,6 +2,8 @@ import string
 
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ImproperlyConfigured, ValidationError
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from .models import UserOldPassword
 
@@ -26,16 +28,25 @@ class CharacterClassValidator:
             if present_class_count == self.minimum_class:
                 return None
         raise ValidationError(
-            f"Minimum {self.minimum_class} character class missing from password",
+            ngettext_lazy(
+                "Minimum %(minimum_class)d character class missing from password",
+                "Minimum %(minimum_class)d character classes missing from password",
+                self.minimum_class,
+            ),
             code="password_class_missing",
             params={
-                "character_classes": self.character_classes,
                 "minimum_class": self.minimum_class,
             },
         )
 
     def get_help_text(self):
-        return f"Password must contain minimum {self.minimum_class} character classes from {self.character_classes}"
+        return ngettext_lazy(
+            "Password must contain minimum {minimum_class} character class from {character_classes}",
+            "Password must contain minimum {minimum_class} character classes from {character_classes}",
+            self.minimum_class,
+        ).format(
+            minimum_class=self.minimum_class, character_classes=self.character_classes
+        )
 
 
 class OldPasswordValidator:
@@ -52,7 +63,11 @@ class OldPasswordValidator:
             is_old_password = check_password(password, user_old_password.password)
             if is_old_password:
                 raise ValidationError(
-                    f"Cannot use last {self.count} password",
+                    ngettext_lazy(
+                        "Cannot use last %(count)d password",
+                        "Cannot use last %(count)d passwords",
+                        self.count,
+                    ),
                     code="password_resuse",
                     params={"count": self.count},
                 )
@@ -64,4 +79,8 @@ class OldPasswordValidator:
         UserOldPassword.objects.create(user=user, password=hashed_password)
 
     def get_help_text(self):
-        return f"Your password must not contain last {self.count} password."
+        return ngettext_lazy(
+            "Your password must not contain last {count} password",
+            "Your password must not contain last {count} password",
+            self.count,
+        ).format(count=self.count)
