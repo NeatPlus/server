@@ -25,43 +25,41 @@ msgstr "contexte"
 
 #: context/admin.py:25
 msgid "contexts"
-msgstr ""
+msgstr "contextes"
 
 #: context/admin.py:42 summary/models.py:21 survey/models.py:55
 msgid "module"
-msgstr ""
+msgstr "module"
 
 #: context/admin.py:43
 msgid "modules"
-msgstr ""
+msgstr "modules"
 
 #: context/models.py:9 context/models.py:20 notification/models.py:82
-#: organization/models.py:15 project/models.py:22 statement/models.py:10
+#: organization/models.py:15 project/models.py:20 statement/models.py:10
 #: statement/models.py:37 statement/models.py:47 statement/models.py:63
-#: statement/models.py:101 statement/models.py:117 support/models.py:64
+#: statement/models.py:96 statement/models.py:118 support/models.py:64
 #: support/models.py:78 support/models.py:97 survey/models.py:10
-#: survey/models.py:34 survey/models.py:71 survey/models.py:89
-#: statement/models.py:96 statement/models.py:112 survey/models.py:87
-#: statement/models.py:118 project/models.py:20
+#: survey/models.py:34 survey/models.py:71 survey/models.py:87
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 #: context/models.py:10 context/models.py:21 notification/models.py:35
-#: notification/models.py:83 organization/models.py:20 project/models.py:23
+#: notification/models.py:83 organization/models.py:20 project/models.py:21
 #: statement/models.py:20 support/models.py:26 support/models.py:79
-#: support/models.py:109 survey/models.py:36 project/models.py:21
+#: support/models.py:109 survey/models.py:36
 msgid "description"
-msgstr ""
+msgstr "description"
 
 #: neatplus/admin.py:25
 #, python-brace-format
 msgid "{name} rejected"
-msgstr ""
+msgstr "{name} refusé"
 
 #: neatplus/admin.py:32
 #, python-brace-format
 msgid "{name} accepted"
-msgstr ""
+msgstr "{name} accepté"
 
 msgid "Unable to log in with provided credentials."
 msgstr ""
@@ -74,23 +72,23 @@ msgstr ""
 
 #: neatplus/models.py:7
 msgid "created at"
-msgstr ""
+msgstr "créé à"
 
 #: neatplus/models.py:8
 msgid "modified at"
-msgstr ""
+msgstr "modifié à"
 
 #: neatplus/models.py:23
 msgid "created by"
-msgstr ""
+msgstr "créé par"
 
 #: neatplus/models.py:33
 msgid "updated by"
-msgstr ""
+msgstr "mis à jour par"
 
 #: neatplus/models.py:41
 msgid "code"
-msgstr ""
+msgstr "code"
 
 msgid ""
 "{error}. You have {defender_config.FAILURE_LIMIT-attempt_count-1} attempts "
@@ -99,39 +97,39 @@ msgstr ""
 
 #: neatplus/settings.py:226
 msgid "English"
-msgstr ""
+msgstr "anglais"
 
 #: neatplus/settings.py:227
 msgid "Spanish"
-msgstr ""
+msgstr "espagnol"
 
 #: neatplus/settings.py:228
 msgid "French"
-msgstr ""
+msgstr "français"
 
 #: notification/admin.py:22 notification/apps.py:8
 msgid "notification"
-msgstr ""
+msgstr "notification"
 
 #: notification/admin.py:23
 msgid "notifications"
-msgstr ""
+msgstr "notifications"
 
 #: notification/admin.py:31
 msgid "notice"
-msgstr ""
+msgstr "avis"
 
 #: notification/admin.py:32
 msgid "notices"
-msgstr ""
+msgstr "avis"
 
 #: notification/models.py:18
 msgid "recipient"
-msgstr ""
+msgstr "destinataire"
 
 #: notification/models.py:26
 msgid "actor content type"
-msgstr ""
+msgstr "type de contenu d'acteur"
 
 #: notification/models.py:29
 msgid "actor object id"
@@ -139,15 +137,15 @@ msgstr ""
 
 #: notification/models.py:34
 msgid "verb"
-msgstr ""
+msgstr "verbe"
 
 #: notification/models.py:37
 msgid "notification type"
-msgstr ""
+msgstr "type de notification"
 
 #: notification/models.py:39
 msgid "timestamp"
-msgstr ""
+msgstr "horodatage"
 
 #: notification/models.py:48
 msgid "action object content type"
@@ -167,7 +165,7 @@ msgstr ""
 
 #: notification/models.py:71
 msgid "read"
-msgstr ""
+msgstr "lu"
 
 #: notification/models.py:79
 msgid "User"
@@ -190,21 +188,20 @@ msgstr ""
 
 #: notification/views.py:53 notification/views.py:64
 msgid "Successfully marked all notification as read"
-msgstr ""
+msgstr "Toutes les notifications ont été marquées avec succès comme lues"
 
 #: notification/views.py:73 notification/views.py:84
 msgid "Successfully marked as read"
-msgstr ""
+msgstr "Marqué avec succès comme lu"
 
 #: organization/admin.py:20 organization/apps.py:8 organization/models.py:103
-#: project/models.py:31 support/models.py:107 user/models.py:53
-#: project/models.py:29
+#: project/models.py:29 support/models.py:107 user/models.py:53
 msgid "organization"
-msgstr ""
+msgstr "organisation"
 
 #: organization/admin.py:21
 msgid "organizations"
-msgstr ""
+msgstr "organisations"
 
 #: organization/admin.py:31
 msgid "organization member request"
@@ -229,43 +226,41 @@ msgstr ""
 
 #: organization/models.py:17 survey/models.py:60
 msgid "acronym"
-msgstr ""
+msgstr "sigle"
 
 #: organization/models.py:23
 msgid "logo"
-msgstr ""
+msgstr "logo"
 
 #: organization/models.py:32
 msgid "admins"
-msgstr ""
+msgstr "admins"
 
 #: organization/models.py:38
 msgid "members"
-msgstr ""
+msgstr "membres"
 
-#: organization/models.py:41 organization/models.py:106 project/models.py:44
-#: project/models.py:42
+#: organization/models.py:41 organization/models.py:106 project/models.py:42
 msgid "status"
-msgstr ""
+msgstr "statut"
 
 #: organization/models.py:48
 msgid "point of contact"
-msgstr ""
+msgstr "point de contact"
 
 #: organization/models.py:57
 msgid "organization parent"
 msgstr ""
 
-#: organization/models.py:97 project/models.py:99 user/admin.py:37
+#: organization/models.py:97 project/models.py:97 user/admin.py:37
 #: user/apps.py:8 user/models.py:144 user/models.py:162 user/models.py:179
-#: user/models.py:197 project/models.py:97
+#: user/models.py:197
 msgid "user"
-msgstr ""
+msgstr "utilisateur"
 
-#: organization/views.py:51 organization/views.py:73 organization/views.py:49
-#: organization/views.py:71 organization/views.py:46 organization/views.py:68
+#: organization/views.py:46 organization/views.py:68
 msgid "Successfully created project"
-msgstr ""
+msgstr "Projet créé avec succès"
 
 #: organization/views.py:82 organization/views.py:100 organization/views.py:80
 #: organization/views.py:98 organization/views.py:77 organization/views.py:95
@@ -302,22 +297,22 @@ msgstr ""
 msgid "Member request successfully rejected"
 msgstr ""
 
-#: project/admin.py:34 project/apps.py:8 project/models.py:96
-#: survey/models.py:94 survey/models.py:92 project/models.py:94
+#: project/admin.py:34 project/apps.py:8 project/models.py:94
+#: survey/models.py:92
 msgid "project"
-msgstr ""
+msgstr "projet"
 
 #: project/admin.py:35
 msgid "projects"
-msgstr ""
+msgstr "projets"
 
 #: project/admin.py:44
 msgid "project user"
-msgstr ""
+msgstr "utilisateur du projet"
 
 #: project/admin.py:45
 msgid "project users"
-msgstr ""
+msgstr "utilisateurs du projet"
 
 #: project/filters.py:10
 msgid "My Project"
@@ -335,17 +330,17 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
-#: project/models.py:34 project/models.py:32
+#: project/models.py:32
 msgid "visibility"
-msgstr ""
+msgstr "visibilité"
 
-#: project/models.py:41 user/admin.py:38 project/models.py:39
+#: project/models.py:39 user/admin.py:38
 msgid "users"
-msgstr ""
+msgstr "utilisateurs"
 
-#: project/models.py:57 project/models.py:55
+#: project/models.py:55
 msgid "share analytics with NEAT"
-msgstr ""
+msgstr "partager des analyses avec NEAT"
 
 #: project/models.py:92
 msgid "Write"
@@ -355,13 +350,13 @@ msgstr ""
 msgid "Read Only"
 msgstr ""
 
-#: project/models.py:102 project/models.py:100
+#: project/models.py:100
 msgid "permission"
-msgstr ""
+msgstr "autorisation"
 
-#: project/serializers.py:57 project/serializers.py:56
+#: project/serializers.py:56
 msgid "Cannot create project for not accepted organization"
-msgstr ""
+msgstr "Impossible de créer un projet pour une organisation non acceptée"
 
 #: project/serializers.py:66 project/serializers.py:65
 msgid ""
@@ -477,29 +472,28 @@ msgstr ""
 
 #: statement/models.py:12
 msgid "icon"
-msgstr ""
+msgstr "icône"
 
 #: statement/models.py:64 survey/models.py:38
 msgid "hints"
-msgstr ""
+msgstr "indices"
 
-#: statement/models.py:83 survey/admin.py:58 statement/models.py:78
+#: statement/models.py:78 survey/admin.py:58
 msgid "questions"
-msgstr ""
+msgstr "questions"
 
-#: statement/models.py:89 survey/admin.py:76 survey/models.py:131
-#: statement/models.py:84 survey/models.py:129 statement/models.py:107
-#: statement/models.py:129
+#: statement/models.py:84 statement/models.py:107 statement/models.py:129
+#: survey/admin.py:76 survey/models.py:129
 msgid "options"
-msgstr ""
+msgstr "options"
 
-#: statement/models.py:91 statement/models.py:86
+#: statement/models.py:86
 msgid "experimental"
-msgstr ""
+msgstr "expérimental"
 
-#: summary/models.py:27 survey/admin.py:25 survey/models.py:46
+#: survey/admin.py:25 survey/models.py:46
 msgid "question group"
-msgstr ""
+msgstr "groupe de questions"
 
 msgid "formula"
 msgstr ""
@@ -509,22 +503,19 @@ msgstr ""
 msgid "version"
 msgstr ""
 
-#: statement/models.py:134 support/models.py:53 survey/admin.py:57
-#: survey/models.py:76 survey/models.py:119 statement/models.py:129
-#: survey/models.py:117 statement/models.py:141
+#: statement/models.py:141 support/models.py:53 survey/admin.py:57
+#: survey/models.py:76 survey/models.py:117
 msgid "question"
-msgstr ""
+msgstr "question"
 
-#: statement/models.py:139 statement/models.py:173 statement/models.py:134
-#: statement/models.py:168 statement/models.py:146 statement/models.py:180
+#: statement/models.py:146 statement/models.py:168
 msgid "weightage"
-msgstr ""
+msgstr "pondération"
 
-#: statement/models.py:168 survey/admin.py:75 statement/models.py:163
-#: statement/models.py:175 statement/models.py:209 statement/models.py:230
-#: statement/models.py:185 statement/models.py:206
+#: statement/models.py:163 statement/models.py:185 statement/models.py:206
+#: survey/admin.py:75
 msgid "option"
-msgstr ""
+msgstr "option"
 
 #: statement/views.py:70 statement/views.py:110 statement/views.py:103
 #: statement/views.py:76
@@ -558,13 +549,13 @@ msgstr ""
 msgid "No option statements found for draft"
 msgstr ""
 
-#: summary/admin.py:16 summary/models.py:58 summary/admin.py:15
+#: summary/admin.py:15
 msgid "survey result"
-msgstr ""
+msgstr "résultat du sondage"
 
-#: summary/admin.py:17 summary/admin.py:16
+#: summary/admin.py:16
 msgid "survey results"
-msgstr ""
+msgstr "résultats du sondage"
 
 msgid "survey result feedback"
 msgstr ""
@@ -575,16 +566,16 @@ msgstr ""
 
 #: summary/apps.py:8 support/models.py:108
 msgid "summary"
-msgstr ""
+msgstr "résumé"
 
 #: summary/models.py:15 survey/admin.py:92 survey/apps.py:8
-#: survey/models.py:125 survey/models.py:123
+#: survey/models.py:123
 msgid "survey"
-msgstr ""
+msgstr "sondage"
 
-#: summary/models.py:32 summary/models.py:23
+#: summary/models.py:23
 msgid "score"
-msgstr ""
+msgstr "score"
 
 msgid "Can add baseline feedback"
 msgstr ""
@@ -636,51 +627,51 @@ msgstr ""
 
 #: support/admin.py:23
 msgid "legal document"
-msgstr ""
+msgstr "document juridique"
 
 #: support/admin.py:24
 msgid "legal documents"
-msgstr ""
+msgstr "documents juridiques"
 
 #: support/admin.py:34
 msgid "frequently asked question"
-msgstr ""
+msgstr "foire aux questions"
 
 #: support/admin.py:35
 msgid "frequently asked questions"
-msgstr ""
+msgstr "foire aux questions"
 
 #: support/admin.py:44 support/admin.py:60
 msgid "resource"
-msgstr ""
+msgstr "ressource"
 
 #: support/admin.py:45 support/models.py:86
 msgid "resource tags"
-msgstr ""
+msgstr "balises de ressources"
 
 #: support/admin.py:61
 msgid "resources"
-msgstr ""
+msgstr "ressources"
 
 #: support/admin.py:70
 msgid "action"
-msgstr ""
+msgstr "action"
 
 #: support/admin.py:71
 msgid "actions"
-msgstr ""
+msgstr "actions"
 
 #: support/admin.py:85
 msgid "email template"
-msgstr ""
+msgstr "modèle de courriel"
 
 #: support/admin.py:86
 msgid "email templates"
-msgstr ""
+msgstr "modèles de courriel"
 
 #: support/apps.py:8
 msgid "support"
-msgstr ""
+msgstr "assistance"
 
 #: support/models.py:13
 msgid "Terms And Conditions"
@@ -696,11 +687,12 @@ msgstr ""
 
 #: support/models.py:21
 msgid "document type"
-msgstr ""
+msgstr "type de document"
 
 #: support/models.py:54 survey/models.py:127 survey/models.py:125
+#, fuzzy
 msgid "answer"
-msgstr ""
+msgstr "réponse"
 
 #: support/models.py:75
 msgid "Attachment"
@@ -712,50 +704,50 @@ msgstr ""
 
 #: support/models.py:81
 msgid "resource type"
-msgstr ""
+msgstr "type de ressource"
 
 #: support/models.py:83
 msgid "video url"
-msgstr ""
+msgstr "URL de la vidéo"
 
 #: support/models.py:84
 msgid "attachment"
-msgstr ""
+msgstr "pièce jointe"
 
 #: support/models.py:110
 msgid "point"
-msgstr ""
+msgstr "point"
 
 #: support/models.py:120 user/models.py:154
 msgid "identifier"
-msgstr ""
+msgstr "identifiant"
 
 #: support/models.py:121
 msgid "subject"
-msgstr ""
+msgstr "objet"
 
 msgid "html message"
 msgstr ""
 
 #: support/models.py:123
 msgid "text message"
-msgstr ""
+msgstr "message textuel"
 
-#: statement/models.py:77 survey/admin.py:26
+#: survey/admin.py:26
 msgid "question groups"
-msgstr ""
+msgstr "groupes de questions"
 
 #: survey/admin.py:93
 msgid "surveys"
-msgstr ""
+msgstr "sondages"
 
 #: survey/admin.py:102
 msgid "survey answer"
-msgstr ""
+msgstr "réponse au sondage"
 
 #: survey/admin.py:103
 msgid "survey answers"
-msgstr ""
+msgstr "réponses au sondage"
 
 #: survey/models.py:11 survey/models.py:58
 msgid "skip logic"
@@ -813,9 +805,9 @@ msgstr ""
 msgid "config"
 msgstr ""
 
-#: survey/models.py:97 survey/models.py:95
+#: survey/models.py:95
 msgid "shared publicly"
-msgstr ""
+msgstr "partagé publiquement"
 
 #: survey/models.py:99 survey/models.py:97
 msgid "shared link identifier"
@@ -902,6 +894,8 @@ msgid ""
 "Enter a valid username. This value may contain only English letters, "
 "numbers, and ./-/_ characters."
 msgstr ""
+"Entrez un nom d'utilisateur valide. Cette valeur ne peut contenir que des "
+"lettres sans diacritiques, des chiffres et les caractères ./-/_"
 
 #: user/models.py:22
 msgid "username"
@@ -918,11 +912,11 @@ msgstr ""
 
 #: user/models.py:37
 msgid "email address"
-msgstr ""
+msgstr "adresse électronique"
 
 #: user/models.py:40
 msgid "A user with that email already exists."
-msgstr ""
+msgstr "Un utilisateur avec cette adresse courriel existe déjà."
 
 #: user/models.py:47
 msgid ""
@@ -932,31 +926,31 @@ msgstr ""
 
 #: user/models.py:56
 msgid "role"
-msgstr ""
+msgstr "rôle"
 
 #: user/models.py:59
 msgid "accepted terms and privacy policy"
-msgstr ""
+msgstr "conditions acceptées et politique de confidentialité"
 
 #: user/models.py:147 user/models.py:165 user/models.py:182
 msgid "number of incorrect attempts"
-msgstr ""
+msgstr "nombre de tentatives incorrectes"
 
 #: user/models.py:150 user/models.py:168 user/models.py:185
 msgid "pin"
-msgstr ""
+msgstr "NIP"
 
 #: user/models.py:152 user/models.py:170 user/models.py:187
 msgid "pin expiry time"
-msgstr ""
+msgstr "délai d'expiration du NIP"
 
 #: user/models.py:188
 msgid "new email"
-msgstr ""
+msgstr "nouveau courriel"
 
 #: user/models.py:199
 msgid "password"
-msgstr ""
+msgstr "mot de passe"
 
 #: user/password_validation.py:32
 #, python-format
@@ -981,8 +975,8 @@ msgstr[1] ""
 #, python-format
 msgid "Cannot use last %(count)d password"
 msgid_plural "Cannot use last %(count)d passwords"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Impossible d'utiliser le %(count)d dernier mot de passe"
+msgstr[1] "Impossible d'utiliser les %(count)d derniers mots de passe"
 
 #: user/password_validation.py:83
 #, python-brace-format
@@ -991,55 +985,57 @@ msgid_plural "Your password must not contain last {count} password"
 msgstr[0] ""
 msgstr[1] ""
 
-#: user/serializers.py:41 user/serializers.py:35
+#: user/serializers.py:35
 msgid "Password field missing"
-msgstr ""
+msgstr "Champ du mot de passe manquant"
 
-#: user/serializers.py:45 user/serializers.py:60 user/serializers.py:85
 #: user/serializers.py:39 user/serializers.py:54 user/serializers.py:75
 msgid "Invalid password for user"
-msgstr ""
+msgstr "Mot de passe invalide pour l'utilisateur"
 
 #: user/serializers.py:64 user/views.py:91
 msgid "New password and re new password doesn't match"
 msgstr ""
 
-#: user/serializers.py:82 user/serializers.py:72
+#: user/serializers.py:72
 msgid "Email is already used"
-msgstr ""
+msgstr "L'adresse est déjà utilisée"
 
 #: user/serializers.py:128 user/views.py:326 user/views.py:324
 #: user/serializers.py:118 user/views.py:317
 msgid "Password and re_password doesn't match"
 msgstr ""
 
-#: user/views.py:75 user/views.py:105 user/views.py:103 user/views.py:67
-#: user/views.py:96
+#: user/views.py:67 user/views.py:96
 msgid "Password successfully updated"
-msgstr ""
+msgstr "Le mot de passe a été mis à jour avec succès"
 
-#: user/views.py:113 user/views.py:152 user/views.py:111 user/views.py:150
 #: user/views.py:104 user/views.py:143
 msgid "User successfully registered and email send to user's email address"
 msgstr ""
+"L'utilisateur s'est enregistré avec succès et le courriel a été envoyé à "
+"l'adresse électronique de l'utilisateur"
 
-#: user/views.py:136 user/views.py:134 user/views.py:127
+#: user/views.py:127
 msgid "User with username/email already exists"
-msgstr ""
+msgstr "Un utilisateur avec ce nom d'utilisateur ou cette adresse existe déjà"
 
-#: user/views.py:163 user/views.py:211 user/views.py:161 user/views.py:209
 #: user/views.py:154 user/views.py:202
 msgid "Password reset email successfully send"
 msgstr ""
+"Le courriel de réinitialisation du mot de passe a été envoyé avec succès"
 
-#: user/views.py:188 user/views.py:186 user/views.py:179
+#: user/views.py:179
 msgid "No active user present for username/email your account may be blocked"
 msgstr ""
+"Aucun utilisateur actif n'est présent pour le nom d'utilisateur / l'adresse "
+"courriel, votre compte peut être bloqué"
 
-#: user/views.py:238 user/views.py:318 user/views.py:236 user/views.py:316
 #: user/views.py:229 user/views.py:309
 msgid "No active user present for username/email"
 msgstr ""
+"Aucun utilisateur actif présent pour ce nom d'utilisateur / cette adresse "
+"courriel"
 
 #: user/views.py:259 user/views.py:346 user/views.py:257 user/views.py:344
 #: user/views.py:250 user/views.py:337
@@ -1075,78 +1071,78 @@ msgstr ""
 msgid "Password reset identifier is incorrect"
 msgstr ""
 
-#: user/views.py:390 user/views.py:447 user/views.py:388 user/views.py:445
 #: user/views.py:379 user/views.py:436
 msgid "Email confirmation mail successfully sent"
-msgstr ""
+msgstr "Envoi réussi du courriel de confirmation"
 
-#: user/views.py:413 user/views.py:411 user/views.py:402
+#: user/views.py:402
 msgid "No user present with given email address/username"
 msgstr ""
+"Aucun utilisateur présent avec l'adresse électronique/le nom d'utilisateur "
+"donné(e)"
 
 #: user/views.py:420 user/views.py:557 user/views.py:418 user/views.py:555
 #: user/views.py:409 user/views.py:546
 msgid "User is inactive for trying too many times"
 msgstr ""
 
-#: user/views.py:425 user/views.py:423 user/views.py:414
+#: user/views.py:414
 msgid "Email address has already been confirmed"
-msgstr ""
+msgstr "L'adresse électronique a déjà été confirmée"
 
-#: user/views.py:454 user/views.py:526 user/views.py:452 user/views.py:524
 #: user/views.py:443 user/views.py:515
 msgid "Email successfully confirmed"
-msgstr ""
+msgstr "Adresse courriel confirmée avec succès"
 
 #: user/views.py:478 user/views.py:476 user/views.py:467
 msgid "No inactive user present for username"
 msgstr ""
 
-#: user/views.py:496 user/views.py:494 user/views.py:485
+#: user/views.py:485
 msgid "Email is already confirmed for user"
-msgstr ""
+msgstr "L'adresse courriel est déjà confirmée pour l'utilisateur"
 
-#: user/views.py:508 user/views.py:506 user/views.py:497
+#: user/views.py:497
 msgid "Email confirmation pin is incorrect"
-msgstr ""
+msgstr "Le code de confirmation de l'adresse est incorrect"
 
-#: user/views.py:513 user/views.py:511 user/views.py:502
+#: user/views.py:502
 msgid "Email confirmation pin has expired"
-msgstr ""
+msgstr "Le code de confirmation de l'adresse a expiré"
 
-#: user/views.py:517 user/views.py:515 user/views.py:506
+#: user/views.py:506
 msgid "No matching active username/email found"
 msgstr ""
+"Aucun nom d'utilisateur actif ni aucune adresse activr correspondants n'ont "
+"été trouvés"
 
-#: user/views.py:533 user/views.py:581 user/views.py:531 user/views.py:579
 #: user/views.py:522 user/views.py:570
 msgid "Email change mail successfully sent"
-msgstr ""
+msgstr "Envoi réussi du courriel de modification"
 
-#: user/views.py:587 user/views.py:657 user/views.py:585 user/views.py:655
 #: user/views.py:576 user/views.py:646
 msgid "Email successfully changed"
-msgstr ""
+msgstr "L'adresse courriel a été modifiée avec succès"
 
-#: user/views.py:622 user/views.py:620 user/views.py:611
+#: user/views.py:611
 msgid "Email is already changed for user"
-msgstr ""
+msgstr "Cette adresse est déjà changée pour cet utilisateur"
 
-#: user/views.py:634 user/views.py:632 user/views.py:623
+#: user/views.py:623
 msgid "Email change pin is incorrect"
-msgstr ""
+msgstr "Le code de changement d'adresse électronique est incorrect"
 
-#: user/views.py:639 user/views.py:637 user/views.py:628
+#: user/views.py:628
 msgid "Email change pin has expired"
-msgstr ""
+msgstr "Le code de changement d'adresse a expiré"
 
 #: user/views.py:643 user/views.py:641 user/views.py:632
 msgid "No matching active change change request found"
 msgstr ""
 
-#: user/views.py:652 user/views.py:650 user/views.py:641
+#: user/views.py:641
 msgid "email already used for account creation"
-msgstr ""
+msgstr "adresse courriel déjà utilisée pour la création du compte"
 
 msgid "No statement formulas found for this version"
 msgstr ""
@@ -1160,7 +1156,7 @@ msgstr ""
 
 #: support/models.py:122
 msgid "html mesaage"
-msgstr ""
+msgstr "message HTML"
 
 #: summary/models.py:61
 msgid "excepted score"
