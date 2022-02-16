@@ -144,6 +144,8 @@ class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         "Statement", on_delete=models.CASCADE, verbose_name=_("statement")
     )
     weightage = models.FloatField(_("weightage"))
+    version = models.CharField(_("version"), max_length=255)
+    is_active = models.BooleanField(_("active"), default=False, editable=False)
 
     def __str__(self):
         return (
@@ -155,7 +157,17 @@ class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         )
 
     class Meta(OrderedModel.Meta):
-        pass
+        constraints = [
+            models.UniqueConstraint(
+                fields=["question", "statement", "version"],
+                name="unique_version_question_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["question", "statement"],
+                condition=models.Q(is_active=True),
+                name="one_active_question_statement",
+            ),
+        ]
 
 
 class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
@@ -166,6 +178,8 @@ class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         "Statement", on_delete=models.CASCADE, verbose_name=_("statement")
     )
     weightage = models.FloatField(_("weightage"))
+    version = models.CharField(_("version"), max_length=255)
+    is_active = models.BooleanField(_("active"), default=False, editable=False)
 
     def __str__(self):
         return (
@@ -177,7 +191,17 @@ class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         )
 
     class Meta(OrderedModel.Meta):
-        pass
+        constraints = [
+            models.UniqueConstraint(
+                fields=["option", "statement", "version"],
+                name="unique_version_option_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["option", "statement"],
+                condition=models.Q(is_active=True),
+                name="one_active_option_statement",
+            ),
+        ]
 
 
 class OptionMitigation(UserStampedModel, TimeStampedModel, OrderedModel):

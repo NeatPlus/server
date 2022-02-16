@@ -16,15 +16,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: iamsauravsharma/create-dotenv@v1.2.0
+      - uses: iamsauravsharma/create-dotenv@v1.2.1
         with:
           env-prefix: 'ENV_'
         env:
           ENV_PROJECT_NAME: "neatplus"
           ENV_SERVER_ENVIRONMENT: "testing"
-      - name: Initial docker related setup
+          ENV_DATABASE_URL: postgis://postgres:postgres@db:5432/postgres
+          ENV_POSTGRES_PASSWORD: postgres
+          ENV_REDIS_PASSWORD: redis
+      - name: Initial external services setup
         run: |
           docker network create external-services
+          ln -s docker/external_services.yml external_services.yml
+          docker-compose -f external_services.yml up -d
           ln -s docker/docker-compose.test.yml docker-compose.yml
       - name: Run test
         run: |

@@ -9,7 +9,7 @@ RANDOM_STRING_CHARS = string.ascii_letters + string.digits
 
 def gen_random_number(length):
     range_start = 10 ** (length - 1)
-    range_end = (10 ** length) - 1
+    range_end = (10**length) - 1
     return secrets.choice(range(range_start, range_end))
 
 

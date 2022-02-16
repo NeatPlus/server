@@ -8,9 +8,9 @@ from neatplus.models import TimeStampedModel, UserStampedModel
 
 class Organization(MPTTModel, TimeStampedModel, UserStampedModel):
     class StatusChoice(models.TextChoices):
-        PENDING = "pending"
-        ACCEPTED = "accepted"
-        REJECTED = "rejected"
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
 
     title = models.CharField(_("title"), max_length=255, unique=True)
     acronym = models.CharField(
@@ -86,9 +86,9 @@ class Organization(MPTTModel, TimeStampedModel, UserStampedModel):
 
 class OrganizationMemberRequest(UserStampedModel, TimeStampedModel):
     class StatusChoice(models.TextChoices):
-        PENDING = "pending"
-        ACCEPTED = "accepted"
-        REJECTED = "rejected"
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

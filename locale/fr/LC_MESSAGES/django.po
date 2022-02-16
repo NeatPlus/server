@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 05:55+0000\n"
+"POT-Creation-Date: 2022-02-16 06:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: context/admin.py:24 context/apps.py:8 context/models.py:26
-#: project/models.py:52 statement/models.py:26 support/models.py:105
+#: project/models.py:54 statement/models.py:26 support/models.py:105
 msgid "context"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgid "modules"
 msgstr ""
 
 #: context/models.py:9 context/models.py:20 notification/models.py:82
-#: organization/models.py:15 project/models.py:20 statement/models.py:10
+#: organization/models.py:15 project/models.py:22 statement/models.py:10
 #: statement/models.py:37 statement/models.py:47 statement/models.py:63
 #: statement/models.py:96 statement/models.py:118 support/models.py:64
 #: support/models.py:78 support/models.py:97 survey/models.py:10
@@ -45,7 +45,7 @@ msgid "title"
 msgstr ""
 
 #: context/models.py:10 context/models.py:21 notification/models.py:35
-#: notification/models.py:83 organization/models.py:20 project/models.py:21
+#: notification/models.py:83 organization/models.py:20 project/models.py:23
 #: statement/models.py:20 support/models.py:26 support/models.py:79
 #: support/models.py:109 survey/models.py:36
 msgid "description"
@@ -159,12 +159,20 @@ msgstr ""
 msgid "read"
 msgstr ""
 
+#: notification/models.py:79
+msgid "User"
+msgstr ""
+
+#: notification/models.py:80 project/filters.py:12 project/models.py:11
+msgid "Public"
+msgstr ""
+
 #: notification/models.py:85
 msgid "notice type"
 msgstr ""
 
-#: notification/models.py:90 user/models.py:44 user/models.py:153
-#: user/models.py:171 user/models.py:189
+#: notification/models.py:90 statement/models.py:148 statement/models.py:182
+#: user/models.py:44 user/models.py:153 user/models.py:171 user/models.py:189
 msgid "active"
 msgstr ""
 
@@ -177,7 +185,7 @@ msgid "Successfully marked as read"
 msgstr ""
 
 #: organization/admin.py:20 organization/apps.py:8 organization/models.py:103
-#: project/models.py:29 support/models.py:107 user/models.py:53
+#: project/models.py:31 support/models.py:107 user/models.py:53
 msgid "organization"
 msgstr ""
 
@@ -191,6 +199,18 @@ msgstr ""
 
 #: organization/admin.py:32
 msgid "organization member requests"
+msgstr ""
+
+#: organization/models.py:11 organization/models.py:89 project/models.py:18
+msgid "Pending"
+msgstr ""
+
+#: organization/models.py:12 organization/models.py:90 project/models.py:19
+msgid "Accepted"
+msgstr ""
+
+#: organization/models.py:13 organization/models.py:91 project/models.py:20
+msgid "Rejected"
 msgstr ""
 
 #: organization/models.py:17 survey/models.py:60
@@ -209,7 +229,7 @@ msgstr ""
 msgid "members"
 msgstr ""
 
-#: organization/models.py:41 organization/models.py:106 project/models.py:42
+#: organization/models.py:41 organization/models.py:106 project/models.py:44
 msgid "status"
 msgstr ""
 
@@ -221,7 +241,7 @@ msgstr ""
 msgid "organization parent"
 msgstr ""
 
-#: organization/models.py:97 project/models.py:97 user/admin.py:37
+#: organization/models.py:97 project/models.py:99 user/admin.py:37
 #: user/apps.py:8 user/models.py:144 user/models.py:162 user/models.py:179
 #: user/models.py:197
 msgid "user"
@@ -243,7 +263,7 @@ msgstr ""
 msgid "Member request successfully rejected"
 msgstr ""
 
-#: project/admin.py:34 project/apps.py:8 project/models.py:94
+#: project/admin.py:34 project/apps.py:8 project/models.py:96
 #: survey/models.py:92
 msgid "project"
 msgstr ""
@@ -260,19 +280,43 @@ msgstr ""
 msgid "project users"
 msgstr ""
 
-#: project/models.py:32
+#: project/filters.py:10
+msgid "My Project"
+msgstr ""
+
+#: project/filters.py:11
+msgid "Organization"
+msgstr ""
+
+#: project/models.py:13
+msgid "Public Within Organization"
+msgstr ""
+
+#: project/models.py:15
+msgid "Private"
+msgstr ""
+
+#: project/models.py:34
 msgid "visibility"
 msgstr ""
 
-#: project/models.py:39 user/admin.py:38
+#: project/models.py:41 user/admin.py:38
 msgid "users"
 msgstr ""
 
-#: project/models.py:55
+#: project/models.py:57
 msgid "share analytics with NEAT"
 msgstr ""
 
-#: project/models.py:100
+#: project/models.py:92
+msgid "Write"
+msgstr ""
+
+#: project/models.py:93
+msgid "Read Only"
+msgstr ""
+
+#: project/models.py:102
 msgid "permission"
 msgstr ""
 
@@ -334,7 +378,7 @@ msgid "statement tags"
 msgstr ""
 
 #: statement/admin.py:75 statement/apps.py:8 statement/models.py:101
-#: statement/models.py:123 statement/models.py:144 statement/models.py:166
+#: statement/models.py:123 statement/models.py:144 statement/models.py:178
 #: summary/models.py:9
 msgid "statement"
 msgstr ""
@@ -343,7 +387,7 @@ msgstr ""
 msgid "statements"
 msgstr ""
 
-#: statement/admin.py:98 statement/models.py:188
+#: statement/admin.py:98 statement/models.py:212
 msgid "mitigation"
 msgstr ""
 
@@ -351,7 +395,7 @@ msgstr ""
 msgid "mitigations"
 msgstr ""
 
-#: statement/admin.py:121 statement/models.py:209
+#: statement/admin.py:121 statement/models.py:233
 msgid "opportunity"
 msgstr ""
 
@@ -417,11 +461,15 @@ msgstr ""
 msgid "question"
 msgstr ""
 
-#: statement/models.py:146 statement/models.py:168
+#: statement/models.py:146 statement/models.py:180
 msgid "weightage"
 msgstr ""
 
-#: statement/models.py:163 statement/models.py:185 statement/models.py:206
+#: statement/models.py:147 statement/models.py:181
+msgid "version"
+msgstr ""
+
+#: statement/models.py:175 statement/models.py:209 statement/models.py:230
 #: survey/admin.py:75
 msgid "option"
 msgstr ""
@@ -495,12 +543,32 @@ msgstr ""
 msgid "support"
 msgstr ""
 
+#: support/models.py:13
+msgid "Terms And Conditions"
+msgstr ""
+
+#: support/models.py:14
+msgid "Privacy Policy"
+msgstr ""
+
+#: support/models.py:15
+msgid "Cookie Policy"
+msgstr ""
+
 #: support/models.py:21
 msgid "document type"
 msgstr ""
 
 #: support/models.py:54 survey/models.py:125
 msgid "answer"
+msgstr ""
+
+#: support/models.py:75
+msgid "Attachment"
+msgstr ""
+
+#: support/models.py:76
+msgid "Video"
 msgstr ""
 
 #: support/models.py:81
@@ -557,6 +625,46 @@ msgstr ""
 
 #: survey/models.py:11 survey/models.py:58
 msgid "skip logic"
+msgstr ""
+
+#: survey/models.py:21
+msgid "Boolean"
+msgstr ""
+
+#: survey/models.py:22
+msgid "Date"
+msgstr ""
+
+#: survey/models.py:23
+msgid "Description"
+msgstr ""
+
+#: survey/models.py:24
+msgid "Single Image"
+msgstr ""
+
+#: survey/models.py:25
+msgid "Multiple Image"
+msgstr ""
+
+#: survey/models.py:26
+msgid "Location"
+msgstr ""
+
+#: survey/models.py:27
+msgid "Number"
+msgstr ""
+
+#: survey/models.py:28
+msgid "Text"
+msgstr ""
+
+#: survey/models.py:29
+msgid "Single Option"
+msgstr ""
+
+#: survey/models.py:30
+msgid "Multiple Option"
 msgstr ""
 
 #: survey/models.py:40 survey/models.py:127

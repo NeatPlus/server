@@ -10,9 +10,9 @@ from neatplus.models import TimeStampedModel, UserStampedModel
 
 
 class LegalDocumentTypeChoice(models.TextChoices):
-    TERMS_AND_CONDITIONS = "terms-and-conditions"
-    PRIVACY_POLICY = "privacy-policy"
-    COOKIE_POLICY = "cookie-policy"
+    TERMS_AND_CONDITIONS = "terms-and-conditions", _("Terms And Conditions")
+    PRIVACY_POLICY = "privacy-policy", _("Privacy Policy")
+    COOKIE_POLICY = "cookie-policy", _("Cookie Policy")
 
 
 class LegalDocument(UserStampedModel, TimeStampedModel):
@@ -72,8 +72,8 @@ class ResourceTag(UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Resource(UserStampedModel, TimeStampedModel, OrderedModel):
     class ResourceTypeChoices(models.TextChoices):
-        ATTACHMENT = "attachment"
-        VIDEO = "video"
+        ATTACHMENT = "attachment", _("Attachment")
+        VIDEO = "video", _("Video")
 
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"))

@@ -18,16 +18,16 @@ class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel)
 
 
 class AnswerTypeChoices(models.TextChoices):
-    BOOLEAN = "boolean"
-    DATE = "date"
-    DESCRIPTION = "description"
-    SINGLE_IMAGE = "single_image"
-    MULTIPLE_IMAGE = "multiple_image"
-    LOCATION = "location"
-    NUMBER = "number"
-    TEXT = "text"
-    SINGLE_OPTION = "single_option"
-    MULTIPLE_OPTION = "multiple_option"
+    BOOLEAN = "boolean", _("Boolean")
+    DATE = "date", _("Date")
+    DESCRIPTION = "description", _("Description")
+    SINGLE_IMAGE = "single_image", _("Single Image")
+    MULTIPLE_IMAGE = "multiple_image", _("Multiple Image")
+    LOCATION = "location", _("Location")
+    NUMBER = "number", _("Number")
+    TEXT = "text", _("Text")
+    SINGLE_OPTION = "single_option", _("Single Option")
+    MULTIPLE_OPTION = "multiple_option", _("Multiple Option")
 
 
 class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):

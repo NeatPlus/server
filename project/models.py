@@ -8,14 +8,16 @@ from neatplus.models import TimeStampedModel, UserStampedModel
 
 class Project(TimeStampedModel, UserStampedModel, OrderedModel):
     class VisibilityChoice(models.TextChoices):
-        PUBLIC = "public"
-        PUBLIC_WIITHIN_ORGANIZATION = "public_within_organization"
-        PRIVATE = "private"
+        PUBLIC = "public", _("Public")
+        PUBLIC_WITHIN_ORGANIZATION = "public_within_organization", _(
+            "Public Within Organization"
+        )
+        PRIVATE = "private", _("Private")
 
     class StatusChoice(models.TextChoices):
-        PENDING = "pending"
-        ACCEPTED = "accepted"
-        REJECTED = "rejected"
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
 
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"))
@@ -87,8 +89,8 @@ class Project(TimeStampedModel, UserStampedModel, OrderedModel):
 
 class ProjectUser(UserStampedModel, TimeStampedModel):
     class SurveyPermissionChoice(models.TextChoices):
-        WRITE = "write"
-        READ_ONLY = "read_only"
+        WRITE = "write", _("Write")
+        READ_ONLY = "read_only", _("Read Only")
 
     project = models.ForeignKey(
         "Project", on_delete=models.CASCADE, verbose_name=_("project")
