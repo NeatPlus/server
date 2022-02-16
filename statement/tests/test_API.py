@@ -44,7 +44,7 @@ class APITest(FullTestCase):
         )
         cls.statement_tag_group_detail_url = cls.reverse(
             "statement-tag-group-detail",
-            kwargs={"version": "v1", "pk": statement_tag.pk},
+            kwargs={"version": "v1", "pk": statement_tag_group.pk},
         )
         cls.statement_tag_list_url = cls.reverse(
             "statement-tag-list", kwargs={"version": "v1"}

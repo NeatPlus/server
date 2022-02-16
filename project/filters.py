@@ -1,4 +1,5 @@
 from django.db.models import Q, TextChoices
+from django.utils.translation import gettext_lazy as _
 from django_filters.filters import ChoiceFilter
 from django_filters.rest_framework import FilterSet
 
@@ -6,9 +7,9 @@ from .models import Project
 
 
 class TabChoice(TextChoices):
-    MY_PROJECT = "my_project"
-    ORGANIZATION = "organization"
-    PUBLIC = "public"
+    MY_PROJECT = "my_project", _("My Project")
+    ORGANIZATION = "organization", _("Organization")
+    PUBLIC = "public", _("Public")
 
 
 class ProjectFilter(FilterSet):

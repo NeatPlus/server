@@ -70,6 +70,8 @@ class QuestionStatementFilter(FilterSet):
         fields = {
             "statement": ["exact"],
             "question": ["exact"],
+            "version": ["exact"],
+            "is_active": ["exact"],
         }
 
 
@@ -79,6 +81,8 @@ class OptionStatementFilter(FilterSet):
         fields = {
             "statement": ["exact"],
             "option": ["exact"],
+            "version": ["exact"],
+            "is_active": ["exact"],
         }
 
 

@@ -76,8 +76,8 @@ class Notification(TimeStampedModel):
 
 class Notice(UserStampedModel, TimeStampedModel):
     class NoticeTypeChoice(models.TextChoices):
-        USER = "user"
-        PUBLIC = "public"
+        USER = "user", _("User")
+        PUBLIC = "public", _("Public")
 
     title = models.CharField(_("title"), max_length=255)
     description = RichTextField(_("description"), blank=True, null=True, default=None)
