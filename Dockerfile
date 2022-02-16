@@ -8,7 +8,7 @@ FROM ubuntu:20.04 as base
 # non interactive frontend
 ENV DEBIAN_FRONTEND=noninteractive
 
-# install requiremnts for python3.9 install
+# install requiremnts for python3.10 install
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     software-properties-common \
@@ -17,12 +17,12 @@ RUN apt-get update \
 # Add deadsnakes ppa
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 
-# install python3.9
+# install python3.10
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
-    python3.9 \
-    python3.9-dev \
-    python3.9-venv
+    python3.10 \
+    python3.10-dev \
+    python3.10-venv
 
 FROM base as python-base
 
@@ -31,7 +31,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.1.7 \
+    POETRY_VERSION=1.1.13 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1
@@ -47,10 +47,10 @@ RUN apt-get update \
     libsqlite3-mod-spatialite
 
 # Install pip
-RUN curl -sSL https://bootstrap.pypa.io/get-pip.py | python3.9
+RUN curl -sSL https://bootstrap.pypa.io/get-pip.py | python3.10
 
 # install virtualenv
-RUN pip3.9 install -U virtualenv
+RUN pip3.10 install -U virtualenv
 
 # Add gis ppa
 RUN add-apt-repository ppa:ubuntugis/ppa -y
@@ -61,7 +61,7 @@ RUN apt-get update \
     gdal-bin
 
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3.9
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3.10
 
 # testing stage
 FROM python-base as testing
