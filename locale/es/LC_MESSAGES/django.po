@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 06:24+0000\n"
+"POT-Creation-Date: 2022-02-17 05:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,27 +329,35 @@ msgid ""
 "No organization project cannot have public_within_organization visibility"
 msgstr ""
 
-#: project/views.py:71 project/views.py:88
+#: project/views.py:69 project/views.py:86
 msgid "Project successfully accepted"
 msgstr ""
 
-#: project/views.py:95 project/views.py:112
+#: project/views.py:93 project/views.py:110
 msgid "Project successfully rejected"
 msgstr ""
 
-#: project/views.py:119 project/views.py:159
+#: project/views.py:117 project/views.py:155
 msgid "Successfully modified users list for project"
 msgstr ""
 
-#: project/views.py:166 project/views.py:196
+#: project/views.py:152
+msgid "Failed to update or add users due to invalid data"
+msgstr ""
+
+#: project/views.py:162 project/views.py:190
 msgid "Successfully removed users from project"
 msgstr ""
 
-#: project/views.py:232 project/views.py:278
+#: project/views.py:187
+msgid "Failed to remove users due to invalid data"
+msgstr ""
+
+#: project/views.py:226 project/views.py:272
 msgid "Successfully submitted survey"
 msgstr ""
 
-#: project/views.py:272
+#: project/views.py:266
 msgid "Failed to create survey or survey answer due to invalid data"
 msgstr ""
 
@@ -711,24 +719,32 @@ msgstr ""
 msgid "Only one image is supported for question"
 msgstr ""
 
-#: survey/views.py:124
+#: survey/views.py:123
 msgid "Cannot update link of not shared survey"
 msgstr ""
 
-#: survey/views.py:131 survey/views.py:145
+#: survey/views.py:130 survey/views.py:144
 msgid "Successfully unshared survey"
 msgstr ""
 
-#: survey/views.py:164
+#: survey/views.py:163
 msgid "Identifier not found"
 msgstr ""
 
-#: survey/views.py:172 survey/views.py:206
+#: survey/views.py:171 survey/views.py:204
 msgid "Successfully added survey answers"
 msgstr ""
 
-#: survey/views.py:215 survey/views.py:248
+#: survey/views.py:200
+msgid "Failed to add answers for survey"
+msgstr ""
+
+#: survey/views.py:213 survey/views.py:243
 msgid "Successfully added survey results"
+msgstr ""
+
+#: survey/views.py:239
+msgid "Failed to create survey result due to invalid data"
 msgstr ""
 
 #: user/admin.py:9

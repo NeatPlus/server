@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
@@ -112,6 +110,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Response({"detail": _("Project successfully rejected")})
 
     @extend_schema(
+        request=UpsertProjectUserSerializer(many=True),
         responses=inline_serializer(
             name="ProjectUpsertResponseSerializer",
             fields={
@@ -119,7 +118,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                     default=_("Successfully modified users list for project")
                 )
             },
-        )
+        ),
     )
     @action(
         methods=["post"],
@@ -129,36 +128,35 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     )
     def update_or_add_users(self, request, *args, **kwargs):
         project = self.get_object()
-        data = request.data
-
-        if isinstance(data, dict):
-            serializer = self.get_serializer(data=data)
-        else:
-            serializer = self.get_serializer(data=data, many=True)
-
+        serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = serializer.validated_data
-        if isinstance(validated_data, OrderedDict):
-            validated_data = [validated_data]
-
-        for validated_datum in validated_data:
-            user = validated_datum.pop("user")
-            try:
-                project_user = ProjectUser.objects.get(project=project, user=user)
-                validated_datum["updated_by"] = request.user
-                for key, value in validated_datum.items():
-                    setattr(project_user, key, value)
-                project_user.save()
-            except ProjectUser.DoesNotExist:
-                validated_datum["created_by"] = request.user
-                project_user = ProjectUser.objects.create(
-                    project=project, user=user, **validated_datum
-                )
+        try:
+            with transaction.atomic():
+                for validated_datum in serializer.validated_data:
+                    user = validated_datum.pop("user")
+                    try:
+                        project_user = ProjectUser.objects.get(
+                            project=project, user=user
+                        )
+                        validated_datum["updated_by"] = request.user
+                        for key, value in validated_datum.items():
+                            setattr(project_user, key, value)
+                        project_user.save()
+                    except ProjectUser.DoesNotExist:
+                        validated_datum["created_by"] = request.user
+                        project_user = ProjectUser.objects.create(
+                            project=project, user=user, **validated_datum
+                        )
+        except Exception:
+            return Response(
+                {"error": _("Failed to update or add users due to invalid data")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response({"detail": _("Successfully modified users list for project")})
 
     @extend_schema(
+        request=RemoveProjectUserSerializer(many=True),
         responses=inline_serializer(
             name="ProjectRemoveUserResponseSerializer",
             fields={
@@ -166,7 +164,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                     default=_("Successfully removed users from project")
                 )
             },
-        )
+        ),
     )
     @action(
         methods=["post"],
@@ -176,23 +174,21 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     )
     def remove_users(self, request, *args, **kwargs):
         project = self.get_object()
-        data = request.data
 
-        if isinstance(data, dict):
-            serializer = self.get_serializer(data=data)
-        else:
-            serializer = self.get_serializer(data=data, many=True)
-
+        serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        validated_data = serializer.validated_data
-        if isinstance(validated_data, OrderedDict):
-            validated_data = [validated_data]
-
-        for validated_datum in validated_data:
-            user_obj = validated_datum.pop("user")
-            project.users.remove(user_obj)
+        try:
+            with transaction.atomic():
+                for validated_datum in serializer.validated_data:
+                    user_obj = validated_datum.pop("user")
+                    project.users.remove(user_obj)
+        except Exception:
+            return Response(
+                {"error": _("Failed to remove users due to invalid data")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response({"detail": _("Successfully removed users from project")})
 
     @action(

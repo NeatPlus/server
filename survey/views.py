@@ -1,5 +1,4 @@
-from collections import OrderedDict
-
+from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
@@ -165,6 +164,7 @@ class SurveyViewSet(
             )
 
     @extend_schema(
+        request=WritableSurveyAnswerSerializer(many=True),
         responses=inline_serializer(
             name="AddSurveyAnswerResponseSerializer",
             fields={
@@ -172,7 +172,7 @@ class SurveyViewSet(
                     default=_("Successfully added survey answers")
                 )
             },
-        )
+        ),
     )
     @action(
         methods=["post"],
@@ -183,31 +183,31 @@ class SurveyViewSet(
     def add_answers(self, request, *args, **kwargs):
         survey = self.get_object()
         user = self.request.user
-        data = request.data
-        if isinstance(data, dict):
-            serializer = self.get_serializer(data=data)
-        else:
-            serializer = self.get_serializer(data=data, many=True)
-
+        serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        validated_data = serializer.validated_data
-        if isinstance(validated_data, OrderedDict):
-            validated_data = [validated_data]
 
-        for validated_datum in validated_data:
-            options = validated_datum.pop("options", None)
-            survey_answer = SurveyAnswer.objects.create(
-                **validated_datum, survey=survey, created_by=user
+        try:
+            with transaction.atomic():
+                for validated_datum in serializer.validated_data:
+                    options = validated_datum.pop("options", None)
+                    survey_answer = SurveyAnswer.objects.create(
+                        **validated_datum, survey=survey, created_by=user
+                    )
+                    if options:
+                        survey_answer.options.add(*options)
+        except Exception:
+            return Response(
+                {"error": _("Failed to add answers for survey")},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-            if options:
-                survey_answer.options.add(*options)
         return Response(
             {"detail": _("Successfully added survey answers")},
             status=status.HTTP_201_CREATED,
         )
 
     @extend_schema(
+        request=WritableSurveyResultSerializer(many=True),
         responses=inline_serializer(
             name="AddSurveyResultResponseSerializer",
             fields={
@@ -215,7 +215,7 @@ class SurveyViewSet(
                     default=_("Successfully added survey results")
                 )
             },
-        )
+        ),
     )
     @action(
         methods=["post"],
@@ -226,23 +226,20 @@ class SurveyViewSet(
     def add_results(self, request, *args, **kwargs):
         survey = self.get_object()
         user = self.request.user
-        data = request.data
-
-        if isinstance(data, dict):
-            serializer = self.get_serializer(data=data)
-        else:
-            serializer = self.get_serializer(data=data, many=True)
-
+        serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        validated_data = serializer.validated_data
-        if isinstance(validated_data, OrderedDict):
-            validated_data = [validated_data]
-
-        for validated_datum in validated_data:
-            SurveyResult.objects.create(
-                **validated_datum, survey=survey, created_by=user
+        try:
+            with transaction.atomic():
+                for validated_datum in serializer.validated_data:
+                    SurveyResult.objects.create(
+                        **validated_datum, survey=survey, created_by=user
+                    )
+        except Exception:
+            return Response(
+                {"error": _("Failed to create survey result due to invalid data")},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(
             {"detail": _("Successfully added survey results")},

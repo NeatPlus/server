@@ -192,7 +192,7 @@ class APITest(FullTestCase):
         question_5 = self.baker.make("survey.Question", answer_type="multiple_option")
         question_5_option_1 = self.baker.make("survey.Option", question=question_5)
         question_5_option_2 = self.baker.make("survey.Option", question=question_5)
-        multiple_data = [
+        data = [
             {
                 "question": question_1.pk,
                 "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
@@ -213,19 +213,15 @@ class APITest(FullTestCase):
                 "answerType": "single_option",
                 "options": [question_4_option.pk],
             },
+            {
+                "question": question_5.pk,
+                "answerType": "multiple_option",
+                "options": [question_5_option_1.pk, question_5_option_2.pk],
+            },
         ]
-        single_data = {
-            "question": question_5.pk,
-            "answerType": "multiple_option",
-            "options": [question_5_option_1.pk, question_5_option_2.pk],
-        }
         self.client.force_authenticate(self.user)
-        multiple_response = self.client.post(url, data=multiple_data, format="json")
-        self.assertEqual(
-            multiple_response.status_code, self.status_code.HTTP_201_CREATED
-        )
-        single_response = self.client.post(url, single_data)
-        self.assertEqual(single_response.status_code, self.status_code.HTTP_201_CREATED)
+        response = self.client.post(url, data=data, format="json")
+        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
 
     def test_add_survey_results(self):
         url = self.reverse(
@@ -234,7 +230,7 @@ class APITest(FullTestCase):
         statement_1, statement_2, statement_3 = self.baker.make(
             "statement.Statement", _quantity=3
         )
-        multiple_data = [
+        data = [
             {
                 "statement": statement_1.pk,
                 "score": 0.90,
@@ -246,15 +242,6 @@ class APITest(FullTestCase):
                 "module": self.question.module.pk,
             },
         ]
-        single_data = {
-            "statement": statement_3.pk,
-            "score": 0.90,
-            "module": self.question.module.pk,
-        }
         self.client.force_authenticate(self.user)
-        multiple_response = self.client.post(url, data=multiple_data, format="json")
-        self.assertEqual(
-            multiple_response.status_code, self.status_code.HTTP_201_CREATED
-        )
-        single_response = self.client.post(url, single_data)
-        self.assertEqual(single_response.status_code, self.status_code.HTTP_201_CREATED)
+        response = self.client.post(url, data=data, format="json")
+        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
