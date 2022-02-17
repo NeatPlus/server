@@ -150,16 +150,12 @@ class APITest(FullTestCase):
             "project-update-or-add-users",
             kwargs={"version": "v1", "pk": self.project.pk},
         )
-        multiple_data = [
+        data = [
             {"user": first_user.pk, "permission": "write"},
             {"user": second_user.pk},
         ]
-        multiple_post_response = self.client.post(
-            url, data=multiple_data, format="json"
-        )
-        self.assertEqual(
-            multiple_post_response.status_code, self.status_code.HTTP_200_OK
-        )
+        post_response = self.client.post(url, data=data, format="json")
+        self.assertEqual(post_response.status_code, self.status_code.HTTP_200_OK)
         self.assertEqual(
             ProjectUser.objects.get(project=self.project, user=first_user).permission,
             "write",
@@ -167,18 +163,6 @@ class APITest(FullTestCase):
         self.assertEqual(
             ProjectUser.objects.get(project=self.project, user=second_user).permission,
             "read_only",
-        )
-
-        single_data = {"user": second_user.pk, "permission": "write"}
-        single_post_response = self.client.post(url, data=single_data)
-        self.assertEqual(single_post_response.status_code, self.status_code.HTTP_200_OK)
-        self.assertEqual(
-            ProjectUser.objects.get(project=self.project, user=first_user).permission,
-            "write",
-        )
-        self.assertEqual(
-            ProjectUser.objects.get(project=self.project, user=second_user).permission,
-            "write",
         )
 
     def test_project_user_deletion(self):
@@ -190,20 +174,12 @@ class APITest(FullTestCase):
             "project-remove-users",
             kwargs={"version": "v1", "pk": self.project.pk},
         )
-        multiple_data = [
+        data = [
             {"user": first_user.pk},
             {"user": second_user.pk},
         ]
-        multiple_post_response = self.client.post(
-            url, data=multiple_data, format="json"
-        )
-        self.assertEqual(
-            multiple_post_response.status_code, self.status_code.HTTP_200_OK
-        )
-
-        single_data = {"user": third_user.pk}
-        single_post_response = self.client.post(url, data=single_data)
-        self.assertEqual(single_post_response.status_code, self.status_code.HTTP_200_OK)
+        post_response = self.client.post(url, data=data, format="json")
+        self.assertEqual(post_response.status_code, self.status_code.HTTP_200_OK)
 
     def test_project_access_level(self):
         url = self.reverse(
