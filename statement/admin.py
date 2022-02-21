@@ -127,7 +127,14 @@ class QuestionStatementAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("question", "statement", "weightage", "move_up_down_links")
+    list_display = (
+        "question",
+        "statement",
+        "weightage",
+        "version",
+        "is_active",
+        "move_up_down_links",
+    )
     autocomplete_fields = ("question", "statement")
 
     class Meta:
@@ -140,7 +147,14 @@ class OptionStatementAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("option", "statement", "weightage", "move_up_down_links")
+    list_display = (
+        "option",
+        "statement",
+        "weightage",
+        "version",
+        "is_active",
+        "move_up_down_links",
+    )
     autocomplete_fields = ("option", "statement")
 
     class Meta:
@@ -153,7 +167,11 @@ class OptionMitigationAdmin(
     UserStampedModelAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("option", "mitigation", "move_up_down_links")
+    list_display = (
+        "option",
+        "mitigation",
+        "move_up_down_links",
+    )
     autocomplete_fields = ("option", "mitigation")
 
     class Meta:

@@ -20,10 +20,8 @@ class TestAdmin(FullTestCase):
 
     def test_admin_changelist_view(self):
         self.client.login(username=self.user.username, password=self.user_pass)
-        print()
         for model, _ in admin.site._registry.items():
             self.baker.make(model, _quantity=3)
-            print(f"Testing {model._meta.model_name} change list view")
             url = self.reverse(
                 f"admin:{model._meta.app_label}_{model._meta.model_name}_changelist"
             )
@@ -31,14 +29,12 @@ class TestAdmin(FullTestCase):
             self.assertEqual(
                 response.status_code,
                 self.status_code.HTTP_200_OK,
-                msg=f"Test failed for url {url}",
+                f"Test failed for {model._meta.model_name}",
             )
 
     def test_admin_add_view(self):
         self.client.login(username=self.user.username, password=self.user_pass)
-        print()
         for model, modeladmin in admin.site._registry.items():
-            print(f"Testing {model._meta.model_name} add view")
             url = self.reverse(
                 f"admin:{model._meta.app_label}_{model._meta.model_name}_add"
             )
@@ -49,15 +45,13 @@ class TestAdmin(FullTestCase):
                 self.assertEqual(
                     response.status_code,
                     self.status_code.HTTP_200_OK,
-                    msg=f"Test failed for url {url}",
+                    f"Test failed for {model._meta.model_name}",
                 )
 
     def test_admin_delete_view(self):
         self.client.login(username=self.user.username, password=self.user_pass)
-        print()
         for model, modeladmin in admin.site._registry.items():
             object_id = self.baker.make(model).id
-            print(f"Testing {model._meta.model_name} delete view")
             url = self.reverse(
                 f"admin:{model._meta.app_label}_{model._meta.model_name}_delete",
                 args=(object_id,),
@@ -69,15 +63,13 @@ class TestAdmin(FullTestCase):
                 self.assertEqual(
                     response.status_code,
                     self.status_code.HTTP_200_OK,
-                    msg=f"Test failed for url {url}",
+                    f"Test failed for {model._meta.model_name}",
                 )
 
     def test_admin_change_view(self):
         self.client.login(username=self.user.username, password=self.user_pass)
-        print()
         for model, modeladmin in admin.site._registry.items():
             object_id = self.baker.make(model).id
-            print(f"Testing {model._meta.model_name} change view")
             url = self.reverse(
                 f"admin:{model._meta.app_label}_{model._meta.model_name}_change",
                 args=(object_id,),
@@ -89,5 +81,5 @@ class TestAdmin(FullTestCase):
                 self.assertEqual(
                     response.status_code,
                     self.status_code.HTTP_200_OK,
-                    msg=f"Test failed for url {url}",
+                    f"Test failed for {model._meta.model_name}",
                 )

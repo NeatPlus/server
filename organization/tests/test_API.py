@@ -35,12 +35,16 @@ class APITest(FullTestCase):
     def test_organization_list(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.organization_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_organization_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.organization_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_organization_creation(self):
         self.client.force_authenticate(self.user)
@@ -49,7 +53,11 @@ class APITest(FullTestCase):
             "description": "Description goes here",
         }
         post_response = self.client.post(self.organization_list_url, data=data)
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            post_response.status_code,
+            self.status_code.HTTP_201_CREATED,
+            post_response.json(),
+        )
 
     def test_member_request(self):
         user = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
@@ -59,17 +67,25 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.organization.pk},
         )
         post_response = self.client.post(url)
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            post_response.status_code,
+            self.status_code.HTTP_200_OK,
+            post_response.json(),
+        )
 
     def test_organization_member_request_list(self):
         self.client.force_authenticate(self.admin_user)
         response = self.client.get(self.organization_member_request_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_organization_member_request_detail(self):
         self.client.force_authenticate(self.admin_user)
         response = self.client.get(self.organization_member_request_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_member_request_accept(self):
         self.client.force_authenticate(self.admin_user)
@@ -78,7 +94,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.organization_member_request.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_member_request_reject(self):
         self.client.force_authenticate(self.admin_user)
@@ -87,4 +105,6 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.organization_member_request.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

@@ -66,47 +66,67 @@ class APITest(FullTestCase):
 
     def test_question_group_list(self):
         response = self.client.get(self.question_group_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_question_group_detail(self):
         response = self.client.get(self.question_group_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_question_list(self):
         response = self.client.get(self.question_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_question_detail(self):
         response = self.client.get(self.question_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_list(self):
         response = self.client.get(self.option_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_detail(self):
         response = self.client.get(self.option_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_survey_list(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_survey_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_survey_answer_list(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_answer_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_survey_answer_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_answer_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_share_survey(self):
         self.client.force_authenticate(self.user)
@@ -115,7 +135,9 @@ class APITest(FullTestCase):
             "survey-share-link", kwargs={"version": "v1", "pk": survey.pk}
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_unshare_survey(self):
         self.client.force_authenticate(self.user)
@@ -129,7 +151,9 @@ class APITest(FullTestCase):
             "survey-unshare-link", kwargs={"version": "v1", "pk": survey.pk}
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_update_share_survey(self):
         self.client.force_authenticate(self.user)
@@ -143,7 +167,9 @@ class APITest(FullTestCase):
             "survey-update-link", kwargs={"version": "v1", "pk": survey_1.pk}
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         survey_2 = self.baker.make(
             "survey.Survey",
             created_by=self.user,
@@ -152,7 +178,9 @@ class APITest(FullTestCase):
             "survey-update-link", kwargs={"version": "v1", "pk": survey_2.pk}
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_400_BAD_REQUEST, response.json()
+        )
 
     def test_get_identifier_survey(self):
         shared_link_identifier = random_gen.gen_string(10)
@@ -169,7 +197,9 @@ class APITest(FullTestCase):
             },
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         survey.is_shared_publicly = False
         survey.save()
         url = self.reverse(
@@ -180,7 +210,9 @@ class APITest(FullTestCase):
             },
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_404_NOT_FOUND, response.json()
+        )
 
     def test_add_survey_answers(self):
         url = self.reverse(
@@ -223,7 +255,9 @@ class APITest(FullTestCase):
         ]
         self.client.force_authenticate(self.user)
         response = self.client.post(url, data=data, format="json")
-        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
         self.assertTrue(
             SurveyAnswer.objects.filter(
                 question=question_2.pk, answer="2", survey=self.survey.pk
@@ -242,7 +276,11 @@ class APITest(FullTestCase):
             },
         ]
         update_response = self.client.post(url, data=update_data, format="json")
-        self.assertEqual(update_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            update_response.status_code,
+            self.status_code.HTTP_201_CREATED,
+            update_response.json(),
+        )
         self.assertTrue(
             SurveyAnswer.objects.filter(
                 question=question_2.pk, answer="2", survey=self.survey.pk
@@ -275,7 +313,9 @@ class APITest(FullTestCase):
         ]
         self.client.force_authenticate(self.user)
         response = self.client.post(url, data=data, format="json")
-        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_1.pk,
@@ -300,7 +340,11 @@ class APITest(FullTestCase):
             },
         ]
         update_response = self.client.post(url, data=update_data, format="json")
-        self.assertEqual(update_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            update_response.status_code,
+            self.status_code.HTTP_201_CREATED,
+            update_response.json(),
+        )
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_1.pk,
