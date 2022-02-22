@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - superset.yml
+  - service.yml
+secretGenerator:
+  - name: superset-secret
+    envs:
+      - superset.env
+    type: Opaque
+configMapGenerator:
+  - name: superset-config-map
+    file:
+      - superset_config.py
