@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset-deployment
+  labels:
+    app: superset
+    project: neatplus
+    role: dashboard
+spec:
+  selector:
+    matchLabels:
+      app: superset
+      project: neatplus
+      role: dashboard
+  template:
+    metadata:
+      name: superset-pod
+      labels:
+        app: superset
+        project: neatplus
+        role: dashboard
+    spec:
+      containers:
+      - name: container
+        image: amancevice/superset:v1.4.1
+        ports:
+          - containerPort: 8088
+        envFrom:
+          - secretRef:
+              name: superset-secret
+        volumeMounts:
+          - name: superset-config-volume
+            mountPath: /etc/superset/superset_config.py
+      volumes:
+        - name: superset-config-volume
+          configMap:
+            name: superset-config-map
+

@@ -26,5 +26,6 @@ backend.hcl
 
 # Kubrnetes related
 kubernetes/**/*.env
+!kubernetes/**/*.example.env
 kubernetes/**/kustomization.yml
 kubernetes/**/kustomization.yaml
