@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: container
-        image: amancevice/superset:v1.4.1
+        image: amancevice/superset:1.4.1
         ports:
           - containerPort: 8088
         envFrom:
@@ -30,7 +30,7 @@ spec:
               name: superset-secret
         volumeMounts:
           - name: superset-config-volume
-            mountPath: /etc/superset/superset_config.py
+            mountPath: /etc/superset
       volumes:
         - name: superset-config-volume
           configMap:
