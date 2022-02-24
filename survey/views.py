@@ -6,7 +6,6 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from neatplus.permissions import IsOwner, IsOwnerOrReadOnly
 from neatplus.utils import gen_random_string
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
@@ -52,7 +51,7 @@ class SurveyViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = SurveySerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [CanWriteSurveyOrReadOnly]
     filterset_class = SurveyFilter
 
     def get_queryset(self):
@@ -77,7 +76,7 @@ class SurveyViewSet(
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsOwner],
+        permission_classes=[CanWriteSurvey],
         serializer_class=serializers.Serializer,
     )
     def share_link(self, request, *args, **kwargs):
@@ -104,7 +103,7 @@ class SurveyViewSet(
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsOwner],
+        permission_classes=[CanWriteSurvey],
         serializer_class=serializers.Serializer,
     )
     def update_link(self, request, *args, **kwargs):
@@ -133,7 +132,7 @@ class SurveyViewSet(
     @action(
         methods=["post"],
         detail=True,
-        permission_classes=[IsOwner],
+        permission_classes=[CanWriteSurvey],
         serializer_class=serializers.Serializer,
     )
     def unshare_link(self, request, *args, **kwargs):
@@ -191,11 +190,17 @@ class SurveyViewSet(
             with transaction.atomic():
                 for validated_datum in serializer.validated_data:
                     options = validated_datum.pop("options", None)
-                    survey_answer = SurveyAnswer.objects.create(
-                        **validated_datum, survey=survey, created_by=user
+                    question = validated_datum.pop("question")
+                    survey_answer, created = SurveyAnswer.objects.update_or_create(
+                        survey=survey, question=question, defaults=validated_datum
                     )
+                    if created:
+                        survey_answer.created_by = user
+                    else:
+                        survey_answer.updated_by = user
+                    survey_answer.save()
                     if options:
-                        survey_answer.options.add(*options)
+                        survey_answer.options.set(options)
         except Exception:
             return Response(
                 {"error": _("Failed to add answers for survey")},
@@ -233,9 +238,19 @@ class SurveyViewSet(
         try:
             with transaction.atomic():
                 for validated_datum in serializer.validated_data:
-                    SurveyResult.objects.create(
-                        **validated_datum, survey=survey, created_by=user
+                    statement = validated_datum.pop("statement")
+                    module = validated_datum.pop("module")
+                    survey_result, created = SurveyResult.objects.update_or_create(
+                        survey=survey,
+                        statement=statement,
+                        module=module,
+                        defaults=validated_datum,
                     )
+                    if created:
+                        survey_result.created_by = user
+                    else:
+                        survey_result.updated_by = user
+                    survey_result.save()
         except Exception:
             return Response(
                 {"error": _("Failed to create survey result due to invalid data")},
