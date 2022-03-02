@@ -21,3 +21,11 @@ class SurveyResult(UserStampedModel, TimeStampedModel):
         verbose_name=_("module"),
     )
     score = models.FloatField(_("score"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["statement", "survey", "module"],
+                name="unique_module_survey_statement",
+            ),
+        ]

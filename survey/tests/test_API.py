@@ -2,6 +2,8 @@ from django.conf import settings
 from model_bakery import random_gen
 
 from neatplus.tests import FullTestCase
+from summary.models import SurveyResult
+from survey.models import SurveyAnswer
 
 
 class APITest(FullTestCase):
@@ -222,6 +224,35 @@ class APITest(FullTestCase):
         self.client.force_authenticate(self.user)
         response = self.client.post(url, data=data, format="json")
         self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertTrue(
+            SurveyAnswer.objects.filter(
+                question=question_2.pk, answer="2", survey=self.survey.pk
+            ).exists()
+        )
+        self.assertTrue(
+            SurveyAnswer.objects.filter(
+                question=question_3.pk, answer="true", survey=self.survey.pk
+            ).exists()
+        )
+        update_data = [
+            {
+                "question": question_3.pk,
+                "answer": "false",
+                "answerType": "boolean",
+            },
+        ]
+        update_response = self.client.post(url, data=update_data, format="json")
+        self.assertEqual(update_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertTrue(
+            SurveyAnswer.objects.filter(
+                question=question_2.pk, answer="2", survey=self.survey.pk
+            ).exists()
+        )
+        self.assertTrue(
+            SurveyAnswer.objects.filter(
+                question=question_3.pk, answer="false", survey=self.survey.pk
+            ).exists()
+        )
 
     def test_add_survey_results(self):
         url = self.reverse(
@@ -245,3 +276,44 @@ class APITest(FullTestCase):
         self.client.force_authenticate(self.user)
         response = self.client.post(url, data=data, format="json")
         self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertTrue(
+            SurveyResult.objects.filter(
+                statement=statement_1.pk,
+                module=self.question.module.pk,
+                survey=self.survey.pk,
+                score=0.90,
+            ).exists()
+        )
+        self.assertTrue(
+            SurveyResult.objects.filter(
+                statement=statement_2.pk,
+                module=self.question.module.pk,
+                survey=self.survey.pk,
+                score=0.67,
+            ).exists()
+        )
+        update_data = [
+            {
+                "statement": statement_2.pk,
+                "score": 0.37,
+                "module": self.question.module.pk,
+            },
+        ]
+        update_response = self.client.post(url, data=update_data, format="json")
+        self.assertEqual(update_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertTrue(
+            SurveyResult.objects.filter(
+                statement=statement_1.pk,
+                module=self.question.module.pk,
+                survey=self.survey.pk,
+                score=0.90,
+            ).exists()
+        )
+        self.assertTrue(
+            SurveyResult.objects.filter(
+                statement=statement_2.pk,
+                module=self.question.module.pk,
+                survey=self.survey.pk,
+                score=0.37,
+            ).exists()
+        )

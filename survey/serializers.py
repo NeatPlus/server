@@ -88,7 +88,7 @@ class SurveyAnswerSerializer(serializers.ModelSerializer):
             AnswerTypeChoices.SINGLE_OPTION.value,
             AnswerTypeChoices.MULTIPLE_OPTION.value,
         ]:
-            if options is None:
+            if not options:
                 raise serializers.ValidationError(
                     {"options": _("options should be present for provided answer_type")}
                 )

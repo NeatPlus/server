@@ -127,3 +127,11 @@ class SurveyAnswer(UserStampedModel, TimeStampedModel):
         _("answer type"), max_length=15, choices=AnswerTypeChoices.choices
     )
     options = models.ManyToManyField("Option", blank=True, verbose_name=_("options"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["question", "survey"],
+                name="unique_survey_question",
+            ),
+        ]
