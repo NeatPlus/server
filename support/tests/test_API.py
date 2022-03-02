@@ -44,40 +44,60 @@ class APITest(FullTestCase):
 
     def test_legal_document_list(self):
         response = self.client.get(self.legal_document_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_legal_document_detail(self):
         response = self.client.get(self.legal_document_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_frequently_asked_question_list(self):
         response = self.client.get(self.frequently_asked_question_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_frequently_asked_question_detail(self):
         response = self.client.get(self.frequently_asked_question_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_resource_tag_list(self):
         response = self.client.get(self.resource_tag_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_resource_tag_detail(self):
         response = self.client.get(self.resource_tag_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_resource_list(self):
         response = self.client.get(self.resource_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_resource_detail(self):
         response = self.client.get(self.resource_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_action_list(self):
         response = self.client.get(self.action_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_action_detail(self):
         response = self.client.get(self.action_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

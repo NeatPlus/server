@@ -23,13 +23,17 @@ class APITest(FullTestCase):
         self.client.force_authenticate(self.activated_user)
         url = self.reverse("user-list", kwargs={"version": "v1"})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_user_me_get(self):
         self.client.force_authenticate(self.activated_user)
         url = self.reverse("user-me", kwargs={"version": "v1"})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_user_me_patch(self):
         self.client.force_authenticate(self.activated_user)
@@ -38,7 +42,9 @@ class APITest(FullTestCase):
         data = {"first_name": new_name, "password": self.activated_initial_password}
         url = self.reverse("user-me", kwargs={"version": "v1"})
         response = self.client.patch(url, data=data, format="json")
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         updated_user = get_user_model().objects.get(pk=self.activated_user.pk)
         self.assertEqual(updated_user.first_name, new_name)
 
@@ -58,7 +64,9 @@ class APITest(FullTestCase):
         }
         url = self.reverse("user-change-password", kwargs={"version": "v1"})
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         user = authenticate(username=user.username, password=new_password)
         self.assertIsNotNone(user)
 
@@ -77,7 +85,9 @@ class APITest(FullTestCase):
         }
         url = self.reverse("user-register", kwargs={"version": "v1"})
         response = self.client.post(url, data=user_data)
-        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
         non_activated_user = get_user_model().objects.get(
             username=non_activated_user_username
         )
@@ -98,7 +108,9 @@ class APITest(FullTestCase):
                 "pin": email_verify_pin,
             },
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         email_verified = get_user_model().objects.get(
             username=non_activated_user.username
         )
@@ -118,7 +130,11 @@ class APITest(FullTestCase):
         password_reset_send = self.client.post(
             password_reset_url, data={"username": user.username}
         )
-        self.assertEqual(password_reset_send.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            password_reset_send.status_code,
+            self.status_code.HTTP_200_OK,
+            password_reset_send.json(),
+        )
         password_reset_pin = (
             apps.get_model("user", "PasswordResetPin").objects.get(user=user).pin
         )
@@ -127,7 +143,9 @@ class APITest(FullTestCase):
             data={"username": user.username, "pin": password_reset_pin},
         )
         self.assertEqual(
-            password_reset_verify.status_code, self.status_code.HTTP_200_OK
+            password_reset_verify.status_code,
+            self.status_code.HTTP_200_OK,
+            password_reset_verify.json(),
         )
         identifier = password_reset_verify.json()["identifier"]
         new_pass = "secure^78@12"
@@ -161,7 +179,9 @@ class APITest(FullTestCase):
             email_change_url, data=email_change_data
         )
         self.assertEqual(
-            email_change_response.status_code, self.status_code.HTTP_200_OK
+            email_change_response.status_code,
+            self.status_code.HTTP_200_OK,
+            email_change_response.json(),
         )
         email_change_pin = (
             apps.get_model("user", "EmailChangePin")
@@ -173,7 +193,9 @@ class APITest(FullTestCase):
             email_change_verify_url, data=email_change_verify_data
         )
         self.assertEqual(
-            email_change_verify_response.status_code, self.status_code.HTTP_200_OK
+            email_change_verify_response.status_code,
+            self.status_code.HTTP_200_OK,
+            email_change_verify_response.json(),
         )
         user = get_user_model().objects.get(pk=self.activated_user.pk)
         self.assertEqual(new_email, user.email)

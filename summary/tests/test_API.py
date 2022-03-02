@@ -34,9 +34,13 @@ class APITest(FullTestCase):
     def test_survey_result_list(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_result_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_survey_result_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_result_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

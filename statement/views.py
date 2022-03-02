@@ -1,4 +1,9 @@
-from rest_framework import viewsets
+from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from .filters import (
     MitigationFilter,
@@ -25,6 +30,7 @@ from .models import (
     StatementTopic,
 )
 from .serializers import (
+    ActivateVersionSerializer,
     MitigationSerializer,
     OpportunitySerializer,
     OptionMitigationSerializer,
@@ -35,6 +41,7 @@ from .serializers import (
     StatementTagGroupSerializer,
     StatementTagSerializer,
     StatementTopicSerializer,
+    UploadWeightageSerializer,
 )
 
 
@@ -60,6 +67,85 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = StatementSerializer
     queryset = Statement.objects.all()
     filterset_class = StatementFilter
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="UploadWeightageResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default=_("Successfully uploaded weightage for statement")
+                )
+            },
+        )
+    )
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=UploadWeightageSerializer,
+    )
+    def upload_weightage(self, request, *args, **kwargs):
+        statement = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        version = data["version"]
+        try:
+            with transaction.atomic():
+                for question_statement_data in data["questions"]:
+                    QuestionStatement.objects.create(
+                        **question_statement_data, statement=statement, version=version
+                    )
+                for option_statement_data in data["options"]:
+                    OptionStatement.objects.create(
+                        **option_statement_data, statement=statement, version=version
+                    )
+        except Exception as e:
+            return Response(
+                {"error": _("Failed to upload weightage for statement")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            {"detail": _("Successfully uploaded weightage for statement")},
+            status=status.HTTP_201_CREATED,
+        )
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="ActivateVersionResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default=_("Successfully activate new version")
+                )
+            },
+        )
+    )
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=ActivateVersionSerializer,
+    )
+    def activate_version(self, request, *args, **kwargs):
+        statement = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        version = data["version"]
+        with transaction.atomic():
+            QuestionStatement.objects.filter(statement=statement).exclude(
+                version=version
+            ).update(is_active=False)
+            QuestionStatement.objects.filter(statement=statement).filter(
+                version=version
+            ).update(is_active=True)
+            OptionStatement.objects.filter(statement=statement).exclude(
+                version=version
+            ).update(is_active=False)
+            OptionStatement.objects.filter(statement=statement).filter(
+                version=version
+            ).update(is_active=True)
+        return Response({"detail": _("Successfully activate new version")})
 
 
 class MitigationViewSet(viewsets.ReadOnlyModelViewSet):

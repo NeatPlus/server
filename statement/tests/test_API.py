@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from neatplus.tests import FullTestCase
+from statement.models import OptionStatement, QuestionStatement
 
 
 class APITest(FullTestCase):
@@ -27,8 +28,15 @@ class APITest(FullTestCase):
         cls.opportunity = cls.baker.make(
             "statement.Opportunity", statement=cls.statement, options=options
         )
-        question_statement = cls.baker.make("statement.QuestionStatement")
-        option_statement = cls.baker.make("statement.OptionStatement")
+        cls.question_statement = cls.baker.make(
+            "statement.QuestionStatement", version="initial", is_active=True
+        )
+        cls.option_statement = cls.baker.make(
+            "statement.OptionStatement",
+            statement=cls.question_statement.statement,
+            version="initial",
+            is_active=True,
+        )
         option_mitigation = cls.baker.make("statement.OptionMitigation")
         option_opportunity = cls.baker.make("statement.OptionOpportunity")
 
@@ -77,7 +85,7 @@ class APITest(FullTestCase):
         )
         cls.question_statement_detail_url = cls.reverse(
             "question-statement-detail",
-            kwargs={"version": "v1", "pk": question_statement.pk},
+            kwargs={"version": "v1", "pk": cls.question_statement.pk},
         )
 
         cls.option_statement_list_url = cls.reverse(
@@ -85,7 +93,7 @@ class APITest(FullTestCase):
         )
         cls.option_statement_detail_url = cls.reverse(
             "option-statement-detail",
-            kwargs={"version": "v1", "pk": option_statement.pk},
+            kwargs={"version": "v1", "pk": cls.option_statement.pk},
         )
 
         cls.option_mitigation_list_url = cls.reverse(
@@ -106,80 +114,208 @@ class APITest(FullTestCase):
 
     def test_statement_topic_list(self):
         response = self.client.get(self.statement_topic_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_topic_detail(self):
         response = self.client.get(self.statement_topic_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_tag_group_list(self):
         response = self.client.get(self.statement_tag_group_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_tag_group_detail(self):
         response = self.client.get(self.statement_tag_group_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_tag_list(self):
         response = self.client.get(self.statement_tag_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_tag_detail(self):
         response = self.client.get(self.statement_tag_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_list(self):
         response = self.client.get(self.statement_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_statement_detail(self):
         response = self.client.get(self.statement_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_mitigation_list(self):
         response = self.client.get(self.mitigation_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_mitigation_detail(self):
         response = self.client.get(self.mitigation_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_opportunity_list(self):
         response = self.client.get(self.opportunity_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_opportunity_detail(self):
         response = self.client.get(self.opportunity_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_question_statement_list(self):
         response = self.client.get(self.question_statement_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_question_statement_detail(self):
         response = self.client.get(self.question_statement_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_statement_list(self):
         response = self.client.get(self.option_statement_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_statement_detail(self):
         response = self.client.get(self.option_statement_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_mitigation_list(self):
         response = self.client.get(self.option_mitigation_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_mitigation_detail(self):
         response = self.client.get(self.option_mitigation_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_opportunity_list(self):
         response = self.client.get(self.option_opportunity_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_option_opportunity_detail(self):
         response = self.client.get(self.option_opportunity_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_upload_weightage(self):
+        user = self.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
+        )
+        self.client.force_authenticate(user)
+        statement = self.question_statement.statement
+        url = self.reverse(
+            "statement-upload-weightage",
+            kwargs={"version": "v1", "pk": statement.pk},
+        )
+        version = self.baker.random_gen.gen_string(max_length=255)
+
+        data = {
+            "version": version,
+            "questions": [
+                {
+                    "question": self.question_statement.question.pk,
+                    "weightage": self.baker.random_gen.gen_float(),
+                }
+            ],
+            "options": [
+                {
+                    "option": self.option_statement.option.pk,
+                    "weightage": self.baker.random_gen.gen_float(),
+                }
+            ],
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
+        self.assertTrue(
+            QuestionStatement.objects.filter(
+                question=self.question_statement.question.pk,
+                statement=statement.pk,
+                version=version,
+            ).exists()
+        )
+        self.assertTrue(
+            OptionStatement.objects.filter(
+                option=self.option_statement.option.pk,
+                statement=statement.pk,
+                version=version,
+            ).exists()
+        )
+
+    def test_activate_version(self):
+        user = self.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
+        )
+        self.client.force_authenticate(user)
+        statement = self.question_statement.statement
+        url = self.reverse(
+            "statement-activate-version",
+            kwargs={"version": "v1", "pk": statement.pk},
+        )
+        version = self.baker.random_gen.gen_string(max_length=255)
+        self.baker.make("statement.QuestionStatement", version=version)
+        self.baker.make(
+            "statement.OptionStatement",
+            statement=statement,
+            version=version,
+        )
+        response = self.client.post(url, data={"version": version})
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+        self.assertFalse(
+            QuestionStatement.objects.filter(statement=statement.pk, is_active=True)
+            .exclude(version=version)
+            .exists()
+        )
+        self.assertFalse(
+            OptionStatement.objects.filter(statement=statement.pk, is_active=True)
+            .exclude(version=version)
+            .exists()
+        )
+        self.assertFalse(
+            QuestionStatement.objects.filter(statement=statement.pk, is_active=False)
+            .filter(version=version)
+            .exists()
+        )
+        self.assertFalse(
+            OptionStatement.objects.filter(statement=statement.pk, is_active=False)
+            .filter(version=version)
+            .exists()
+        )

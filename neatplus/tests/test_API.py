@@ -23,7 +23,9 @@ class APITest(FullTestCase):
             jwt_create_url,
             data={"username": self.user.username, "password": self.user_pass},
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_email_jwt_login(self):
         jwt_create_url = self.reverse("jwt-create", kwargs={"version": "v1"})
@@ -31,4 +33,6 @@ class APITest(FullTestCase):
             jwt_create_url,
             data={"username": self.user.email, "password": self.user_pass},
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

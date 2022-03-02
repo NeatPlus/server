@@ -72,3 +72,25 @@ class OptionOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = OptionOpportunity
         fields = "__all__"
+
+
+class UploadQuestionStatementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionStatement
+        exclude = ("statement", "version")
+
+
+class UploadOptionStatementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OptionStatement
+        exclude = ("statement", "version")
+
+
+class UploadWeightageSerializer(serializers.Serializer):
+    version = serializers.CharField()
+    questions = UploadQuestionStatementSerializer(many=True)
+    options = UploadOptionStatementSerializer(many=True)
+
+
+class ActivateVersionSerializer(serializers.Serializer):
+    version = serializers.CharField()

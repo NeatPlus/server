@@ -33,14 +33,18 @@ class APITest(FullTestCase):
         response = self.client.get(
             self.notification_list_url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notification_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(
             self.notification_detail_url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notification_unread_count(self):
         self.client.force_authenticate(self.user)
@@ -48,7 +52,9 @@ class APITest(FullTestCase):
         response = self.client.get(
             url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notification_mark_as_read(self):
         self.client.force_authenticate(self.user)
@@ -59,7 +65,9 @@ class APITest(FullTestCase):
         response = self.client.post(
             url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notification_mark_all_as_read(self):
         self.client.force_authenticate(self.user)
@@ -67,17 +75,23 @@ class APITest(FullTestCase):
         response = self.client.post(
             url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notice_list(self):
         response = self.client.get(
             self.notice_list_url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_get_notice_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(
             self.notice_detail_url,
         )
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

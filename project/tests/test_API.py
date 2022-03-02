@@ -45,25 +45,35 @@ class APITest(FullTestCase):
 
     def test_non_authenticated_project_access(self):
         response = self.client.get(self.project_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_403_FORBIDDEN, response.json()
+        )
 
     def test_project_list(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.project_list_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_project_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.project_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_pending_project_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.pending_project_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         self.client.force_authenticate(self.organization_user)
         response = self.client.get(self.pending_project_detail_url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_404_NOT_FOUND)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_404_NOT_FOUND, response.json()
+        )
 
     def test_organization_admin_project_users(self):
         self.client.force_authenticate(self.admin_user)
@@ -71,7 +81,9 @@ class APITest(FullTestCase):
             "project-users", kwargs={"version": "v1", "pk": self.project.pk}
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_project_creator_project_users(self):
         self.client.force_authenticate(self.project_created_user)
@@ -79,7 +91,9 @@ class APITest(FullTestCase):
             "project-users", kwargs={"version": "v1", "pk": self.project.pk}
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_normal_user_project_users(self):
         self.client.force_authenticate(self.user)
@@ -87,25 +101,33 @@ class APITest(FullTestCase):
             "project-users", kwargs={"version": "v1", "pk": self.project.pk}
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_403_FORBIDDEN, response.json()
+        )
 
     def test_organization_admin_edit_project(self):
         self.client.force_authenticate(self.admin_user)
         data = {"title": "update_project"}
         response = self.client.patch(self.project_detail_url, data=data)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_project_creator_edit_project(self):
         self.client.force_authenticate(self.project_created_user)
         data = {"title": "update_project_by_created_by"}
         response = self.client.patch(self.project_detail_url, data=data)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_normal_user_edit_project(self):
         self.client.force_authenticate(self.user)
         data = {"title": "update_project_by_normal_user"}
         response = self.client.patch(self.project_detail_url, data=data)
-        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_403_FORBIDDEN, response.json()
+        )
 
     def test_project_creator_project_accept(self):
         self.client.force_authenticate(self.project_created_user)
@@ -114,7 +136,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_403_FORBIDDEN, response.json()
+        )
 
     def test_organization_admin_project_accept(self):
         self.client.force_authenticate(self.admin_user)
@@ -123,7 +147,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_project_creator_project_reject(self):
         self.client.force_authenticate(self.project_created_user)
@@ -132,7 +158,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_403_FORBIDDEN, response.json()
+        )
 
     def test_organization_admin_project_reject(self):
         self.client.force_authenticate(self.admin_user)
@@ -141,7 +169,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         response = self.client.post(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
 
     def test_project_user_modification(self):
         self.client.force_authenticate(self.project_created_user)
@@ -155,7 +185,11 @@ class APITest(FullTestCase):
             {"user": second_user.pk},
         ]
         post_response = self.client.post(url, data=data, format="json")
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            post_response.status_code,
+            self.status_code.HTTP_200_OK,
+            post_response.json(),
+        )
         self.assertEqual(
             ProjectUser.objects.get(project=self.project, user=first_user).permission,
             "write",
@@ -179,7 +213,11 @@ class APITest(FullTestCase):
             {"user": second_user.pk},
         ]
         post_response = self.client.post(url, data=data, format="json")
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            post_response.status_code,
+            self.status_code.HTTP_200_OK,
+            post_response.json(),
+        )
 
     def test_project_access_level(self):
         url = self.reverse(
@@ -189,17 +227,23 @@ class APITest(FullTestCase):
         # admin user
         self.client.force_authenticate(self.admin_user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         self.assertEqual(response.json()["accessLevel"], "organization_admin")
         # project user
         self.client.force_authenticate(self.project_created_user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         self.assertEqual(response.json()["accessLevel"], "owner")
         # normal user
         self.client.force_authenticate(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, self.status_code.HTTP_200_OK)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
         self.assertEqual(response.json()["accessLevel"], "read_only")
 
     def test_project_survey_creation(self):
@@ -257,7 +301,9 @@ class APITest(FullTestCase):
         }
         self.client.force_authenticate(self.project_created_user)
         response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
 
     def test_project_creation(self):
         self.client.force_authenticate(self.user)
@@ -269,7 +315,11 @@ class APITest(FullTestCase):
             "context": context.pk,
         }
         post_response = self.client.post(self.project_list_url, data=data)
-        self.assertEqual(post_response.status_code, self.status_code.HTTP_201_CREATED)
+        self.assertEqual(
+            post_response.status_code,
+            self.status_code.HTTP_201_CREATED,
+            post_response.json(),
+        )
 
     def test_project_creation_fail_for_visibility(self):
         self.client.force_authenticate(self.user)
@@ -282,5 +332,7 @@ class APITest(FullTestCase):
         }
         post_response = self.client.post(self.project_list_url, data=data)
         self.assertEqual(
-            post_response.status_code, self.status_code.HTTP_400_BAD_REQUEST
+            post_response.status_code,
+            self.status_code.HTTP_400_BAD_REQUEST,
+            post_response.json(),
         )

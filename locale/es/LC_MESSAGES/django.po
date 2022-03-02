@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 05:39+0000\n"
+"POT-Creation-Date: 2022-02-21 07:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,27 +337,27 @@ msgstr ""
 msgid "Project successfully rejected"
 msgstr ""
 
-#: project/views.py:117 project/views.py:155
+#: project/views.py:118 project/views.py:156
 msgid "Successfully modified users list for project"
 msgstr ""
 
-#: project/views.py:152
+#: project/views.py:153
 msgid "Failed to update or add users due to invalid data"
 msgstr ""
 
-#: project/views.py:162 project/views.py:190
+#: project/views.py:164 project/views.py:192
 msgid "Successfully removed users from project"
 msgstr ""
 
-#: project/views.py:187
+#: project/views.py:189
 msgid "Failed to remove users due to invalid data"
 msgstr ""
 
-#: project/views.py:226 project/views.py:272
+#: project/views.py:228 project/views.py:274
 msgid "Successfully submitted survey"
 msgstr ""
 
-#: project/views.py:266
+#: project/views.py:268
 msgid "Failed to create survey or survey answer due to invalid data"
 msgstr ""
 
@@ -411,35 +411,35 @@ msgstr ""
 msgid "opportunities"
 msgstr ""
 
-#: statement/admin.py:134
+#: statement/admin.py:141
 msgid "question statement"
 msgstr ""
 
-#: statement/admin.py:135
+#: statement/admin.py:142
 msgid "question statements"
 msgstr ""
 
-#: statement/admin.py:147
+#: statement/admin.py:161
 msgid "option statement"
 msgstr ""
 
-#: statement/admin.py:148
+#: statement/admin.py:162
 msgid "option statements"
 msgstr ""
 
-#: statement/admin.py:160
+#: statement/admin.py:178
 msgid "option mitigation"
 msgstr ""
 
-#: statement/admin.py:161
+#: statement/admin.py:179
 msgid "option mitigations"
 msgstr ""
 
-#: statement/admin.py:173
+#: statement/admin.py:191
 msgid "option opportunity"
 msgstr ""
 
-#: statement/admin.py:174
+#: statement/admin.py:192
 msgid "option opportunites"
 msgstr ""
 
@@ -480,6 +480,18 @@ msgstr ""
 #: statement/models.py:175 statement/models.py:209 statement/models.py:230
 #: survey/admin.py:75
 msgid "option"
+msgstr ""
+
+#: statement/views.py:76 statement/views.py:110
+msgid "Successfully uploaded weightage for statement"
+msgstr ""
+
+#: statement/views.py:106
+msgid "Failed to upload weightage for statement"
+msgstr ""
+
+#: statement/views.py:119 statement/views.py:150
+msgid "Successfully activate new version"
 msgstr ""
 
 #: summary/admin.py:15
@@ -731,19 +743,19 @@ msgstr ""
 msgid "Identifier not found"
 msgstr ""
 
-#: survey/views.py:171 survey/views.py:204
+#: survey/views.py:172 survey/views.py:205
 msgid "Successfully added survey answers"
 msgstr ""
 
-#: survey/views.py:200
+#: survey/views.py:201
 msgid "Failed to add answers for survey"
 msgstr ""
 
-#: survey/views.py:213 survey/views.py:243
+#: survey/views.py:215 survey/views.py:245
 msgid "Successfully added survey results"
 msgstr ""
 
-#: survey/views.py:239
+#: survey/views.py:241
 msgid "Failed to create survey result due to invalid data"
 msgstr ""
 
