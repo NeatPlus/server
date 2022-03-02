@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from .filters import (
     MitigationFilter,
     OpportunityFilter,
-    OptionMitigationFilter,
-    OptionOpportunityFilter,
     OptionStatementFilter,
     QuestionStatementFilter,
     StatementFilter,
@@ -20,8 +18,6 @@ from .filters import (
 from .models import (
     Mitigation,
     Opportunity,
-    OptionMitigation,
-    OptionOpportunity,
     OptionStatement,
     QuestionStatement,
     Statement,
@@ -33,8 +29,6 @@ from .serializers import (
     ActivateVersionSerializer,
     MitigationSerializer,
     OpportunitySerializer,
-    OptionMitigationSerializer,
-    OptionOpportunitySerializer,
     OptionStatementSerializer,
     QuestionStatementSerializer,
     StatementSerializer,
@@ -170,15 +164,3 @@ class OptionStatementViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = OptionStatementSerializer
     queryset = OptionStatement.objects.all()
     filterset_class = OptionStatementFilter
-
-
-class OptionMitigationViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = OptionMitigationSerializer
-    queryset = OptionMitigation.objects.all()
-    filterset_class = OptionMitigationFilter
-
-
-class OptionOpportunityViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = OptionOpportunitySerializer
-    queryset = OptionOpportunity.objects.all()
-    filterset_class = OptionOpportunityFilter

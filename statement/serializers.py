@@ -3,8 +3,6 @@ from rest_framework import serializers
 from .models import (
     Mitigation,
     Opportunity,
-    OptionMitigation,
-    OptionOpportunity,
     OptionStatement,
     QuestionStatement,
     Statement,
@@ -59,18 +57,6 @@ class QuestionStatementSerializer(serializers.ModelSerializer):
 class OptionStatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = OptionStatement
-        fields = "__all__"
-
-
-class OptionMitigationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OptionMitigation
-        fields = "__all__"
-
-
-class OptionOpportunitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OptionOpportunity
         fields = "__all__"
 
 
