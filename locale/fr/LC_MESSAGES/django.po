@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-02 05:52+0000\n"
+"POT-Creation-Date: 2022-03-03 08:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: statement/models.py:37 statement/models.py:47 statement/models.py:63
 #: statement/models.py:96 statement/models.py:112 support/models.py:64
 #: support/models.py:78 support/models.py:97 survey/models.py:10
-#: survey/models.py:34 survey/models.py:71 survey/models.py:87
+#: survey/models.py:34 survey/models.py:71 survey/models.py:89
 msgid "title"
 msgstr ""
 
@@ -264,7 +264,7 @@ msgid "Member request successfully rejected"
 msgstr ""
 
 #: project/admin.py:34 project/apps.py:8 project/models.py:96
-#: survey/models.py:92
+#: survey/models.py:94
 msgid "project"
 msgstr ""
 
@@ -399,7 +399,7 @@ msgstr ""
 msgid "mitigation"
 msgstr ""
 
-#: statement/admin.py:97
+#: statement/admin.py:97 survey/models.py:78
 msgid "mitigations"
 msgstr ""
 
@@ -407,7 +407,7 @@ msgstr ""
 msgid "opportunity"
 msgstr ""
 
-#: statement/admin.py:120
+#: statement/admin.py:120 survey/models.py:79
 msgid "opportunities"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgstr ""
 msgid "questions"
 msgstr ""
 
-#: statement/models.py:84 survey/admin.py:76 survey/models.py:129
+#: statement/models.py:84 survey/admin.py:76 survey/models.py:131
 msgid "options"
 msgstr ""
 
@@ -448,7 +448,7 @@ msgid "experimental"
 msgstr ""
 
 #: statement/models.py:129 support/models.py:53 survey/admin.py:57
-#: survey/models.py:76 survey/models.py:117
+#: survey/models.py:76 survey/models.py:119
 msgid "question"
 msgstr ""
 
@@ -489,7 +489,7 @@ msgid "summary"
 msgstr ""
 
 #: summary/models.py:15 survey/admin.py:92 survey/apps.py:8
-#: survey/models.py:123
+#: survey/models.py:125
 msgid "survey"
 msgstr ""
 
@@ -561,7 +561,7 @@ msgstr ""
 msgid "document type"
 msgstr ""
 
-#: support/models.py:54 survey/models.py:125
+#: support/models.py:54 survey/models.py:127
 msgid "answer"
 msgstr ""
 
@@ -669,7 +669,7 @@ msgstr ""
 msgid "Multiple Option"
 msgstr ""
 
-#: survey/models.py:40 survey/models.py:127
+#: survey/models.py:40 survey/models.py:129
 msgid "answer type"
 msgstr ""
 
@@ -677,39 +677,55 @@ msgstr ""
 msgid "required"
 msgstr ""
 
-#: survey/models.py:94
+#: survey/models.py:96
 msgid "config"
 msgstr ""
 
-#: survey/models.py:95
+#: survey/models.py:97
 msgid "shared publicly"
 msgstr ""
 
-#: survey/models.py:97
+#: survey/models.py:99
 msgid "shared link identifier"
 msgstr ""
 
-#: survey/serializers.py:78
+#: survey/serializers.py:42
+msgid "Invalid mitigations field expect list"
+msgstr ""
+
+#: survey/serializers.py:47 survey/serializers.py:64
+msgid "list must contains dictionary as its value"
+msgstr ""
+
+#: survey/serializers.py:52 survey/serializers.py:69
+msgid "title field should be present with string value for dictionary"
+msgstr ""
+
+#: survey/serializers.py:59
+msgid "Invalid opportunities field expect list"
+msgstr ""
+
+#: survey/serializers.py:113
 msgid "Answer type of question and provided answer_type value doesn't match"
 msgstr ""
 
-#: survey/serializers.py:85
+#: survey/serializers.py:120
 msgid "answer field cannot be present for provided answer_type"
 msgstr ""
 
-#: survey/serializers.py:93
+#: survey/serializers.py:128
 msgid "options should be present for provided answer_type"
 msgstr ""
 
-#: survey/serializers.py:98
+#: survey/serializers.py:133
 msgid "Invalid option for question"
 msgstr ""
 
-#: survey/serializers.py:107
+#: survey/serializers.py:142
 msgid "Only one option in list form is supported for question"
 msgstr ""
 
-#: survey/serializers.py:119
+#: survey/serializers.py:154
 msgid "Only one image is supported for question"
 msgstr ""
 
