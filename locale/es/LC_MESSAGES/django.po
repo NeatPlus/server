@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-21 07:09+0000\n"
+"POT-Creation-Date: 2022-03-02 05:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #: context/models.py:9 context/models.py:20 notification/models.py:82
 #: organization/models.py:15 project/models.py:22 statement/models.py:10
 #: statement/models.py:37 statement/models.py:47 statement/models.py:63
-#: statement/models.py:96 statement/models.py:118 support/models.py:64
+#: statement/models.py:96 statement/models.py:112 support/models.py:64
 #: support/models.py:78 support/models.py:97 survey/models.py:10
 #: survey/models.py:34 survey/models.py:71 survey/models.py:87
 msgid "title"
@@ -171,7 +171,7 @@ msgstr ""
 msgid "notice type"
 msgstr ""
 
-#: notification/models.py:90 statement/models.py:148 statement/models.py:182
+#: notification/models.py:90 statement/models.py:136 statement/models.py:170
 #: user/models.py:44 user/models.py:153 user/models.py:171 user/models.py:189
 msgid "active"
 msgstr ""
@@ -361,86 +361,70 @@ msgstr ""
 msgid "Failed to create survey or survey answer due to invalid data"
 msgstr ""
 
-#: statement/admin.py:29 statement/models.py:69
+#: statement/admin.py:27 statement/models.py:69
 msgid "statement topic"
 msgstr ""
 
-#: statement/admin.py:30
+#: statement/admin.py:28
 msgid "statement topics"
 msgstr ""
 
-#: statement/admin.py:41 statement/models.py:52
+#: statement/admin.py:39 statement/models.py:52
 msgid "statement tag group"
 msgstr ""
 
-#: statement/admin.py:42
+#: statement/admin.py:40
 msgid "statement tag groups"
 msgstr ""
 
-#: statement/admin.py:52
+#: statement/admin.py:50
 msgid "statement tag"
 msgstr ""
 
-#: statement/admin.py:53 statement/models.py:72
+#: statement/admin.py:51 statement/models.py:72
 msgid "statement tags"
 msgstr ""
 
-#: statement/admin.py:75 statement/apps.py:8 statement/models.py:101
-#: statement/models.py:123 statement/models.py:144 statement/models.py:178
+#: statement/admin.py:73 statement/apps.py:8 statement/models.py:101
+#: statement/models.py:117 statement/models.py:132 statement/models.py:166
 #: summary/models.py:9
 msgid "statement"
 msgstr ""
 
-#: statement/admin.py:76
+#: statement/admin.py:74
 msgid "statements"
 msgstr ""
 
-#: statement/admin.py:98 statement/models.py:212
+#: statement/admin.py:96
 msgid "mitigation"
 msgstr ""
 
-#: statement/admin.py:99
+#: statement/admin.py:97
 msgid "mitigations"
 msgstr ""
 
-#: statement/admin.py:121 statement/models.py:233
+#: statement/admin.py:119
 msgid "opportunity"
 msgstr ""
 
-#: statement/admin.py:122
+#: statement/admin.py:120
 msgid "opportunities"
 msgstr ""
 
-#: statement/admin.py:141
+#: statement/admin.py:139
 msgid "question statement"
 msgstr ""
 
-#: statement/admin.py:142
+#: statement/admin.py:140
 msgid "question statements"
 msgstr ""
 
-#: statement/admin.py:161
+#: statement/admin.py:159
 msgid "option statement"
 msgstr ""
 
-#: statement/admin.py:162
+#: statement/admin.py:160
 msgid "option statements"
-msgstr ""
-
-#: statement/admin.py:178
-msgid "option mitigation"
-msgstr ""
-
-#: statement/admin.py:179
-msgid "option mitigations"
-msgstr ""
-
-#: statement/admin.py:191
-msgid "option opportunity"
-msgstr ""
-
-#: statement/admin.py:192
-msgid "option opportunites"
 msgstr ""
 
 #: statement/models.py:12
@@ -455,8 +439,7 @@ msgstr ""
 msgid "questions"
 msgstr ""
 
-#: statement/models.py:84 statement/models.py:107 statement/models.py:129
-#: survey/admin.py:76 survey/models.py:129
+#: statement/models.py:84 survey/admin.py:76 survey/models.py:129
 msgid "options"
 msgstr ""
 
@@ -464,33 +447,32 @@ msgstr ""
 msgid "experimental"
 msgstr ""
 
-#: statement/models.py:141 support/models.py:53 survey/admin.py:57
+#: statement/models.py:129 support/models.py:53 survey/admin.py:57
 #: survey/models.py:76 survey/models.py:117
 msgid "question"
 msgstr ""
 
-#: statement/models.py:146 statement/models.py:180
+#: statement/models.py:134 statement/models.py:168
 msgid "weightage"
 msgstr ""
 
-#: statement/models.py:147 statement/models.py:181
+#: statement/models.py:135 statement/models.py:169
 msgid "version"
 msgstr ""
 
-#: statement/models.py:175 statement/models.py:209 statement/models.py:230
-#: survey/admin.py:75
+#: statement/models.py:163 survey/admin.py:75
 msgid "option"
 msgstr ""
 
-#: statement/views.py:76 statement/views.py:110
+#: statement/views.py:70 statement/views.py:103
 msgid "Successfully uploaded weightage for statement"
 msgstr ""
 
-#: statement/views.py:106
+#: statement/views.py:99
 msgid "Failed to upload weightage for statement"
 msgstr ""
 
-#: statement/views.py:119 statement/views.py:150
+#: statement/views.py:112 statement/views.py:142
 msgid "Successfully activate new version"
 msgstr ""
 
@@ -731,31 +713,31 @@ msgstr ""
 msgid "Only one image is supported for question"
 msgstr ""
 
-#: survey/views.py:123
+#: survey/views.py:122
 msgid "Cannot update link of not shared survey"
 msgstr ""
 
-#: survey/views.py:130 survey/views.py:144
+#: survey/views.py:129 survey/views.py:143
 msgid "Successfully unshared survey"
 msgstr ""
 
-#: survey/views.py:163
+#: survey/views.py:162
 msgid "Identifier not found"
 msgstr ""
 
-#: survey/views.py:172 survey/views.py:205
+#: survey/views.py:171 survey/views.py:210
 msgid "Successfully added survey answers"
 msgstr ""
 
-#: survey/views.py:201
+#: survey/views.py:206
 msgid "Failed to add answers for survey"
 msgstr ""
 
-#: survey/views.py:215 survey/views.py:245
+#: survey/views.py:220 survey/views.py:260
 msgid "Successfully added survey results"
 msgstr ""
 
-#: survey/views.py:241
+#: survey/views.py:256
 msgid "Failed to create survey result due to invalid data"
 msgstr ""
 

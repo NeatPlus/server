@@ -22,8 +22,6 @@ from project.views import ProjectViewSet
 from statement.views import (
     MitigationViewSet,
     OpportunityViewSet,
-    OptionMitigationViewSet,
-    OptionOpportunityViewSet,
     OptionStatementViewSet,
     QuestionStatementViewSet,
     StatementTagGroupViewSet,
@@ -74,12 +72,6 @@ router.register("notice", NoticeViewSet, basename="notice")
 router.register("notification", NotificationViewSet, basename="notification")
 router.register("opportunity", OpportunityViewSet, basename="opportunity")
 router.register("option", OptionViewSet, basename="option")
-router.register(
-    "option-mitigation", OptionMitigationViewSet, basename="option-mitigation"
-)
-router.register(
-    "option-opportunity", OptionOpportunityViewSet, basename="option-opportunity"
-)
 router.register("option-statement", OptionStatementViewSet, basename="option-statement")
 router.register("organization", OrganizationViewSet, basename="organization")
 router.register(

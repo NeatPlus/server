@@ -3,8 +3,6 @@ from django_filters.rest_framework.filterset import FilterSet
 from .models import (
     Mitigation,
     Opportunity,
-    OptionMitigation,
-    OptionOpportunity,
     OptionStatement,
     QuestionStatement,
     Statement,
@@ -50,7 +48,6 @@ class MitigationFilter(FilterSet):
         fields = {
             "title": ["exact"],
             "statement": ["exact"],
-            "options": ["exact"],
         }
 
 
@@ -60,7 +57,6 @@ class OpportunityFilter(FilterSet):
         fields = {
             "title": ["exact"],
             "statement": ["exact"],
-            "options": ["exact"],
         }
 
 
@@ -83,22 +79,4 @@ class OptionStatementFilter(FilterSet):
             "option": ["exact"],
             "version": ["exact"],
             "is_active": ["exact"],
-        }
-
-
-class OptionMitigationFilter(FilterSet):
-    class Meta:
-        model = OptionMitigation
-        fields = {
-            "mitigation": ["exact"],
-            "option": ["exact"],
-        }
-
-
-class OptionOpportunityFilter(FilterSet):
-    class Meta:
-        model = OptionOpportunity
-        fields = {
-            "opportunity": ["exact"],
-            "option": ["exact"],
         }

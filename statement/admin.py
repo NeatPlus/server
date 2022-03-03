@@ -8,8 +8,6 @@ from neatplus.admin import UserStampedModelAdmin
 from .models import (
     Mitigation,
     Opportunity,
-    OptionMitigation,
-    OptionOpportunity,
     OptionStatement,
     QuestionStatement,
     Statement,
@@ -160,33 +158,3 @@ class OptionStatementAdmin(
     class Meta:
         verbose_name = _("option statement")
         verbose_plural_name = _("option statements")
-
-
-@admin.register(OptionMitigation)
-class OptionMitigationAdmin(
-    UserStampedModelAdmin,
-    OrderedModelAdmin,
-):
-    list_display = (
-        "option",
-        "mitigation",
-        "move_up_down_links",
-    )
-    autocomplete_fields = ("option", "mitigation")
-
-    class Meta:
-        verbose_name = _("option mitigation")
-        verbose_plural_name = _("option mitigations")
-
-
-@admin.register(OptionOpportunity)
-class OptionOpportunityAdmin(
-    UserStampedModelAdmin,
-    OrderedModelAdmin,
-):
-    list_display = ("option", "opportunity", "move_up_down_links")
-    autocomplete_fields = ("option", "opportunity")
-
-    class Meta:
-        verbose_name = _("option opportunity")
-        verbose_plural_name = _("option opportunites")

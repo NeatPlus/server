@@ -100,12 +100,6 @@ class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         related_name="mitigations",
         verbose_name=_("statement"),
     )
-    options = models.ManyToManyField(
-        "survey.Option",
-        related_name="mitigations",
-        through="OptionMitigation",
-        verbose_name=_("options"),
-    )
 
     def __str__(self):
         return self.code + "-" + self.title
@@ -121,12 +115,6 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         on_delete=models.CASCADE,
         related_name="opportunities",
         verbose_name=_("statement"),
-    )
-    options = models.ManyToManyField(
-        "survey.Option",
-        related_name="opportunities",
-        through="OptionOpportunity",
-        verbose_name=_("options"),
     )
 
     def __str__(self):
@@ -202,45 +190,3 @@ class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
                 name="one_active_option_statement",
             ),
         ]
-
-
-class OptionMitigation(UserStampedModel, TimeStampedModel, OrderedModel):
-    option = models.ForeignKey(
-        "survey.Option", on_delete=models.CASCADE, verbose_name=_("option")
-    )
-    mitigation = models.ForeignKey(
-        "Mitigation", on_delete=models.CASCADE, verbose_name=_("mitigation")
-    )
-
-    def __str__(self):
-        return (
-            "Option:"
-            + str(self.option.pk)
-            + "-"
-            + "Mitigation:"
-            + str(self.mitigation.pk)
-        )
-
-    class Meta(OrderedModel.Meta):
-        pass
-
-
-class OptionOpportunity(UserStampedModel, TimeStampedModel, OrderedModel):
-    option = models.ForeignKey(
-        "survey.Option", on_delete=models.CASCADE, verbose_name=_("option")
-    )
-    opportunity = models.ForeignKey(
-        "Opportunity", on_delete=models.CASCADE, verbose_name=_("opportunity")
-    )
-
-    def __str__(self):
-        return (
-            "Option:"
-            + str(self.option.pk)
-            + "-"
-            + "Opportunity:"
-            + str(self.opportunity.pk)
-        )
-
-    class Meta(OrderedModel.Meta):
-        pass

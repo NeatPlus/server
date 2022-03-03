@@ -22,11 +22,9 @@ class APITest(FullTestCase):
             questions=questions,
             options=options,
         )
-        cls.mitigation = cls.baker.make(
-            "statement.Mitigation", statement=cls.statement, options=options
-        )
+        cls.mitigation = cls.baker.make("statement.Mitigation", statement=cls.statement)
         cls.opportunity = cls.baker.make(
-            "statement.Opportunity", statement=cls.statement, options=options
+            "statement.Opportunity", statement=cls.statement
         )
         cls.question_statement = cls.baker.make(
             "statement.QuestionStatement", version="initial", is_active=True
@@ -37,8 +35,6 @@ class APITest(FullTestCase):
             version="initial",
             is_active=True,
         )
-        option_mitigation = cls.baker.make("statement.OptionMitigation")
-        option_opportunity = cls.baker.make("statement.OptionOpportunity")
 
         cls.statement_topic_list_url = cls.reverse(
             "statement-topic-list", kwargs={"version": "v1"}
@@ -94,22 +90,6 @@ class APITest(FullTestCase):
         cls.option_statement_detail_url = cls.reverse(
             "option-statement-detail",
             kwargs={"version": "v1", "pk": cls.option_statement.pk},
-        )
-
-        cls.option_mitigation_list_url = cls.reverse(
-            "option-mitigation-list", kwargs={"version": "v1"}
-        )
-        cls.option_mitigation_detail_url = cls.reverse(
-            "option-mitigation-detail",
-            kwargs={"version": "v1", "pk": option_mitigation.pk},
-        )
-
-        cls.option_opportunity_list_url = cls.reverse(
-            "option-opportunity-list", kwargs={"version": "v1"}
-        )
-        cls.option_opportunity_detail_url = cls.reverse(
-            "option-opportunity-detail",
-            kwargs={"version": "v1", "pk": option_opportunity.pk},
         )
 
     def test_statement_topic_list(self):
@@ -204,30 +184,6 @@ class APITest(FullTestCase):
 
     def test_option_statement_detail(self):
         response = self.client.get(self.option_statement_detail_url)
-        self.assertEqual(
-            response.status_code, self.status_code.HTTP_200_OK, response.json()
-        )
-
-    def test_option_mitigation_list(self):
-        response = self.client.get(self.option_mitigation_list_url)
-        self.assertEqual(
-            response.status_code, self.status_code.HTTP_200_OK, response.json()
-        )
-
-    def test_option_mitigation_detail(self):
-        response = self.client.get(self.option_mitigation_detail_url)
-        self.assertEqual(
-            response.status_code, self.status_code.HTTP_200_OK, response.json()
-        )
-
-    def test_option_opportunity_list(self):
-        response = self.client.get(self.option_opportunity_list_url)
-        self.assertEqual(
-            response.status_code, self.status_code.HTTP_200_OK, response.json()
-        )
-
-    def test_option_opportunity_detail(self):
-        response = self.client.get(self.option_opportunity_detail_url)
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
