@@ -71,6 +71,11 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     tags = models.ManyToManyField(
         "StatementTag", related_name="statements", verbose_name=_("statement tags")
     )
+    question_groups = models.ManyToManyField(
+        "survey.QuestionGroup",
+        related_name="statements",
+        verbose_name=_("question groups"),
+    )
     questions = models.ManyToManyField(
         "survey.Question",
         related_name="statements",

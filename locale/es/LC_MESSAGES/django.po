@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-03 08:06+0000\n"
+"POT-Creation-Date: 2022-03-07 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #: context/models.py:9 context/models.py:20 notification/models.py:82
 #: organization/models.py:15 project/models.py:22 statement/models.py:10
 #: statement/models.py:37 statement/models.py:47 statement/models.py:63
-#: statement/models.py:96 statement/models.py:112 support/models.py:64
+#: statement/models.py:101 statement/models.py:117 support/models.py:64
 #: support/models.py:78 support/models.py:97 survey/models.py:10
 #: survey/models.py:34 survey/models.py:71 survey/models.py:89
 msgid "title"
@@ -171,7 +171,7 @@ msgstr ""
 msgid "notice type"
 msgstr ""
 
-#: notification/models.py:90 statement/models.py:136 statement/models.py:170
+#: notification/models.py:90 statement/models.py:141 statement/models.py:175
 #: user/models.py:44 user/models.py:153 user/models.py:171 user/models.py:189
 msgid "active"
 msgstr ""
@@ -385,8 +385,8 @@ msgstr ""
 msgid "statement tags"
 msgstr ""
 
-#: statement/admin.py:73 statement/apps.py:8 statement/models.py:101
-#: statement/models.py:117 statement/models.py:132 statement/models.py:166
+#: statement/admin.py:73 statement/apps.py:8 statement/models.py:106
+#: statement/models.py:122 statement/models.py:137 statement/models.py:171
 #: summary/models.py:9
 msgid "statement"
 msgstr ""
@@ -435,32 +435,36 @@ msgstr ""
 msgid "hints"
 msgstr ""
 
-#: statement/models.py:78 survey/admin.py:58
+#: statement/models.py:77 survey/admin.py:26
+msgid "question groups"
+msgstr ""
+
+#: statement/models.py:83 survey/admin.py:58
 msgid "questions"
 msgstr ""
 
-#: statement/models.py:84 survey/admin.py:76 survey/models.py:131
+#: statement/models.py:89 survey/admin.py:76 survey/models.py:131
 msgid "options"
 msgstr ""
 
-#: statement/models.py:86
+#: statement/models.py:91
 msgid "experimental"
 msgstr ""
 
-#: statement/models.py:129 support/models.py:53 survey/admin.py:57
+#: statement/models.py:134 support/models.py:53 survey/admin.py:57
 #: survey/models.py:76 survey/models.py:119
 msgid "question"
 msgstr ""
 
-#: statement/models.py:134 statement/models.py:168
+#: statement/models.py:139 statement/models.py:173
 msgid "weightage"
 msgstr ""
 
-#: statement/models.py:135 statement/models.py:169
+#: statement/models.py:140 statement/models.py:174
 msgid "version"
 msgstr ""
 
-#: statement/models.py:163 survey/admin.py:75
+#: statement/models.py:168 survey/admin.py:75
 msgid "option"
 msgstr ""
 
@@ -607,10 +611,6 @@ msgstr ""
 
 #: survey/admin.py:25 survey/models.py:46
 msgid "question group"
-msgstr ""
-
-#: survey/admin.py:26
-msgid "question groups"
 msgstr ""
 
 #: survey/admin.py:93
