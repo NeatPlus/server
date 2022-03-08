@@ -37,6 +37,7 @@ class StatementFilter(FilterSet):
             "title": ["exact"],
             "topic": ["exact"],
             "tags": ["exact"],
+            "question_groups": ["exact"],
             "questions": ["exact"],
             "options": ["exact"],
         }
