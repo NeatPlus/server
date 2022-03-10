@@ -8,8 +8,8 @@ from .models import SurveyResult
 
 @admin.register(SurveyResult)
 class SurveyResultAdmin(UserStampedModelAdmin):
-    list_display = ("statement", "survey", "module", "score")
-    autocomplete_fields = ("statement", "survey", "module")
+    list_display = ("statement", "survey", "module", "question_group", "score")
+    autocomplete_fields = ("statement", "survey", "module", "question_group")
 
     class Meta:
         verbose_name = _("survey result")
