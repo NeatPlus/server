@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-11 07:25+0000\n"
+"POT-Creation-Date: 2022-03-11 08:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -469,15 +469,15 @@ msgstr ""
 msgid "option"
 msgstr ""
 
-#: statement/views.py:70 statement/views.py:103
+#: statement/views.py:70 statement/views.py:110
 msgid "Successfully uploaded weightage for statement"
 msgstr ""
 
-#: statement/views.py:99
+#: statement/views.py:106
 msgid "Failed to upload weightage for statement"
 msgstr ""
 
-#: statement/views.py:112 statement/views.py:142
+#: statement/views.py:119 statement/views.py:150
 msgid "Successfully activate new version"
 msgstr ""
 
