@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-07 10:33+0000\n"
+"POT-Creation-Date: 2022-03-11 07:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,6 +202,7 @@ msgid "organization member requests"
 msgstr ""
 
 #: organization/models.py:11 organization/models.py:89 project/models.py:18
+#: summary/models.py:51
 msgid "Pending"
 msgstr ""
 
@@ -480,12 +481,20 @@ msgstr ""
 msgid "Successfully activate new version"
 msgstr ""
 
-#: summary/admin.py:15
+#: summary/admin.py:16 summary/models.py:58
 msgid "survey result"
 msgstr ""
 
-#: summary/admin.py:16
+#: summary/admin.py:17
 msgid "survey results"
+msgstr ""
+
+#: summary/admin.py:26
+msgid "survey result feeback"
+msgstr ""
+
+#: summary/admin.py:27
+msgid "survey result feedbacks"
 msgstr ""
 
 #: summary/apps.py:8 support/models.py:108
@@ -497,8 +506,36 @@ msgstr ""
 msgid "survey"
 msgstr ""
 
-#: summary/models.py:23
+#: summary/models.py:27 survey/admin.py:25 survey/models.py:46
+msgid "question group"
+msgstr ""
+
+#: summary/models.py:32
 msgid "score"
+msgstr ""
+
+#: summary/models.py:52
+msgid "Acknowledged"
+msgstr ""
+
+#: summary/models.py:60
+msgid "actual score"
+msgstr ""
+
+#: summary/models.py:61
+msgid "excepted score"
+msgstr ""
+
+#: summary/models.py:62
+msgid "comment"
+msgstr ""
+
+#: summary/views.py:48 summary/views.py:72
+msgid "Successfully added survey result feedback"
+msgstr ""
+
+#: summary/views.py:99 summary/views.py:116
+msgid "Successfully acknowledged survey result feedback"
 msgstr ""
 
 #: support/admin.py:23
@@ -607,10 +644,6 @@ msgstr ""
 
 #: support/models.py:123
 msgid "text message"
-msgstr ""
-
-#: survey/admin.py:25 survey/models.py:46
-msgid "question group"
 msgstr ""
 
 #: survey/admin.py:93
