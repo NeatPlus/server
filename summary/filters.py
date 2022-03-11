@@ -10,5 +10,6 @@ class SurveyResultFilter(FilterSet):
             "survey": ["exact"],
             "survey__project": ["exact"],
             "statement": ["exact"],
+            "question_group": ["exact"],
             "score": ["exact"],
         }
