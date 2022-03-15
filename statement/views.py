@@ -79,6 +79,7 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
     )
     def upload_weightage(self, request, *args, **kwargs):
         statement = self.get_object()
+        user = self.request.user
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -88,11 +89,17 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
             with transaction.atomic():
                 for question_statement_data in data["questions"]:
                     QuestionStatement.objects.create(
-                        **question_statement_data, statement=statement, version=version
+                        **question_statement_data,
+                        statement=statement,
+                        version=version,
+                        created_by=user
                     )
                 for option_statement_data in data["options"]:
                     OptionStatement.objects.create(
-                        **option_statement_data, statement=statement, version=version
+                        **option_statement_data,
+                        statement=statement,
+                        version=version,
+                        created_by=user
                     )
         except Exception as e:
             return Response(
@@ -121,6 +128,7 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
     )
     def activate_version(self, request, *args, **kwargs):
         statement = self.get_object()
+        user = self.request.user
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -129,16 +137,16 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
         with transaction.atomic():
             QuestionStatement.objects.filter(statement=statement).exclude(
                 version=version
-            ).update(is_active=False)
+            ).update(is_active=False, updated_by=user)
             QuestionStatement.objects.filter(statement=statement).filter(
                 version=version
-            ).update(is_active=True)
+            ).update(is_active=True, updated_by=user)
             OptionStatement.objects.filter(statement=statement).exclude(
                 version=version
-            ).update(is_active=False)
+            ).update(is_active=False, updated_by=user)
             OptionStatement.objects.filter(statement=statement).filter(
                 version=version
-            ).update(is_active=True)
+            ).update(is_active=True, updated_by=user)
         return Response({"detail": _("Successfully activate new version")})
 
 

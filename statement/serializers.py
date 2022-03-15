@@ -51,13 +51,13 @@ class OpportunitySerializer(serializers.ModelSerializer):
 class QuestionStatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionStatement
-        fields = "__all__"
+        exclude = ("created_by", "updated_by", "created_at", "modified_at")
 
 
 class OptionStatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = OptionStatement
-        fields = "__all__"
+        exclude = ("created_by", "updated_by", "created_at", "modified_at")
 
 
 class UploadQuestionStatementSerializer(serializers.ModelSerializer):
