@@ -37,7 +37,6 @@ class StatementFilter(FilterSet):
             "title": ["exact"],
             "topic": ["exact"],
             "tags": ["exact"],
-            "question_groups": ["exact"],
             "questions": ["exact"],
             "options": ["exact"],
         }
@@ -69,6 +68,7 @@ class QuestionStatementFilter(FilterSet):
             "question": ["exact"],
             "version": ["exact"],
             "is_active": ["exact"],
+            "question_group": ["exact"],
         }
 
 
@@ -80,4 +80,5 @@ class OptionStatementFilter(FilterSet):
             "option": ["exact"],
             "version": ["exact"],
             "is_active": ["exact"],
+            "question_group": ["exact"],
         }

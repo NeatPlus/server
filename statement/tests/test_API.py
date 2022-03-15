@@ -198,10 +198,7 @@ class APITest(FullTestCase):
             "statement-upload-weightage",
             kwargs={"version": "v1", "pk": statement.pk},
         )
-        version = self.baker.random_gen.gen_string(max_length=255)
-
         data = {
-            "version": version,
             "questions": [
                 {
                     "question": self.question_statement.question.pk,
@@ -223,14 +220,14 @@ class APITest(FullTestCase):
             QuestionStatement.objects.filter(
                 question=self.question_statement.question.pk,
                 statement=statement.pk,
-                version=version,
+                version="draft",
             ).exists()
         )
         self.assertTrue(
             OptionStatement.objects.filter(
                 option=self.option_statement.option.pk,
                 statement=statement.pk,
-                version=version,
+                version="draft",
             ).exists()
         )
 
@@ -251,27 +248,30 @@ class APITest(FullTestCase):
             statement=statement,
             version=version,
         )
-        response = self.client.post(url, data={"version": version})
+        response = self.client.post(
+            url, data={"version": version, "question_group": None}, format="json"
+        )
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
-        self.assertFalse(
-            QuestionStatement.objects.filter(statement=statement.pk, is_active=True)
-            .exclude(version=version)
-            .exists()
+
+    def test_activate_draft_version(self):
+        user = self.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
         )
-        self.assertFalse(
-            OptionStatement.objects.filter(statement=statement.pk, is_active=True)
-            .exclude(version=version)
-            .exists()
+        self.client.force_authenticate(user)
+        statement = self.question_statement.statement
+        url = self.reverse(
+            "statement-activate-draft-version",
+            kwargs={"version": "v1", "pk": statement.pk},
         )
-        self.assertFalse(
-            QuestionStatement.objects.filter(statement=statement.pk, is_active=False)
-            .filter(version=version)
-            .exists()
+        self.baker.make("statement.QuestionStatement", version="draft")
+        self.baker.make(
+            "statement.OptionStatement",
+            statement=statement,
+            version="draft",
         )
-        self.assertFalse(
-            OptionStatement.objects.filter(statement=statement.pk, is_active=False)
-            .filter(version=version)
-            .exists()
+        response = self.client.post(url, format="json", data={"question_group": None})
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
         )

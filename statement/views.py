@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import serializers, status, viewsets
@@ -26,6 +27,7 @@ from .models import (
     StatementTopic,
 )
 from .serializers import (
+    ActivateDraftVersionSerializer,
     ActivateVersionSerializer,
     MitigationSerializer,
     OpportunitySerializer,
@@ -84,24 +86,40 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
-        version = data["version"]
         try:
             with transaction.atomic():
                 for question_statement_data in data["questions"]:
-                    QuestionStatement.objects.create(
+                    weightage = question_statement_data.pop("weightage")
+                    question_group = question_statement_data.pop("question_group", None)
+                    question_obj, created = QuestionStatement.objects.update_or_create(
                         **question_statement_data,
+                        question_group=question_group,
                         statement=statement,
-                        version=version,
-                        created_by=user
+                        version="draft",
+                        defaults={"weightage": weightage},
                     )
+                    if created:
+                        question_obj.created_by = user
+                    else:
+                        question_obj.updated_by = user
+                    question_obj.save()
                 for option_statement_data in data["options"]:
-                    OptionStatement.objects.create(
+                    weightage = option_statement_data.pop("weightage")
+                    question_group = option_statement_data.pop("question_group", None)
+                    option_obj, created = OptionStatement.objects.update_or_create(
                         **option_statement_data,
+                        question_group=question_group,
                         statement=statement,
-                        version=version,
-                        created_by=user
+                        version="draft",
+                        defaults={"weightage": weightage},
                     )
+                    if created:
+                        option_obj.created_by = user
+                    else:
+                        option_obj.updated_by = user
+                    option_obj.save()
         except Exception as e:
+            print(e)
             return Response(
                 {"error": _("Failed to upload weightage for statement")},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -134,20 +152,68 @@ class StatementViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         version = data["version"]
+        question_group = data["question_group"]
         with transaction.atomic():
-            QuestionStatement.objects.filter(statement=statement).exclude(
-                version=version
-            ).update(is_active=False, updated_by=user)
-            QuestionStatement.objects.filter(statement=statement).filter(
-                version=version
-            ).update(is_active=True, updated_by=user)
-            OptionStatement.objects.filter(statement=statement).exclude(
-                version=version
-            ).update(is_active=False, updated_by=user)
-            OptionStatement.objects.filter(statement=statement).filter(
-                version=version
-            ).update(is_active=True, updated_by=user)
+            QuestionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            QuestionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
+            OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
         return Response({"detail": _("Successfully activate new version")})
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="ActivateDraftVersionResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default=_("Successfully activate draft version")
+                )
+            },
+        )
+    )
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=ActivateDraftVersionSerializer,
+    )
+    def activate_draft_version(self, request, *args, **kwargs):
+        statement = self.get_object()
+        user = self.request.user
+        version = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        question_group = data["question_group"]
+        with transaction.atomic():
+            # Rename version to date time based version
+            QuestionStatement.objects.filter(
+                statement=statement, version="draft", question_group=question_group
+            ).update(version=version)
+            OptionStatement.objects.filter(
+                statement=statement, version="draft", question_group=question_group
+            ).update(version=version)
+            # Make all old version inactive and new version active version
+            QuestionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            QuestionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
+            OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
+        return Response({"detail": _("Successfully activate draft version")})
 
 
 class MitigationViewSet(viewsets.ReadOnlyModelViewSet):

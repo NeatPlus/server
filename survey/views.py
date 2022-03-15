@@ -240,10 +240,12 @@ class SurveyViewSet(
                 for validated_datum in serializer.validated_data:
                     statement = validated_datum.pop("statement")
                     module = validated_datum.pop("module")
+                    question_group = validated_datum.pop("question_group", None)
                     survey_result, created = SurveyResult.objects.update_or_create(
                         survey=survey,
                         statement=statement,
                         module=module,
+                        question_group=question_group,
                         defaults=validated_datum,
                     )
                     if created:
