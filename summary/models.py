@@ -58,7 +58,7 @@ class SurveyResultFeedback(UserStampedModel, TimeStampedModel):
         verbose_name=_("survey result"),
     )
     actual_score = models.FloatField(_("actual score"))
-    expected_score = models.FloatField(_("excepted score"))
+    expected_score = models.FloatField(_("expected score"))
     comment = models.TextField(_("comment"))
     status = models.CharField(
         max_length=12, choices=StatusChoice.choices, default=StatusChoice.PENDING

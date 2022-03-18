@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-11 08:51+0000\n"
+"POT-Creation-Date: 2022-03-18 08:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -523,7 +523,7 @@ msgid "actual score"
 msgstr ""
 
 #: summary/models.py:61
-msgid "excepted score"
+msgid "expected score"
 msgstr ""
 
 #: summary/models.py:62
