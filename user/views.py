@@ -133,7 +133,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             validate_password(password=user_password)
         except ValidationError as e:
             errors = list(e.messages)
-            return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"password": errors}, status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.create_user(**data)
         user.set_password(user_password)
         user.save()
@@ -366,7 +366,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 validate_password(password=password, user=user)
             except ValidationError as e:
                 errors = list(e.messages)
-                return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"password": errors}, status=status.HTTP_400_BAD_REQUEST
+                )
             user.set_password(password)
             user.save()
             return Response({"detail": _("Password successfully changed")})
