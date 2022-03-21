@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-18 08:53+0000\n"
+"POT-Creation-Date: 2022-03-21 04:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,19 +248,35 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: organization/views.py:46 organization/views.py:68
+#: organization/views.py:49 organization/views.py:71
 msgid "Successfully created project"
 msgstr ""
 
-#: organization/views.py:77 organization/views.py:95
+#: organization/views.py:80 organization/views.py:98
 msgid "Successfully requested member access"
 msgstr ""
 
-#: organization/views.py:122 organization/views.py:139
+#: organization/views.py:130 organization/views.py:161
+msgid "Successfully added all valid users"
+msgstr ""
+
+#: organization/views.py:158
+msgid "Failed to add users to organization"
+msgstr ""
+
+#: organization/views.py:169 organization/views.py:200
+msgid "Successfully removed all valid users"
+msgstr ""
+
+#: organization/views.py:197
+msgid "Failed to remove users from organization"
+msgstr ""
+
+#: organization/views.py:225 organization/views.py:242
 msgid "Member request successfully accepted"
 msgstr ""
 
-#: organization/views.py:146 organization/views.py:163
+#: organization/views.py:249 organization/views.py:266
 msgid "Member request successfully rejected"
 msgstr ""
 
@@ -321,11 +337,11 @@ msgstr ""
 msgid "permission"
 msgstr ""
 
-#: project/serializers.py:56
+#: project/serializers.py:57
 msgid "Cannot create project for not accepted organization"
 msgstr ""
 
-#: project/serializers.py:65
+#: project/serializers.py:66
 msgid ""
 "No organization project cannot have public_within_organization visibility"
 msgstr ""
@@ -882,142 +898,142 @@ msgid_plural "Your password must not contain last {count} password"
 msgstr[0] ""
 msgstr[1] ""
 
-#: user/serializers.py:35
+#: user/serializers.py:41
 msgid "Password field missing"
 msgstr ""
 
-#: user/serializers.py:39 user/serializers.py:54 user/serializers.py:75
+#: user/serializers.py:45 user/serializers.py:60 user/serializers.py:85
 msgid "Invalid password for user"
 msgstr ""
 
-#: user/serializers.py:72
-msgid "Email is already used"
-msgstr ""
-
-#: user/serializers.py:118 user/views.py:317
-msgid "Password and re_password doesn't match"
-msgstr ""
-
-#: user/views.py:67 user/views.py:96
-msgid "Password successfully updated"
-msgstr ""
-
-#: user/views.py:91
+#: user/serializers.py:64
 msgid "New password and re new password doesn't match"
 msgstr ""
 
-#: user/views.py:104 user/views.py:143
+#: user/serializers.py:82
+msgid "Email is already used"
+msgstr ""
+
+#: user/serializers.py:128 user/views.py:324
+msgid "Password and re_password doesn't match"
+msgstr ""
+
+#: user/views.py:75 user/views.py:103
+msgid "Password successfully updated"
+msgstr ""
+
+#: user/views.py:111 user/views.py:150
 msgid "User successfully registered and email send to user's email address"
 msgstr ""
 
-#: user/views.py:127
+#: user/views.py:134
 msgid "User with username/email already exists"
 msgstr ""
 
-#: user/views.py:154 user/views.py:202
+#: user/views.py:161 user/views.py:209
 msgid "Password reset email successfully send"
 msgstr ""
 
-#: user/views.py:179
+#: user/views.py:186
 msgid "No active user present for username/email your account may be blocked"
 msgstr ""
 
-#: user/views.py:229 user/views.py:309
+#: user/views.py:236 user/views.py:316
 msgid "No active user present for username/email"
 msgstr ""
 
-#: user/views.py:250 user/views.py:337
+#: user/views.py:257 user/views.py:344
 msgid "User is inactive"
 msgstr ""
 
-#: user/views.py:257 user/views.py:344 user/views.py:492 user/views.py:618
+#: user/views.py:264 user/views.py:351 user/views.py:501 user/views.py:627
 msgid "User is now inactive for trying too many times"
 msgstr ""
 
-#: user/views.py:262
+#: user/views.py:269
 msgid "Password reset pin is incorrect"
 msgstr ""
 
-#: user/views.py:267 user/views.py:354
+#: user/views.py:274 user/views.py:361
 msgid "Password reset pin has expired"
 msgstr ""
 
-#: user/views.py:271 user/views.py:358
+#: user/views.py:278 user/views.py:365
 msgid "No matching active user pin found"
 msgstr ""
 
-#: user/views.py:285 user/views.py:372
+#: user/views.py:292 user/views.py:381
 msgid "Password successfully changed"
 msgstr ""
 
-#: user/views.py:349
+#: user/views.py:356
 msgid "Password reset identifier is incorrect"
 msgstr ""
 
-#: user/views.py:379 user/views.py:436
+#: user/views.py:388 user/views.py:445
 msgid "Email confirmation mail successfully sent"
 msgstr ""
 
-#: user/views.py:402
+#: user/views.py:411
 msgid "No user present with given email address/username"
 msgstr ""
 
-#: user/views.py:409 user/views.py:546
+#: user/views.py:418 user/views.py:555
 msgid "User is inactive for trying too many times"
 msgstr ""
 
-#: user/views.py:414
+#: user/views.py:423
 msgid "Email address has already been confirmed"
 msgstr ""
 
-#: user/views.py:443 user/views.py:515
+#: user/views.py:452 user/views.py:524
 msgid "Email successfully confirmed"
 msgstr ""
 
-#: user/views.py:467
+#: user/views.py:476
 msgid "No inactive user present for username"
 msgstr ""
 
-#: user/views.py:485
+#: user/views.py:494
 msgid "Email is already confirmed for user"
 msgstr ""
 
-#: user/views.py:497
+#: user/views.py:506
 msgid "Email confirmation pin is incorrect"
 msgstr ""
 
-#: user/views.py:502
+#: user/views.py:511
 msgid "Email confirmation pin has expired"
 msgstr ""
 
-#: user/views.py:506
+#: user/views.py:515
 msgid "No matching active username/email found"
 msgstr ""
 
-#: user/views.py:522 user/views.py:570
+#: user/views.py:531 user/views.py:579
 msgid "Email change mail successfully sent"
 msgstr ""
 
-#: user/views.py:576 user/views.py:646
+#: user/views.py:585 user/views.py:655
 msgid "Email successfully changed"
 msgstr ""
 
-#: user/views.py:611
+#: user/views.py:620
 msgid "Email is already changed for user"
 msgstr ""
 
-#: user/views.py:623
+#: user/views.py:632
 msgid "Email change pin is incorrect"
 msgstr ""
 
-#: user/views.py:628
+#: user/views.py:637
 msgid "Email change pin has expired"
 msgstr ""
 
-#: user/views.py:632
+#: user/views.py:641
 msgid "No matching active change change request found"
 msgstr ""
 
-#: user/views.py:641
+#: user/views.py:650
 msgid "email already used for account creation"
 msgstr ""

@@ -3,13 +3,19 @@ from django.utils.translation import gettext_lazy as _
 from drf_recaptcha.fields import ReCaptchaV3Field
 from rest_framework import serializers
 
+from neatplus.serializers import UserModelSerializer
+
 from .models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(UserModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "first_name", "last_name", "organization", "role")
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+        )
 
 
 class PrivateUserSerializer(UserSerializer):
@@ -52,6 +58,10 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise serializers.ValidationError(
                 {"old_password": _("Invalid password for user")}
+            )
+        if attrs["new_password"] != attrs["re_new_password"]:
+            raise serializers.ValidationError(
+                {"error": _("New password and re new password doesn't match")}
             )
         return super().validate(attrs)
 

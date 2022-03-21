@@ -1,9 +1,11 @@
 from rest_framework import serializers
 
+from neatplus.serializers import UserModelSerializer
+
 from .models import SurveyResult, SurveyResultFeedback
 
 
-class SurveyResultSerializer(serializers.ModelSerializer):
+class SurveyResultSerializer(UserModelSerializer):
     class Meta:
         model = SurveyResult
         fields = "__all__"

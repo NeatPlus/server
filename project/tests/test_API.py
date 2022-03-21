@@ -181,8 +181,8 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         data = [
-            {"user": first_user.pk, "permission": "write"},
-            {"user": second_user.pk},
+            {"user": first_user.username, "permission": "write"},
+            {"user": second_user.username},
         ]
         post_response = self.client.post(url, data=data, format="json")
         self.assertEqual(
@@ -209,8 +209,8 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": self.project.pk},
         )
         data = [
-            {"user": first_user.pk},
-            {"user": second_user.pk},
+            {"user": first_user.username},
+            {"user": second_user.username},
         ]
         post_response = self.client.post(url, data=data, format="json")
         self.assertEqual(
