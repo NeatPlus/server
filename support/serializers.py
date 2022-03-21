@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from neatplus.serializers import RichTextUploadingModelSerializer
+from neatplus.serializers import RichTextUploadingModelSerializer, UserModelSerializer
 
 from .models import (
     Action,
@@ -11,25 +11,25 @@ from .models import (
 )
 
 
-class LegalDocumentSerializer(serializers.ModelSerializer):
+class LegalDocumentSerializer(UserModelSerializer):
     class Meta:
         model = LegalDocument
         fields = "__all__"
 
 
-class FrequentlyAskedQuestionSerializer(serializers.ModelSerializer):
+class FrequentlyAskedQuestionSerializer(UserModelSerializer):
     class Meta:
         model = FrequentlyAskedQuestion
         fields = "__all__"
 
 
-class ResourceTagSerializer(serializers.ModelSerializer):
+class ResourceTagSerializer(UserModelSerializer):
     class Meta:
         model = ResourceTag
         fields = "__all__"
 
 
-class ResourceSerializer(serializers.ModelSerializer):
+class ResourceSerializer(UserModelSerializer):
     class Meta:
         model = Resource
         fields = "__all__"

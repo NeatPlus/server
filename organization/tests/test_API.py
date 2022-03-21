@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from neatplus.tests import FullTestCase
+from organization.models import Organization
 
 
 class APITest(FullTestCase):
@@ -107,4 +108,71 @@ class APITest(FullTestCase):
         response = self.client.post(url)
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_users_list(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse(
+            "organization-users",
+            kwargs={"version": "v1", "pk": self.organization.pk},
+        )
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_users_add(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse(
+            "organization-update-or-add-users",
+            kwargs={"version": "v1", "pk": self.organization.pk},
+        )
+        user_1 = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
+        user_2 = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
+        data = [
+            {"user": user_1.username, "role": "member"},
+            {"user": user_2.username, "role": "admin"},
+        ]
+        response = self.client.post(url, data=data, format="json")
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+        self.assertIsNotNone(
+            Organization.objects.filter(pk=self.organization.pk, members=user_1)
+        )
+        self.assertIsNotNone(
+            Organization.objects.filter(pk=self.organization.pk, admins=user_2)
+        )
+
+    def test_users_remove(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse(
+            "organization-remove-users",
+            kwargs={"version": "v1", "pk": self.organization.pk},
+        )
+        user_1 = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
+        user_2 = self.baker.make(settings.AUTH_USER_MODEL, is_active=True)
+        self.organization.admins.add(user_1)
+        self.organization.members.add(user_2)
+        self.assertIsNotNone(
+            Organization.objects.filter(pk=self.organization.pk, admins=user_1)
+        )
+        self.assertIsNotNone(
+            Organization.objects.filter(pk=self.organization.pk, members=user_2)
+        )
+        data = [
+            {"user": user_1.username, "role": "admin"},
+            {"user": user_2.username, "role": "member"},
+        ]
+        response = self.client.post(url, data=data, format="json")
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+        self.assertFalse(
+            Organization.objects.filter(pk=self.organization.pk, admins=user_1).exists()
+        )
+        self.assertFalse(
+            Organization.objects.filter(
+                pk=self.organization.pk, members=user_2
+            ).exists()
         )

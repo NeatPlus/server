@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from neatplus.serializers import UserModelSerializer
+
 from .models import (
     Mitigation,
     Opportunity,
@@ -12,49 +14,49 @@ from .models import (
 )
 
 
-class StatementTopicSerializer(serializers.ModelSerializer):
+class StatementTopicSerializer(UserModelSerializer):
     class Meta:
         model = StatementTopic
         fields = "__all__"
 
 
-class StatementTagGroupSerializer(serializers.ModelSerializer):
+class StatementTagGroupSerializer(UserModelSerializer):
     class Meta:
         model = StatementTagGroup
         fields = "__all__"
 
 
-class StatementTagSerializer(serializers.ModelSerializer):
+class StatementTagSerializer(UserModelSerializer):
     class Meta:
         model = StatementTag
         fields = "__all__"
 
 
-class StatementSerializer(serializers.ModelSerializer):
+class StatementSerializer(UserModelSerializer):
     class Meta:
         model = Statement
         fields = "__all__"
 
 
-class MitigationSerializer(serializers.ModelSerializer):
+class MitigationSerializer(UserModelSerializer):
     class Meta:
         model = Mitigation
         fields = "__all__"
 
 
-class OpportunitySerializer(serializers.ModelSerializer):
+class OpportunitySerializer(UserModelSerializer):
     class Meta:
         model = Opportunity
         fields = "__all__"
 
 
-class QuestionStatementSerializer(serializers.ModelSerializer):
+class QuestionStatementSerializer(UserModelSerializer):
     class Meta:
         model = QuestionStatement
         exclude = ("created_by", "updated_by", "created_at", "modified_at")
 
 
-class OptionStatementSerializer(serializers.ModelSerializer):
+class OptionStatementSerializer(UserModelSerializer):
     class Meta:
         model = OptionStatement
         exclude = ("created_by", "updated_by", "created_at", "modified_at")

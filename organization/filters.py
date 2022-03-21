@@ -6,7 +6,7 @@ from .models import Organization, OrganizationMemberRequest
 class OrganizationFilter(FilterSet):
     class Meta:
         model = Organization
-        fields = {"title": ["exact"], "admins": ["exact"], "members": ["exact"]}
+        fields = {"title": ["exact"]}
 
 
 class OrganizationMemberRequestFilter(FilterSet):

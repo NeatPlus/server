@@ -1,15 +1,15 @@
-from rest_framework import serializers
+from neatplus.serializers import UserModelSerializer
 
 from .models import Context, Module
 
 
-class ContextSerializer(serializers.ModelSerializer):
+class ContextSerializer(UserModelSerializer):
     class Meta:
         model = Context
         fields = "__all__"
 
 
-class ModuleSerializer(serializers.ModelSerializer):
+class ModuleSerializer(UserModelSerializer):
     class Meta:
         model = Module
         fields = "__all__"

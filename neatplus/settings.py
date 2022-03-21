@@ -574,4 +574,7 @@ else:
     DRF_RECAPTCHA_TESTING = True
 
 # silenced system checks
-SILENCED_SYSTEM_CHECKS = ["drf_spectacular.W001"]
+SILENCED_SYSTEM_CHECKS = [
+    "drf_spectacular.W001",  # Silence all drf spectacular W001 system check
+    "security.W019",  # Silence X_FRAME_OPTIONS is not set to 'DENY'. Required to be 'SAME_ORIGIN' for django-admin-interface
+]

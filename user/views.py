@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
@@ -34,7 +35,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return User.objects.filter(is_active=True)
+        search_term = self.request.query_params.get("search", "")
+        if len(search_term) < 3:
+            return User.objects.none()
+        return User.objects.filter(
+            Q(username__icontains=search_term)
+            | Q(first_name__icontains=search_term)
+            | Q(last_name__icontains=search_term)
+        ).filter(is_active=True)
 
     @action(
         methods=[],
@@ -85,12 +93,11 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         data = serializer.data
         user = self.request.user
         new_password = data["new_password"]
-        re_new_password = data["re_new_password"]
-        if re_new_password != new_password:
-            return Response(
-                {"error": _("New password and re new password doesn't match")},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        try:
+            validate_password(password=new_password, user=user)
+        except ValidationError as e:
+            errors = list(e.messages)
+            return Response({"non_field_errors": errors}, status=status.HTTP_400_BAD_REQUEST)
         user.set_password(new_password)
         user.save()
         return Response({"detail": _("Password successfully updated")})

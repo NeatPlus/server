@@ -1,10 +1,12 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
+from neatplus.serializers import UserModelSerializer
+
 from .models import Notice, Notification
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationSerializer(UserModelSerializer):
     actor_content_type = serializers.SlugRelatedField(
         queryset=ContentType.objects.all(),
         slug_field="model",
@@ -48,7 +50,7 @@ class UnReadCountResponseSerializer(serializers.Serializer):
     unread_count = serializers.IntegerField()
 
 
-class NoticeSerializer(serializers.ModelSerializer):
+class NoticeSerializer(UserModelSerializer):
     class Meta:
         model = Notice
         fields = "__all__"

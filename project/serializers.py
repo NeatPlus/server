@@ -1,13 +1,14 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from neatplus.serializers import UserModelSerializer
 from organization.serializers import OrganizationSerializer
 from user.serializers import UserSerializer
 
 from .models import Project, ProjectUser
 
 
-class ProjectUserSerializer(serializers.ModelSerializer):
+class ProjectUserSerializer(UserModelSerializer):
     user = UserSerializer()
 
     class Meta:
@@ -15,7 +16,7 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         exclude = ("project",)
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectSerializer(UserModelSerializer):
     created_by = UserSerializer()
     organization_title = serializers.SerializerMethodField(read_only=True)
     is_admin_or_owner = serializers.SerializerMethodField(read_only=True)
@@ -40,7 +41,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class CreateProjectSerializer(serializers.ModelSerializer):
+class CreateProjectSerializer(UserModelSerializer):
     class Meta:
         model = Project
         exclude = ("users",)
@@ -69,13 +70,13 @@ class CreateProjectSerializer(serializers.ModelSerializer):
         return data
 
 
-class UpsertProjectUserSerializer(serializers.ModelSerializer):
+class UpsertProjectUserSerializer(UserModelSerializer):
     class Meta:
         model = ProjectUser
         exclude = ("project",)
 
 
-class RemoveProjectUserSerializer(serializers.ModelSerializer):
+class RemoveProjectUserSerializer(UserModelSerializer):
     class Meta:
         model = ProjectUser
         fields = ("user",)
