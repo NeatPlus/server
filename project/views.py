@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import permissions, serializers, status, viewsets
@@ -6,6 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelViewSetMixin
+from organization.models import Organization
 from summary.models import SurveyResult
 from survey.models import Survey, SurveyAnswer
 from survey.serializers import WritableSurveySerializer
@@ -47,6 +49,22 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         if self.action == "create":
             return CreateProjectSerializer
         return ProjectSerializer
+
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes=[CanAcceptRejectProject],
+        serializer_class=ProjectSerializer,
+    )
+    def pending_requests(self, request, *args, **kwargs):
+        user = self.request.user
+        admin_organizations = Organization.objects.filter(admins=user)
+        q_filter = Q(organization__in=admin_organizations)
+        if user.is_superuser:
+            q_filter = q_filter | Q(organization__isnull=True)
+        projects = self.get_queryset().filter(q_filter)
+        serializer = self.get_serializer(projects, many=True)
+        return Response(serializer.data)
 
     @action(
         methods=["get"],
