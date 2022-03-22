@@ -63,3 +63,4 @@ class SurveyResultFeedback(UserStampedModel, TimeStampedModel):
     status = models.CharField(
         max_length=12, choices=StatusChoice.choices, default=StatusChoice.PENDING
     )
+    is_baseline = models.BooleanField(_("baseline"), default=False)

@@ -41,3 +41,20 @@ class CanWriteSurveyResultOrReadOnly(permissions.IsAuthenticated):
                     project=project, user=user, permission="write"
                 ).exists()
             )
+
+
+class CanAddBaselineFeedback(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        project = obj.survey.project
+        user = request.user
+        if project.organization:
+            return (
+                user in project.organization.admins.all()
+                or ProjectUser.objects.filter(
+                    project=project, user=user, permission="write"
+                ).exists()
+            )
+        else:
+            return ProjectUser.objects.filter(
+                project=project, user=user, permission="write"
+            ).exists()

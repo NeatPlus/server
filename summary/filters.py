@@ -24,4 +24,5 @@ class SurveyResultFeedbackFilter(FilterSet):
             "survey_result__survey__project": ["exact"],
             "survey_result__statement": ["exact"],
             "status": ["exact"],
+            "is_baseline": ["exact"],
         }

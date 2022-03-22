@@ -19,7 +19,13 @@ class SurveyResultAdmin(UserStampedModelAdmin):
 
 @admin.register(SurveyResultFeedback)
 class SurveyResultAdmin(UserStampedModelAdmin):
-    list_display = ("survey_result", "actual_score", "expected_score", "status")
+    list_display = (
+        "survey_result",
+        "actual_score",
+        "expected_score",
+        "status",
+        "is_baseline",
+    )
     autocomplete_fields = ("survey_result",)
 
     class Meta:

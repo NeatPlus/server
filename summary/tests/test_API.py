@@ -61,8 +61,20 @@ class APITest(FullTestCase):
             "survey-result-add-feedback",
             kwargs={"version": "v1", "pk": self.survey_result.pk},
         )
-        data = {"expected_score": 0.7, "comment": self.baker.random_gen.gen_text()}
-        response = self.client.post(url, data=data)
+        data = [{"expected_score": 0.7, "comment": self.baker.random_gen.gen_text()}]
+        response = self.client.post(url, data=data, format="json")
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
+
+    def test_survey_result_add_baseline_feedback(self):
+        self.client.force_authenticate(self.user)
+        url = self.reverse(
+            "survey-result-add-baseline-feedback",
+            kwargs={"version": "v1", "pk": self.survey_result.pk},
+        )
+        data = [{"expected_score": 0.7, "comment": self.baker.random_gen.gen_text()}]
+        response = self.client.post(url, data=data, format="json")
         self.assertEqual(
             response.status_code, self.status_code.HTTP_201_CREATED, response.json()
         )
