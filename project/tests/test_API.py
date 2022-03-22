@@ -75,6 +75,14 @@ class APITest(FullTestCase):
             response.status_code, self.status_code.HTTP_404_NOT_FOUND, response.json()
         )
 
+    def test_pending_requests(self):
+        self.client.force_authenticate(self.admin_user)
+        url = self.reverse("project-pending-requests", kwargs={"version": "v1"})
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
     def test_organization_admin_project_users(self):
         self.client.force_authenticate(self.admin_user)
         url = self.reverse(

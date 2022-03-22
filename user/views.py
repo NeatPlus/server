@@ -97,7 +97,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             validate_password(password=new_password, user=user)
         except ValidationError as e:
             errors = list(e.messages)
-            return Response({"non_field_errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"non_field_errors": errors}, status=status.HTTP_400_BAD_REQUEST
+            )
         user.set_password(new_password)
         user.save()
         return Response({"detail": _("Password successfully updated")})
