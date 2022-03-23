@@ -9,13 +9,20 @@ from neatplus.admin import UserStampedModelAdmin
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
 
 
+class ModuleAutoCompleteFilter(AutocompleteFilter):
+    title = "module"
+    field_name = "module"
+
+
 @admin.register(QuestionGroup)
 class QuestionGroupAdmin(
     UserStampedModelAdmin,
     TranslationAdmin,
     OrderedModelAdmin,
 ):
-    list_display = ("code", "title", "move_up_down_links")
+    list_display = ("code", "title", "module", "move_up_down_links")
+    list_filter = (ModuleAutoCompleteFilter,)
+    autocomplete_fields = ("module",)
     search_fields = (
         "code",
         "title",
@@ -31,6 +38,11 @@ class OptionInline(admin.StackedInline):
     extra = 0
 
 
+class QuestionGroupAutoCompleteFilter(AutocompleteFilter):
+    title = "group"
+    field_name = "group"
+
+
 @admin.register(Question)
 class QuestionAdmin(
     UserStampedModelAdmin,
@@ -42,11 +54,11 @@ class QuestionAdmin(
         "title",
         "group",
         "answer_type",
-        "module",
         "is_required",
         "move_up_down_links",
     )
-    autocomplete_fields = ("group", "module")
+    list_filter = (QuestionGroupAutoCompleteFilter,)
+    autocomplete_fields = ("group",)
     search_fields = (
         "code",
         "title",

@@ -9,6 +9,12 @@ from neatplus.models import CodeModel, TimeStampedModel, UserStampedModel
 class QuestionGroup(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.CharField(_("title"), max_length=255)
     skip_logic = models.TextField(_("skip logic"), null=True, blank=True, default=None)
+    module = models.ForeignKey(
+        "context.Module",
+        on_delete=models.PROTECT,
+        related_name="question_groups",
+        verbose_name=_("module"),
+    )
 
     def __str__(self):
         return self.code + "-" + self.title
@@ -44,15 +50,6 @@ class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         on_delete=models.CASCADE,
         related_name="questions",
         verbose_name=_("question group"),
-    )
-    module = models.ForeignKey(
-        "context.Module",
-        on_delete=models.PROTECT,
-        related_name="questions",
-        null=True,
-        blank=True,
-        default=None,
-        verbose_name=_("module"),
     )
     is_required = models.BooleanField(_("required"), default=True)
     skip_logic = models.TextField(_("skip logic"), null=True, blank=True, default=None)

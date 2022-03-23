@@ -33,7 +33,7 @@ class QuestionGroupViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
 class QuestionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
+    queryset = Question.objects.all().select_related("group__module")
     filterset_class = QuestionFilter
 
 
