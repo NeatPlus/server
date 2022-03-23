@@ -20,12 +20,11 @@ class APITest(FullTestCase):
             users=[cls.user],
             status="accepted",
         )
-        question_group = cls.baker.make("survey.QuestionGroup")
         module = cls.baker.make("context.Module")
+        question_group = cls.baker.make("survey.QuestionGroup", module=module)
         cls.question = cls.baker.make(
             "survey.Question",
             group=question_group,
-            module=module,
             answer_type="single_option",
         )
         option = cls.baker.make("survey.Option", question=cls.question)
@@ -296,19 +295,17 @@ class APITest(FullTestCase):
         url = self.reverse(
             "survey-add-results", kwargs={"version": "v1", "pk": self.survey.pk}
         )
-        statement_1, statement_2, statement_3 = self.baker.make(
-            "statement.Statement", _quantity=3
-        )
+        statement_1, statement_2 = self.baker.make("statement.Statement", _quantity=2)
         data = [
             {
                 "statement": statement_1.pk,
                 "score": 0.90,
-                "module": self.question.module.pk,
+                "module": self.question.group.module.pk,
             },
             {
                 "statement": statement_2.pk,
                 "score": 0.67,
-                "module": self.question.module.pk,
+                "module": self.question.group.module.pk,
             },
         ]
         self.client.force_authenticate(self.user)
@@ -319,7 +316,7 @@ class APITest(FullTestCase):
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_1.pk,
-                module=self.question.module.pk,
+                module=self.question.group.module.pk,
                 survey=self.survey.pk,
                 score=0.90,
             ).exists()
@@ -327,7 +324,7 @@ class APITest(FullTestCase):
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_2.pk,
-                module=self.question.module.pk,
+                module=self.question.group.module.pk,
                 survey=self.survey.pk,
                 score=0.67,
             ).exists()
@@ -336,7 +333,7 @@ class APITest(FullTestCase):
             {
                 "statement": statement_2.pk,
                 "score": 0.37,
-                "module": self.question.module.pk,
+                "module": self.question.group.module.pk,
             },
         ]
         update_response = self.client.post(url, data=update_data, format="json")
@@ -348,7 +345,7 @@ class APITest(FullTestCase):
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_1.pk,
-                module=self.question.module.pk,
+                module=self.question.group.module.pk,
                 survey=self.survey.pk,
                 score=0.90,
             ).exists()
@@ -356,7 +353,7 @@ class APITest(FullTestCase):
         self.assertTrue(
             SurveyResult.objects.filter(
                 statement=statement_2.pk,
-                module=self.question.module.pk,
+                module=self.question.group.module.pk,
                 survey=self.survey.pk,
                 score=0.37,
             ).exists()

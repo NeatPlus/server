@@ -12,14 +12,14 @@ def forward_migration(apps, schema_editor):
         survey = survey_result.survey
         answer = survey.answers.first()
         if answer is None:
-            raise exceptions.AmbiguityError(
+            raise exceptions.InvalidMigrationPlan(
                 f'Survey {survey.pk} has no answer. Migration does not support such survey'
             )
         modules = list(survey.answers.values_list('question__module', flat=True))
         non_null_modules = [ x for x in modules if x is not None]
         if not non_null_modules:
             if default_module is None:
-                raise exceptions.AmbiguityError(
+                raise exceptions.InvalidMigrationPlan(
                     'Cannot set default module since there is no single module. Create at least one module'
                 )
             module = default_module

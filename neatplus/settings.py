@@ -1,5 +1,6 @@
 import importlib.util
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import sentry_sdk
@@ -340,6 +341,7 @@ OTP_TOTP_ISSUER = env.str("OTP_TOTP_ISSUER", default="neatplus-server")
 SIMPLE_JWT = {
     "ALGORITHM": "HS512",
     "ISSUER": env.str("SIMPLE_JWT_ISSUER", default="neatplus-sever"),
+    "REFRESH_TOKEN_LIFETIME": timedelta(weeks=1),
 }
 
 # CORS settings

@@ -259,8 +259,9 @@ class APITest(FullTestCase):
             "project-create-survey", kwargs={"version": "v1", "pk": self.project.pk}
         )
         module = self.baker.make("context.Module")
+        question_group = self.baker.make("survey.QuestionGroup", module=module)
         question_1 = self.baker.make(
-            "survey.Question", answer_type="location", module=module
+            "survey.Question", answer_type="location", group=question_group
         )
         question_2 = self.baker.make("survey.Question", answer_type="number")
         question_3 = self.baker.make("survey.Question", answer_type="boolean")
@@ -303,7 +304,7 @@ class APITest(FullTestCase):
                 {
                     "statement": statement.pk,
                     "score": 0.90,
-                    "module": question_1.module.pk,
+                    "module": question_1.group.module.pk,
                 },
             ],
         }

@@ -26,9 +26,16 @@ class QuestionGroupSerializer(UserModelSerializer):
 
 
 class QuestionSerializer(RichTextUploadingModelSerializer):
+    # Added at 2022-03-23. Added for backward compatibility.
+    # TODO: Remove it after some time if required
+    module = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Question
         fields = "__all__"
+
+    def get_module(self, obj):
+        return obj.group.module.pk
 
 
 class OptionSerializer(UserModelSerializer):
