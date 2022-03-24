@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from neatplus.serializers import UserModelSerializer
+from survey.models import QuestionGroup
 
 from .models import (
     Mitigation,
@@ -75,10 +76,18 @@ class UploadOptionStatementSerializer(serializers.ModelSerializer):
 
 
 class UploadWeightageSerializer(serializers.Serializer):
-    version = serializers.CharField()
     questions = UploadQuestionStatementSerializer(many=True)
     options = UploadOptionStatementSerializer(many=True)
 
 
 class ActivateVersionSerializer(serializers.Serializer):
     version = serializers.CharField()
+    question_group = serializers.PrimaryKeyRelatedField(
+        queryset=QuestionGroup.objects.all(), allow_null=True
+    )
+
+
+class ActivateDraftVersionSerializer(serializers.Serializer):
+    question_group = serializers.PrimaryKeyRelatedField(
+        queryset=QuestionGroup.objects.all(), allow_null=True
+    )

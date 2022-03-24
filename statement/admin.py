@@ -67,7 +67,10 @@ class StatementAdmin(
         "code",
         "title",
     )
-    autocomplete_fields = ("topic", "tags", "question_groups")
+    autocomplete_fields = (
+        "topic",
+        "tags",
+    )
 
     class Meta:
         verbose_name = _("statement")

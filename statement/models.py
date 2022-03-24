@@ -71,11 +71,6 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     tags = models.ManyToManyField(
         "StatementTag", related_name="statements", verbose_name=_("statement tags")
     )
-    question_groups = models.ManyToManyField(
-        "survey.QuestionGroup",
-        related_name="statements",
-        verbose_name=_("question groups"),
-    )
     questions = models.ManyToManyField(
         "survey.Question",
         related_name="statements",
@@ -136,6 +131,14 @@ class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
     statement = models.ForeignKey(
         "Statement", on_delete=models.CASCADE, verbose_name=_("statement")
     )
+    question_group = models.ForeignKey(
+        "survey.QuestionGroup",
+        on_delete=models.CASCADE,
+        verbose_name=_("question group"),
+        null=True,
+        blank=True,
+        default=None,
+    )
     weightage = models.FloatField(_("weightage"))
     version = models.CharField(_("version"), max_length=255)
     is_active = models.BooleanField(_("active"), default=False, editable=False)
@@ -153,12 +156,25 @@ class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         constraints = [
             models.UniqueConstraint(
                 fields=["question", "statement", "version"],
+                condition=models.Q(question_group__isnull=True),
                 name="unique_version_question_statement",
             ),
             models.UniqueConstraint(
                 fields=["question", "statement"],
-                condition=models.Q(is_active=True),
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=True),
                 name="one_active_question_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["question", "statement", "question_group", "version"],
+                condition=models.Q(question_group__isnull=False),
+                name="unique_version_question_question_group_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["question", "statement", "question_group"],
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=False),
+                name="one_active_question_question_group_statement",
             ),
         ]
 
@@ -169,6 +185,14 @@ class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
     )
     statement = models.ForeignKey(
         "Statement", on_delete=models.CASCADE, verbose_name=_("statement")
+    )
+    question_group = models.ForeignKey(
+        "survey.QuestionGroup",
+        on_delete=models.CASCADE,
+        verbose_name=_("question group"),
+        null=True,
+        blank=True,
+        default=None,
     )
     weightage = models.FloatField(_("weightage"))
     version = models.CharField(_("version"), max_length=255)
@@ -187,11 +211,24 @@ class OptionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
         constraints = [
             models.UniqueConstraint(
                 fields=["option", "statement", "version"],
+                condition=models.Q(question_group__isnull=True),
                 name="unique_version_option_statement",
             ),
             models.UniqueConstraint(
                 fields=["option", "statement"],
-                condition=models.Q(is_active=True),
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=True),
                 name="one_active_option_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["option", "statement", "question_group", "version"],
+                condition=models.Q(question_group__isnull=False),
+                name="unique_version_option_question_group_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["option", "statement", "question_group"],
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=False),
+                name="one_active_option_question_group_statement",
             ),
         ]
