@@ -59,21 +59,38 @@ class APITest(FullTestCase):
         self.client.force_authenticate(self.user)
         url = self.reverse(
             "survey-result-add-feedback",
-            kwargs={"version": "v1", "pk": self.survey_result.pk},
+            kwargs={
+                "version": "v1",
+            },
         )
-        data = [{"expected_score": 0.7, "comment": self.baker.random_gen.gen_text()}]
+        data = [
+            {
+                "survey_result": self.survey_result.pk,
+                "expected_score": 0.7,
+                "comment": self.baker.random_gen.gen_text(),
+            }
+        ]
         response = self.client.post(url, data=data, format="json")
         self.assertEqual(
             response.status_code, self.status_code.HTTP_201_CREATED, response.json()
         )
 
     def test_survey_result_add_baseline_feedback(self):
-        self.client.force_authenticate(self.user)
+        super_user = self.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
+        )
+        self.client.force_authenticate(super_user)
         url = self.reverse(
             "survey-result-add-baseline-feedback",
-            kwargs={"version": "v1", "pk": self.survey_result.pk},
+            kwargs={"version": "v1"},
         )
-        data = [{"expected_score": 0.7, "comment": self.baker.random_gen.gen_text()}]
+        data = [
+            {
+                "survey_result": self.survey_result.pk,
+                "expected_score": 0.12,
+                "comment": self.baker.random_gen.gen_text(),
+            }
+        ]
         response = self.client.post(url, data=data, format="json")
         self.assertEqual(
             response.status_code, self.status_code.HTTP_201_CREATED, response.json()
