@@ -12,18 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2.3.2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
         with:
           python-version: "3.10"
       - name: Install Poetry
-        uses: snok/install-poetry@v1.3.0
+        uses: snok/install-poetry@v1.3.1
         with:
           version: 1.1.13
           virtualenvs-create: true
           virtualenvs-in-project: true
       - name: Setup cache
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: .venv
           key: poetry-venv-${{ hashFiles('poetry.lock') }}
