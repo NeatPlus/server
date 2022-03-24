@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from project.utils import read_allowed_project_for_user
 from summary.permissions import (
     CanAcknowledgeSurveyResultFeedback,
-    CanAddBaselineFeedback,
     CanWriteSurveyResultOrReadOnly,
 )
 from survey.models import Survey
@@ -55,27 +54,29 @@ class SurveyResultViewSet(
     )
     @action(
         methods=["post"],
-        detail=True,
+        detail=False,
         permission_classes=[permissions.IsAuthenticated],
         serializer_class=WritableSurveyResultFeedbackSerializer,
     )
     def add_feedback(self, request, *args, **kwargs):
-        survey_result = self.get_object()
         user = self.request.user
         serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
             with transaction.atomic():
-                for data in serializer.data:
+                for data in serializer.validated_data:
+                    survey_result = data.pop("survey_result")
+                    survey_result_score = survey_result.score
                     SurveyResultFeedback.objects.create(
                         created_by=user,
                         survey_result=survey_result,
-                        actual_score=survey_result.score,
+                        actual_score=survey_result_score,
                         is_baseline=False,
                         **data
                     )
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response(
                 {"detail": _("Failed to add survey result feedback")},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -98,21 +99,20 @@ class SurveyResultViewSet(
     )
     @action(
         methods=["post"],
-        detail=True,
-        permission_classes=[CanAddBaselineFeedback],
+        detail=False,
+        permission_classes=[permissions.DjangoModelPermissions],
         serializer_class=WritableSurveyResultFeedbackSerializer,
     )
     def add_baseline_feedback(self, request, *args, **kwargs):
-        survey_result = self.get_object()
-        score = survey_result.score
         user = self.request.user
         serializer = self.get_serializer(data=request.data, many=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
             with transaction.atomic():
-                for data in serializer.data:
-                    data["actual_score"] = score
+                for data in serializer.validated_data:
+                    survey_result = data.pop("survey_result")
+                    data["actual_score"] = survey_result.score
                     (
                         survey_result_feedback,
                         created,
