@@ -101,6 +101,7 @@ THIRD_PARTY_APPS = [
     "admin_auto_filters",
     "drf_recaptcha",
     "mptt",
+    "oauth2_provider",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
@@ -308,7 +309,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
@@ -580,3 +581,6 @@ SILENCED_SYSTEM_CHECKS = [
     "drf_spectacular.W001",  # Silence all drf spectacular W001 system check
     "security.W019",  # Silence X_FRAME_OPTIONS is not set to 'DENY'. Required to be 'SAME_ORIGIN' for django-admin-interface
 ]
+
+# Login url for django authentication login required decorator
+LOGIN_URL = "/admin/login/"
