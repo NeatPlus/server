@@ -49,6 +49,7 @@ django-admin-autocomplete-filter = "^0.7.1"
 drf-recaptcha = "^2.0.7"
 PyYAML = "^6.0"
 django-mptt = "^0.13.4"
+django-oauth-toolkit = "^1.7.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

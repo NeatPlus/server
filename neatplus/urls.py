@@ -142,6 +142,8 @@ urlpatterns += [
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
     path("ckeditor/", include("ckeditor_uploader.urls")),
+    # Oauth
+    path("oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
 ]
 
 if not settings.IS_SERVER_SECURE:
