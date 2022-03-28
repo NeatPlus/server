@@ -54,7 +54,7 @@ class CustomSsoSecurityManager(SupersetSecurityManager):
     def oauth_user_info(self, provider, response=None):
         if provider == "neatplus":
             me = self.appbuilder.sm.oauth_remotes[provider].get("user/me").json()
-            user_role = me.get["isSuperuser"]
+            user_role = me["isSuperuser"]
             if user_role:
                 role_keys = ["superuser"]
             else:
