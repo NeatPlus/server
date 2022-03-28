@@ -24,3 +24,22 @@ replicas:
 images:
   - name: ghcr.io/neatplus/server
     newTag: ${PROJECT_VERSION}
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: cloudflare-secret
+        labels:
+          app: cloudflare
+          project: neatplus
+          role: dns
+  - patch: |-
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: server-secret
+        labels:
+          app: server
+          project: neatplus
+          role: backend

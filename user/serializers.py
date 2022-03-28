@@ -29,6 +29,7 @@ class PrivateUserSerializer(UserSerializer):
             "email",
             "first_name",
             "last_name",
+            "is_superuser",
             "organization",
             "role",
             "has_accepted_terms_and_privacy_policy",

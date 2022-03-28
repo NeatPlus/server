@@ -10,5 +10,24 @@ secretGenerator:
     type: Opaque
 configMapGenerator:
   - name: superset-config-map
-    file:
+    files:
       - superset_config.py
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: superset-secret
+        labels:
+          app: superset
+          project: neatplus
+          role: dashboard
+  - patch: |-
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: superset-config-map
+          labels:
+            app: superset
+            project: neatplus
+            role: dashboard
