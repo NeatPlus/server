@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from project.utils import read_allowed_project_for_user
 from summary.permissions import (
     CanAcknowledgeSurveyResultFeedback,
+    CanAddBaselineFeedback,
     CanWriteSurveyResultOrReadOnly,
 )
 from survey.models import Survey
@@ -100,7 +101,7 @@ class SurveyResultViewSet(
     @action(
         methods=["post"],
         detail=False,
-        permission_classes=[permissions.DjangoModelPermissions],
+        permission_classes=[CanAddBaselineFeedback],
         serializer_class=WritableSurveyResultFeedbackSerializer,
     )
     def add_baseline_feedback(self, request, *args, **kwargs):

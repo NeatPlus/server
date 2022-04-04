@@ -511,12 +511,19 @@ description = "OAuth2 Provider for Django"
 category = "main"
 optional = false
 python-versions = "*"
+develop = false
 
 [package.dependencies]
 django = ">=2.2,<4.0.0 || >4.0.0"
 jwcrypto = ">=0.8.0"
 oauthlib = ">=3.1.0"
 requests = ">=2.13.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/jazzband/django-oauth-toolkit"
+reference = "e647d51bee0685d21ab692b205dc0fa65b4c4d8a"
+resolved_reference = "e647d51bee0685d21ab692b205dc0fa65b4c4d8a"
 
 [[package]]
 name = "django-ordered-model"
@@ -1392,7 +1399,7 @@ asgi = ["uvicorn", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "5d1e2d94cd7f03ce54f54d387aea074270c0a7a8a95a70f615caa6ae62b03502"
+content-hash = "5e1b5d324a14bbad8939a2a26321a806a18e1f9ea1dc02996742abc72cf16473"
 
 [metadata.files]
 amqp = [
@@ -1639,10 +1646,7 @@ django-mptt = [
     {file = "django-mptt-0.13.4.tar.gz", hash = "sha256:80c9fb34df7796a4e5af0cb6b8ade3697555b1aa438bd07a01f32b3ab5202b63"},
     {file = "django_mptt-0.13.4-py3-none-any.whl", hash = "sha256:75745b621ae31d97957ed924155a750dfa8cacd9543799ada2d713fd6bc3f5c7"},
 ]
-django-oauth-toolkit = [
-    {file = "django-oauth-toolkit-1.7.1.tar.gz", hash = "sha256:37b690fa53f340c7391bdbc0fdbb32fd9ef8a7c012e72ee8754c331a2d7b4adb"},
-    {file = "django_oauth_toolkit-1.7.1-py3-none-any.whl", hash = "sha256:756e44421d0993f27705736b6c33a3d89018393859a31ac926296950f76e4433"},
-]
+django-oauth-toolkit = []
 django-ordered-model = [
     {file = "django-ordered-model-3.5.tar.gz", hash = "sha256:26c6b5a87a6e51323c53e0233d999dd1a9f40d43b0f17e478de951bc1f999c73"},
     {file = "django_ordered_model-3.5-py3-none-any.whl", hash = "sha256:a840b475ca0f2bac5f6e4918e107a8e075578babcd94b3b8d0ba7f009eaf1450"},

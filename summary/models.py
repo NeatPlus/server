@@ -44,6 +44,7 @@ class SurveyResult(UserStampedModel, TimeStampedModel):
                 name="unique_module_survey_question_group_statement",
             ),
         ]
+        permissions = [("add_baseline_feedback", _("Can add baseline feedback"))]
 
 
 class SurveyResultFeedback(UserStampedModel, TimeStampedModel):
