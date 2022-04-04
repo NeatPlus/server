@@ -41,6 +41,7 @@ OAUTH_PROVIDERS = [
             "api_base_url": f"{NEATPLUS_URL}/api/v1/",
             "access_token_url": f"{NEATPLUS_URL}/oauth/token/",
             "authorize_url": f"{NEATPLUS_URL}/oauth/authorize/",
+            "code_challenge_method": "S256",
         },
     }
 ]
