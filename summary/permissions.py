@@ -20,6 +20,11 @@ class CanAcknowledgeSurveyResultFeedback(permissions.IsAuthenticated):
             ).exists()
 
 
+class CanAddBaselineFeedback(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        return request.user.has_perm("summary.add_baseline_feedback")
+
+
 class CanWriteSurveyResultOrReadOnly(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:

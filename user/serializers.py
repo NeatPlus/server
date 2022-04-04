@@ -21,6 +21,7 @@ class UserSerializer(UserModelSerializer):
 class PrivateUserSerializer(UserSerializer):
     email = serializers.EmailField(read_only=True)
     password = serializers.CharField(write_only=True)
+    permissions = serializers.SerializerMethodField(read_only=True)
 
     class Meta(UserSerializer.Meta):
         fields = (
@@ -34,6 +35,7 @@ class PrivateUserSerializer(UserSerializer):
             "role",
             "has_accepted_terms_and_privacy_policy",
             "password",
+            "permissions",
         )
 
     def validate(self, attrs):
@@ -46,6 +48,9 @@ class PrivateUserSerializer(UserSerializer):
                 {"password": _("Invalid password for user")}
             )
         return super().validate(attrs)
+
+    def get_permissions(self, obj):
+        return obj.get_all_permissions()
 
 
 class ChangePasswordSerializer(serializers.Serializer):
