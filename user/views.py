@@ -368,9 +368,6 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
-            password_reset_pin_object.no_of_incorrect_attempts = 0
-            password_reset_pin_object.is_active = False
-            password_reset_pin_object.save()
             try:
                 validate_password(password=password, user=user)
             except ValidationError as e:
@@ -378,6 +375,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 return Response(
                     {"password": errors}, status=status.HTTP_400_BAD_REQUEST
                 )
+            password_reset_pin_object.no_of_incorrect_attempts = 0
+            password_reset_pin_object.is_active = False
+            password_reset_pin_object.save()
             user.set_password(password)
             user.save()
             return Response({"detail": _("Password successfully changed")})
@@ -644,14 +644,14 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
         else:
-            email_change_mail_object.no_of_incorrect_attempts = 0
-            email_change_mail_object.is_active = False
-            email_change_mail_object.save()
             if User.objects.filter(email=email_change_mail_object.new_email).exists():
                 return Response(
                     {"error": _("email already used for account creation")},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+            email_change_mail_object.no_of_incorrect_attempts = 0
+            email_change_mail_object.is_active = False
+            email_change_mail_object.save()
             user.email = email_change_mail_object.new_email
             user.save()
             return Response({"detail": _("Email successfully changed")})
