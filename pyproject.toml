@@ -49,9 +49,7 @@ django-admin-autocomplete-filter = "^0.7.1"
 drf-recaptcha = "^2.0.7"
 PyYAML = "^6.0"
 django-mptt = "^0.13.4"
-# TODO: Update to use django-oauth-toolkit version 2.0.0 after release of 2.0.0 at pypi. Also update scripts/safety.sh
-# Used git commit due to security issue will be solved by version 2.0.0 release.
-django-oauth-toolkit = { git = "https://github.com/jazzband/django-oauth-toolkit", rev = "e647d51bee0685d21ab692b205dc0fa65b4c4d8a" }
+django-oauth-toolkit = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
