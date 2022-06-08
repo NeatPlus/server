@@ -6,6 +6,8 @@ from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.views import UserStampedModelViewSetMixin
+
 from .filters import (
     MitigationFilter,
     OpportunityFilter,
@@ -59,7 +61,7 @@ class StatementTagViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = StatementTagFilter
 
 
-class StatementViewSet(viewsets.ReadOnlyModelViewSet):
+class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     serializer_class = StatementSerializer
     queryset = Statement.objects.all()
     filterset_class = StatementFilter

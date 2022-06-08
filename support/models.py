@@ -119,7 +119,7 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
 class EmailTemplate(models.Model):
     identifier = models.CharField(_("identifier"), max_length=50, unique=True)
     subject = models.CharField(_("subject"), max_length=255)
-    html_message = RichTextField(_("html mesaage"))
+    html_message = RichTextField(_("html message"))
     text_message = models.TextField(_("text message"))
 
     def __str__(self):
