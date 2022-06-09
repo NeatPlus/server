@@ -17,10 +17,15 @@ class WritableSurveyResultSerializer(SurveyResultSerializer):
         exclude = ("survey",)
 
 
-class SurveyResultFeedbackSerializer(serializers.ModelSerializer):
+class SurveyResultFeedbackSerializer(UserModelSerializer):
+    survey_title = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = SurveyResultFeedback
         fields = "__all__"
+
+    def get_survey_title(self, obj):
+        return obj.survey_result.survey.title
 
 
 class WritableSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):

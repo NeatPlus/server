@@ -153,7 +153,9 @@ class SurveyResultFeedbackViewSet(
         surveys = Survey.objects.filter(
             Q(project__in=projects) | Q(created_by=current_user)
         )
-        return SurveyResultFeedback.objects.filter(survey_result__survey__in=surveys)
+        return SurveyResultFeedback.objects.filter(
+            survey_result__survey__in=surveys
+        ).select_related("survey_result__survey")
 
     @extend_schema(
         responses=inline_serializer(

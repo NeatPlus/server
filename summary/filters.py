@@ -9,6 +9,7 @@ class SurveyResultFilter(FilterSet):
         fields = {
             "survey": ["exact"],
             "survey__project": ["exact"],
+            "module": ["exact"],
             "statement": ["exact"],
             "question_group": ["exact"],
             "score": ["exact"],
@@ -23,6 +24,8 @@ class SurveyResultFeedbackFilter(FilterSet):
             "survey_result__survey": ["exact"],
             "survey_result__survey__project": ["exact"],
             "survey_result__statement": ["exact"],
+            "survey_result__module": ["exact"],
+            "survey_result__module__context": ["exact"],
             "status": ["exact"],
             "is_baseline": ["exact"],
         }
