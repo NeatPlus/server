@@ -151,6 +151,20 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         data = serializer.validated_data
         version = data["version"]
         question_group = data.pop("question_group", None)
+        if not QuestionStatement.objects.filter(
+            version=version, statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No question statements found for this version")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not OptionStatement.objects.filter(
+            version=version, statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No option statements found for this version")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with transaction.atomic():
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
