@@ -66,16 +66,19 @@ class OptionStatementSerializer(UserModelSerializer):
 class UploadQuestionStatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionStatement
-        exclude = ("statement", "version")
+        exclude = ("statement", "version", "question_group")
 
 
 class UploadOptionStatementSerializer(serializers.ModelSerializer):
     class Meta:
         model = OptionStatement
-        exclude = ("statement", "version")
+        exclude = ("statement", "version", "question_group")
 
 
 class UploadWeightageSerializer(serializers.Serializer):
+    question_group = serializers.PrimaryKeyRelatedField(
+        queryset=QuestionGroup.objects.all(), allow_null=True, required=False
+    )
     questions = UploadQuestionStatementSerializer(many=True)
     options = UploadOptionStatementSerializer(many=True)
 
@@ -83,11 +86,11 @@ class UploadWeightageSerializer(serializers.Serializer):
 class ActivateVersionSerializer(serializers.Serializer):
     version = serializers.CharField()
     question_group = serializers.PrimaryKeyRelatedField(
-        queryset=QuestionGroup.objects.all(), allow_null=True
+        queryset=QuestionGroup.objects.all(), allow_null=True, required=False
     )
 
 
 class ActivateDraftVersionSerializer(serializers.Serializer):
     question_group = serializers.PrimaryKeyRelatedField(
-        queryset=QuestionGroup.objects.all(), allow_null=True
+        queryset=QuestionGroup.objects.all(), allow_null=True, required=False
     )

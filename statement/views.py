@@ -90,36 +90,32 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         data = serializer.validated_data
         try:
             with transaction.atomic():
+                question_group = data.pop("question_group", None)
+
+                QuestionStatement.objects.filter(
+                    statement=statement, question_group=question_group, version="draft"
+                ).delete()
+
                 for question_statement_data in data["questions"]:
-                    weightage = question_statement_data.pop("weightage")
-                    question_group = question_statement_data.pop("question_group", None)
-                    question_obj, created = QuestionStatement.objects.update_or_create(
+                    QuestionStatement.objects.create(
                         **question_statement_data,
                         question_group=question_group,
                         statement=statement,
                         version="draft",
-                        defaults={"weightage": weightage},
+                        created_by=user,
                     )
-                    if created:
-                        question_obj.created_by = user
-                    else:
-                        question_obj.updated_by = user
-                    question_obj.save()
+
+                OptionStatement.objects.filter(
+                    statement=statement, question_group=question_group, version="draft"
+                ).delete()
                 for option_statement_data in data["options"]:
-                    weightage = option_statement_data.pop("weightage")
-                    question_group = option_statement_data.pop("question_group", None)
-                    option_obj, created = OptionStatement.objects.update_or_create(
+                    OptionStatement.objects.create(
                         **option_statement_data,
                         question_group=question_group,
                         statement=statement,
                         version="draft",
-                        defaults={"weightage": weightage},
                     )
-                    if created:
-                        option_obj.created_by = user
-                    else:
-                        option_obj.updated_by = user
-                    option_obj.save()
+
         except Exception as e:
             print(e)
             return Response(
@@ -154,7 +150,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         version = data["version"]
-        question_group = data["question_group"]
+        question_group = data.pop("question_group", None)
         with transaction.atomic():
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
@@ -193,7 +189,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
-        question_group = data["question_group"]
+        question_group = data.pop("question_group", None)
         with transaction.atomic():
             # Rename version to date time based version
             QuestionStatement.objects.filter(
