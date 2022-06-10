@@ -249,7 +249,11 @@ class APITest(FullTestCase):
             version=version,
         )
         response = self.client.post(
-            url, data={"version": version, "question_group": None}, format="json"
+            url,
+            data={
+                "version": version,
+            },
+            format="json",
         )
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
@@ -271,7 +275,7 @@ class APITest(FullTestCase):
             statement=statement,
             version="draft",
         )
-        response = self.client.post(url, format="json", data={"question_group": None})
+        response = self.client.post(url, format="json", data={})
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
