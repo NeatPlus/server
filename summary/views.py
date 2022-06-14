@@ -188,24 +188,30 @@ class SurveyInsightAPIView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        statement = self.request.query_params.get("statement", None)
+        statement = self.request.query_params.get("statement")
         question_group = self.request.query_params.get("question_group", None)
         module = self.request.query_params.get("module", None)
 
-        if not statement and not module:
+        if not module:
             return Response(
-                {"error": _("Missing statement or module")},
+                {"error": _("Missing module")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         baseline_survey_result_feedback = SurveyResultFeedback.objects.filter(
             is_baseline=True,
-            survey_result__statement_id=statement,
             survey_result__question_group_id=question_group,
             survey_result__module_id=module,
         )
 
-        response = baseline_survey_result_feedback.aggregate(
+        if statement:
+            baseline_survey_result_feedback = baseline_survey_result_feedback.filter(
+                survey_result__statement_id=statement
+            )
+
+        response = baseline_survey_result_feedback.values(
+            "survey_result__statement"
+        ).annotate(
             difference=Avg(
                 F("expected_score") - F("actual_score"), output_field=FloatField()
             ),
@@ -219,6 +225,6 @@ class SurveyInsightAPIView(views.APIView):
         )
 
         return Response(
-            response,
+            list(response),
             status=status.HTTP_200_OK,
         )
