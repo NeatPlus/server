@@ -29,7 +29,11 @@ from statement.views import (
     StatementTopicViewSet,
     StatementViewSet,
 )
-from summary.views import SurveyResultFeedbackViewSet, SurveyResultViewSet
+from summary.views import (
+    SurveyInsightAPIView,
+    SurveyResultFeedbackViewSet,
+    SurveyResultViewSet,
+)
 from support.views import (
     ActionViewSet,
     FrequentlyAskedQuestionViewSet,
@@ -144,6 +148,12 @@ urlpatterns += [
     path("ckeditor/", include("ckeditor_uploader.urls")),
     # Oauth
     path("oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    # API
+    re_path(
+        get_api_path(r"survey-insight/$"),
+        SurveyInsightAPIView.as_view(),
+        name="survey-insight",
+    ),
 ]
 
 if not settings.IS_SERVER_SECURE:

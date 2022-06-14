@@ -120,3 +120,18 @@ class APITest(FullTestCase):
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
+
+    def test_survey_insight(self):
+        self.client.force_authenticate(self.user)
+        url = self.reverse(
+            "survey-insight",
+            kwargs={"version": "v1"},
+            params={
+                "statement": self.survey_result.statement.pk,
+                "module": self.survey_result.module.pk,
+            },
+        )
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )

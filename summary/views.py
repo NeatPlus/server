@@ -1,8 +1,8 @@
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Avg, F, FloatField, Q, StdDev, Sum
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import mixins, permissions, serializers, status, viewsets
+from rest_framework import mixins, permissions, serializers, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -180,5 +180,45 @@ class SurveyResultFeedbackViewSet(
         survey_result_feedback.save()
         return Response(
             {"detail": _("Successfully acknowledged survey result feedback")},
+            status=status.HTTP_200_OK,
+        )
+
+
+class SurveyInsightAPIView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        statement = self.request.query_params.get("statement", None)
+        question_group = self.request.query_params.get("question_group", None)
+        module = self.request.query_params.get("module", None)
+
+        if not statement and not module:
+            return Response(
+                {"error": _("Missing statement or module")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        baseline_survey_result_feedback = SurveyResultFeedback.objects.filter(
+            is_baseline=True,
+            survey_result__statement_id=statement,
+            survey_result__question_group_id=question_group,
+            survey_result__module_id=module,
+        )
+
+        response = baseline_survey_result_feedback.aggregate(
+            difference=Avg(
+                F("expected_score") - F("actual_score"), output_field=FloatField()
+            ),
+            sum_of_square=Sum(
+                (F("expected_score") - F("actual_score")) ** 2,
+                output_field=FloatField(),
+            ),
+            standard_deviation=StdDev(
+                F("expected_score") - F("actual_score"), output_field=FloatField()
+            ),
+        )
+
+        return Response(
+            response,
             status=status.HTTP_200_OK,
         )
