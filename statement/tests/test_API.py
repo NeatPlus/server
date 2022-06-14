@@ -242,7 +242,9 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": statement.pk},
         )
         version = self.baker.random_gen.gen_string(max_length=255)
-        self.baker.make("statement.QuestionStatement", version=version)
+        self.baker.make(
+            "statement.QuestionStatement", statement=statement, version=version
+        )
         self.baker.make(
             "statement.OptionStatement",
             statement=statement,

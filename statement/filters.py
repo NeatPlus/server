@@ -1,3 +1,4 @@
+from django_filters.filters import CharFilter
 from django_filters.rest_framework.filterset import FilterSet
 
 from .models import (
@@ -61,24 +62,40 @@ class OpportunityFilter(FilterSet):
 
 
 class QuestionStatementFilter(FilterSet):
+    version = CharFilter(label="version", method="get_version")
+
     class Meta:
         model = QuestionStatement
         fields = {
             "statement": ["exact"],
             "question": ["exact"],
-            "version": ["exact"],
             "is_active": ["exact"],
             "question_group": ["exact"],
         }
 
+    def get_version(self, queryset, name, value):
+        if value == "latest":
+            if queryset.filter(version="draft").exists():
+                return queryset.filter(version="draft")
+            return queryset.filter(is_active=True)
+        return queryset.filter(version=value)
+
 
 class OptionStatementFilter(FilterSet):
+    version = CharFilter(label="version", method="get_version")
+
     class Meta:
         model = OptionStatement
         fields = {
             "statement": ["exact"],
             "option": ["exact"],
-            "version": ["exact"],
             "is_active": ["exact"],
             "question_group": ["exact"],
         }
+
+    def get_version(self, queryset, name, value):
+        if value == "latest":
+            if queryset.filter(version="draft").exists():
+                return queryset.filter(version="draft")
+            return queryset.filter(is_active=True)
+        return queryset.filter(version=value)
