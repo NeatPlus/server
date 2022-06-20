@@ -46,6 +46,26 @@ class SurveyResult(UserStampedModel, TimeStampedModel):
         ]
         permissions = [("add_baseline_feedback", _("Can add baseline feedback"))]
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            cls = self.__class__
+            old = cls.objects.get(pk=self.pk)
+            changed_fields = []
+            for field in cls._meta.get_fields():
+                field_name = field.name
+                try:
+                    old_val = getattr(old, field_name)
+                    new_val = getattr(self, field_name)
+                    if hasattr(field, "is_custom_lower_field"):
+                        if field.is_custom_lower_field():
+                            new_val = new_val.lower()
+                    if old_val != new_val:
+                        changed_fields.append(field_name)
+                except Exception:
+                    pass
+            kwargs["update_fields"] = changed_fields
+        super().save(*args, **kwargs)
+
 
 class SurveyResultFeedback(UserStampedModel, TimeStampedModel):
     class StatusChoice(models.TextChoices):
