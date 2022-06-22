@@ -14,6 +14,7 @@ from .filters import (
     OptionStatementFilter,
     QuestionStatementFilter,
     StatementFilter,
+    StatementFormulaFilter,
     StatementTagFilter,
     StatementTagGroupFilter,
     StatementTopicFilter,
@@ -24,6 +25,7 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementFormula,
     StatementTag,
     StatementTagGroup,
     StatementTopic,
@@ -31,10 +33,12 @@ from .models import (
 from .serializers import (
     ActivateDraftVersionSerializer,
     ActivateVersionSerializer,
+    CreateStatementFormulaSerializer,
     MitigationSerializer,
     OpportunitySerializer,
     OptionStatementSerializer,
     QuestionStatementSerializer,
+    StatementFormulaSerializer,
     StatementSerializer,
     StatementTagGroupSerializer,
     StatementTagSerializer,
@@ -124,6 +128,42 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             )
         return Response(
             {"detail": _("Successfully uploaded weightage for statement")},
+            status=status.HTTP_201_CREATED,
+        )
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="UploadFormulaResponseSerializer",
+            fields={
+                "detail": serializers.CharField(
+                    default=_("Successfully created formula for statement")
+                )
+            },
+        )
+    )
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=CreateStatementFormulaSerializer,
+    )
+    def create_formula(self, request, *args, **kwargs):
+        statement = self.get_object()
+        user = self.request.user
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        question_group = data.pop("question_group", None)
+        obj, created = StatementFormula.objects.update_or_create(
+            statement=statement, question_group=question_group, defaults=data
+        )
+        if created:
+            obj.created_by = user
+        else:
+            obj.updated_by = user
+        obj.save()
+        return Response(
+            {"detail": _("Successfully created formula for statement")},
             status=status.HTTP_201_CREATED,
         )
 
@@ -238,6 +278,12 @@ class OpportunityViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = OpportunitySerializer
     queryset = Opportunity.objects.all()
     filterset_class = OpportunityFilter
+
+
+class StatementFormulaViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = StatementFormulaSerializer
+    queryset = StatementFormula.objects.all()
+    filterset_class = StatementFormulaFilter
 
 
 class QuestionStatementViewSet(viewsets.ReadOnlyModelViewSet):

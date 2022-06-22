@@ -7,6 +7,7 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementFormula,
     StatementTag,
     StatementTagGroup,
     StatementTopic,
@@ -58,6 +59,16 @@ class OpportunityFilter(FilterSet):
         fields = {
             "title": ["exact"],
             "statement": ["exact"],
+        }
+
+
+class StatementFormulaFilter(FilterSet):
+    class Meta:
+        model = StatementFormula
+        fields = {
+            "statement": ["exact"],
+            "question_group": ["exact"],
+            "module": ["exact"],
         }
 
 

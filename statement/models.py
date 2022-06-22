@@ -124,6 +124,45 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         verbose_name_plural = "Opportunities"
 
 
+class StatementFormula(UserStampedModel, TimeStampedModel):
+    statement = models.ForeignKey(
+        "Statement",
+        on_delete=models.CASCADE,
+        verbose_name=_("statement"),
+        related_name="formulas",
+    )
+    question_group = models.ForeignKey(
+        "survey.QuestionGroup",
+        on_delete=models.CASCADE,
+        verbose_name=_("question group"),
+        related_name="formulas",
+        null=True,
+        blank=True,
+        default=None,
+    )
+    module = models.ForeignKey(
+        "context.Module",
+        on_delete=models.CASCADE,
+        verbose_name=_("module"),
+        related_name="formulas",
+    )
+    formula = models.TextField(_("formula"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["question_group", "statement"],
+                condition=models.Q(question_group__isnull=False),
+                name="one_formula_question_group_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["statement"],
+                condition=models.Q(question_group__isnull=True),
+                name="one_formula_statement",
+            ),
+        ]
+
+
 class QuestionStatement(UserStampedModel, TimeStampedModel, OrderedModel):
     question = models.ForeignKey(
         "survey.Question", on_delete=models.CASCADE, verbose_name=_("question")

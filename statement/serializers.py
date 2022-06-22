@@ -9,6 +9,7 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementFormula,
     StatementTag,
     StatementTagGroup,
     StatementTopic,
@@ -49,6 +50,18 @@ class OpportunitySerializer(UserModelSerializer):
     class Meta:
         model = Opportunity
         fields = "__all__"
+
+
+class StatementFormulaSerializer(UserModelSerializer):
+    class Meta:
+        model = StatementFormula
+        fields = "__all__"
+
+
+class CreateStatementFormulaSerializer(UserModelSerializer):
+    class Meta:
+        model = StatementFormula
+        exclude = ("statement",)
 
 
 class QuestionStatementSerializer(UserModelSerializer):

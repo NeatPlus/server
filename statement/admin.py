@@ -11,6 +11,7 @@ from .models import (
     OptionStatement,
     QuestionStatement,
     Statement,
+    StatementFormula,
     StatementTag,
     StatementTagGroup,
     StatementTopic,
@@ -75,6 +76,12 @@ class StatementAdmin(
     class Meta:
         verbose_name = _("statement")
         verbose_plural_name = _("statements")
+
+
+@admin.register(StatementFormula)
+class StatementFormulaAdmin(UserStampedModelAdmin):
+    list_display = ("statement", "question_group")
+    autocomplete_fields = ("statement", "question_group")
 
 
 @admin.register(Mitigation)
