@@ -41,3 +41,9 @@ class WritableSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
     class Meta:
         model = SurveyResultFeedback
         exclude = ("actual_score", "status", "is_baseline")
+
+
+class WritableBaselineSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
+    class Meta:
+        model = SurveyResultFeedback
+        exclude = ("status", "is_baseline")

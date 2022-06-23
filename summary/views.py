@@ -19,6 +19,7 @@ from .models import SurveyResult, SurveyResultFeedback
 from .serializers import (
     SurveyResultFeedbackSerializer,
     SurveyResultSerializer,
+    WritableBaselineSurveyResultFeedbackSerializer,
     WritableSurveyResultFeedbackSerializer,
 )
 
@@ -102,7 +103,7 @@ class SurveyResultViewSet(
         methods=["post"],
         detail=False,
         permission_classes=[CanAddBaselineFeedback],
-        serializer_class=WritableSurveyResultFeedbackSerializer,
+        serializer_class=WritableBaselineSurveyResultFeedbackSerializer,
     )
     def add_baseline_feedback(self, request, *args, **kwargs):
         user = self.request.user
@@ -113,7 +114,6 @@ class SurveyResultViewSet(
             with transaction.atomic():
                 for data in serializer.validated_data:
                     survey_result = data.pop("survey_result")
-                    data["actual_score"] = survey_result.score
                     (
                         survey_result_feedback,
                         created,

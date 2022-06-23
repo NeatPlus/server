@@ -87,6 +87,7 @@ class APITest(FullTestCase):
         data = [
             {
                 "survey_result": self.survey_result.pk,
+                "actual_score": 0.10,
                 "expected_score": 0.12,
                 "comment": self.baker.random_gen.gen_text(),
             }
