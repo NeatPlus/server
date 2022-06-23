@@ -24,6 +24,7 @@ from statement.views import (
     OpportunityViewSet,
     OptionStatementViewSet,
     QuestionStatementViewSet,
+    StatementFormulaViewSet,
     StatementTagGroupViewSet,
     StatementTagViewSet,
     StatementTopicViewSet,
@@ -92,6 +93,9 @@ router.register(
 router.register("resource", ResourceViewSet, basename="resource")
 router.register("resource-tag", ResourceTagViewSet, basename="resource-tag")
 router.register("statement", StatementViewSet, basename="statement")
+router.register(
+    "statement-formula", StatementFormulaViewSet, basename="statement-formula"
+)
 router.register("statement-tag", StatementTagViewSet, basename="statement-tag")
 router.register(
     "statement-tag-group", StatementTagGroupViewSet, basename="statement-tag-group"

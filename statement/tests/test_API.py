@@ -35,6 +35,9 @@ class APITest(FullTestCase):
             version="initial",
             is_active=True,
         )
+        cls.statement_formula = cls.baker.make(
+            "statement.StatementFormula", statement=cls.statement
+        )
 
         cls.statement_topic_list_url = cls.reverse(
             "statement-topic-list", kwargs={"version": "v1"}
@@ -60,6 +63,13 @@ class APITest(FullTestCase):
         cls.statement_list_url = cls.reverse("statement-list", kwargs={"version": "v1"})
         cls.statement_detail_url = cls.reverse(
             "statement-detail", kwargs={"version": "v1", "pk": cls.statement.pk}
+        )
+        cls.statement_formula_list_url = cls.reverse(
+            "statement-formula-list", kwargs={"version": "v1"}
+        )
+        cls.statement_formula_detail_url = cls.reverse(
+            "statement-formula-detail",
+            kwargs={"version": "v1", "pk": cls.statement_formula.pk},
         )
 
         cls.mitigation_list_url = cls.reverse(
@@ -136,6 +146,18 @@ class APITest(FullTestCase):
 
     def test_statement_detail(self):
         response = self.client.get(self.statement_detail_url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_statement_formula_list(self):
+        response = self.client.get(self.statement_formula_list_url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_statement_formula_detail(self):
+        response = self.client.get(self.statement_formula_detail_url)
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
@@ -229,6 +251,26 @@ class APITest(FullTestCase):
                 statement=statement.pk,
                 version="draft",
             ).exists()
+        )
+
+    def test_create_formula(self):
+        user = self.baker.make(
+            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
+        )
+        self.client.force_authenticate(user)
+        statement = self.statement
+        url = self.reverse(
+            "statement-create-formula",
+            kwargs={"version": "v1", "pk": statement.pk},
+        )
+        data = {
+            "question_group": self.question_statement.question_group,
+            "module": self.baker.make("context.Module").id,
+            "formula": self.baker.random_gen.gen_text(),
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
         )
 
     def test_activate_version(self):
