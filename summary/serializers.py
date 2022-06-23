@@ -6,9 +6,14 @@ from .models import SurveyResult, SurveyResultFeedback
 
 
 class SurveyResultSerializer(UserModelSerializer):
+    contains_baseline_feedback = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = SurveyResult
         fields = "__all__"
+
+    def get_contains_baseline_feedback(self, obj):
+        return obj.feedbacks.filter(is_baseline=True).exists()
 
 
 class WritableSurveyResultSerializer(SurveyResultSerializer):
