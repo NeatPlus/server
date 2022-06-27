@@ -80,7 +80,7 @@ class StatementAdmin(
 
 @admin.register(StatementFormula)
 class StatementFormulaAdmin(UserStampedModelAdmin):
-    list_display = ("statement", "question_group")
+    list_display = ("statement", "question_group", "version", "is_active")
     autocomplete_fields = ("statement", "question_group")
 
 

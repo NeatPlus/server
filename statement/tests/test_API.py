@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from neatplus.tests import FullTestCase
-from statement.models import OptionStatement, QuestionStatement
+from statement.models import OptionStatement, QuestionStatement, StatementFormula
 
 
 class APITest(FullTestCase):
@@ -216,6 +216,7 @@ class APITest(FullTestCase):
         )
         self.client.force_authenticate(user)
         statement = self.question_statement.statement
+        module = self.baker.make("context.Module")
         url = self.reverse(
             "statement-upload-weightage",
             kwargs={"version": "v1", "pk": statement.pk},
@@ -231,6 +232,12 @@ class APITest(FullTestCase):
                 {
                     "option": self.option_statement.option.pk,
                     "weightage": self.baker.random_gen.gen_float(),
+                }
+            ],
+            "formulas": [
+                {
+                    "module": module.pk,
+                    "formula": self.baker.random_gen.gen_text(),
                 }
             ],
         }
@@ -252,25 +259,12 @@ class APITest(FullTestCase):
                 version="draft",
             ).exists()
         )
-
-    def test_create_formula(self):
-        user = self.baker.make(
-            settings.AUTH_USER_MODEL, is_active=True, is_superuser=True
-        )
-        self.client.force_authenticate(user)
-        statement = self.statement
-        url = self.reverse(
-            "statement-create-formula",
-            kwargs={"version": "v1", "pk": statement.pk},
-        )
-        data = {
-            "question_group": self.question_statement.question_group,
-            "module": self.baker.make("context.Module").id,
-            "formula": self.baker.random_gen.gen_text(),
-        }
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(
-            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        self.assertTrue(
+            StatementFormula.objects.filter(
+                module=module.pk,
+                statement=statement.pk,
+                version="draft",
+            ).exists()
         )
 
     def test_activate_version(self):
@@ -291,6 +285,9 @@ class APITest(FullTestCase):
             "statement.OptionStatement",
             statement=statement,
             version=version,
+        )
+        self.baker.make(
+            "statement.StatementFormula", statement=statement, version=version
         )
         response = self.client.post(
             url,
@@ -313,11 +310,16 @@ class APITest(FullTestCase):
             "statement-activate-draft-version",
             kwargs={"version": "v1", "pk": statement.pk},
         )
-        self.baker.make("statement.QuestionStatement", version="draft")
+        self.baker.make(
+            "statement.QuestionStatement", statement=statement, version="draft"
+        )
         self.baker.make(
             "statement.OptionStatement",
             statement=statement,
             version="draft",
+        )
+        self.baker.make(
+            "statement.StatementFormula", statement=statement, version="draft"
         )
         response = self.client.post(url, format="json", data={})
         self.assertEqual(

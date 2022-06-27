@@ -58,12 +58,6 @@ class StatementFormulaSerializer(UserModelSerializer):
         fields = "__all__"
 
 
-class CreateStatementFormulaSerializer(UserModelSerializer):
-    class Meta:
-        model = StatementFormula
-        exclude = ("statement",)
-
-
 class QuestionStatementSerializer(UserModelSerializer):
     class Meta:
         model = QuestionStatement
@@ -88,12 +82,21 @@ class UploadOptionStatementSerializer(serializers.ModelSerializer):
         exclude = ("statement", "version", "question_group")
 
 
+class UploadStatementFormulaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatementFormula
+        exclude = ("statement", "version", "question_group")
+
+
 class UploadWeightageSerializer(serializers.Serializer):
     question_group = serializers.PrimaryKeyRelatedField(
         queryset=QuestionGroup.objects.all(), allow_null=True, required=False
     )
     questions = UploadQuestionStatementSerializer(many=True)
     options = UploadOptionStatementSerializer(many=True)
+    formulas = UploadStatementFormulaSerializer(
+        many=True, allow_null=True, required=False
+    )
 
 
 class ActivateVersionSerializer(serializers.Serializer):
