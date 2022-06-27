@@ -1,3 +1,5 @@
+from ensurepip import version
+
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -33,7 +35,6 @@ from .models import (
 from .serializers import (
     ActivateDraftVersionSerializer,
     ActivateVersionSerializer,
-    CreateStatementFormulaSerializer,
     MitigationSerializer,
     OpportunitySerializer,
     OptionStatementSerializer,
@@ -120,6 +121,17 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                         version="draft",
                     )
 
+                StatementFormula.objects.filter(
+                    statement=statement, question_group=question_group, version="draft"
+                ).delete()
+                for formula_data in data["formulas"]:
+                    StatementFormula.objects.create(
+                        **formula_data,
+                        statement=statement,
+                        question_group=question_group,
+                        version="draft",
+                    )
+
         except Exception as e:
             print(e)
             return Response(
@@ -128,42 +140,6 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             )
         return Response(
             {"detail": _("Successfully uploaded weightage for statement")},
-            status=status.HTTP_201_CREATED,
-        )
-
-    @extend_schema(
-        responses=inline_serializer(
-            name="UploadFormulaResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully created formula for statement")
-                )
-            },
-        )
-    )
-    @action(
-        detail=True,
-        methods=["post"],
-        serializer_class=CreateStatementFormulaSerializer,
-    )
-    def create_formula(self, request, *args, **kwargs):
-        statement = self.get_object()
-        user = self.request.user
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        data = serializer.validated_data
-        question_group = data.pop("question_group", None)
-        obj, created = StatementFormula.objects.update_or_create(
-            statement=statement, question_group=question_group, defaults=data
-        )
-        if created:
-            obj.created_by = user
-        else:
-            obj.updated_by = user
-        obj.save()
-        return Response(
-            {"detail": _("Successfully created formula for statement")},
             status=status.HTTP_201_CREATED,
         )
 
@@ -205,6 +181,13 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 {"error": _("No option statements found for this version")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if not StatementFormula.objects.filter(
+            version=version, statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No statement formulas found for this version")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with transaction.atomic():
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
@@ -216,6 +199,12 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
+            StatementFormula.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
         return Response({"detail": _("Successfully activate new version")})
@@ -244,12 +233,36 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         question_group = data.pop("question_group", None)
+        if not QuestionStatement.objects.filter(
+            version="draft", statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No question statements found for draft")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not OptionStatement.objects.filter(
+            version="draft", statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No option statements found for draft")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not StatementFormula.objects.filter(
+            version="draft", statement=statement, question_group=question_group
+        ).exists():
+            return Response(
+                {"error": _("No statement formulas found for draft")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with transaction.atomic():
             # Rename version to date time based version
             QuestionStatement.objects.filter(
                 statement=statement, version="draft", question_group=question_group
             ).update(version=version)
             OptionStatement.objects.filter(
+                statement=statement, version="draft", question_group=question_group
+            ).update(version=version)
+            StatementFormula.objects.filter(
                 statement=statement, version="draft", question_group=question_group
             ).update(version=version)
             # Make all old version inactive and new version active version
@@ -263,6 +276,12 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             OptionStatement.objects.filter(
+                statement=statement, question_group=question_group
+            ).filter(version=version).update(is_active=True, updated_by=user)
+            StatementFormula.objects.filter(
+                statement=statement, question_group=question_group
+            ).exclude(version=version).update(is_active=False, updated_by=user)
+            StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
         return Response({"detail": _("Successfully activate draft version")})

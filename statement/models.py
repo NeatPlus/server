@@ -147,18 +147,32 @@ class StatementFormula(UserStampedModel, TimeStampedModel):
         related_name="formulas",
     )
     formula = models.TextField(_("formula"))
+    version = models.CharField(_("version"), max_length=255)
+    is_active = models.BooleanField(_("active"), default=False, editable=False)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["question_group", "statement"],
-                condition=models.Q(question_group__isnull=False),
-                name="one_formula_question_group_statement",
+                fields=["statement", "version"],
+                condition=models.Q(question_group__isnull=True),
+                name="one_version_formula_statement",
             ),
             models.UniqueConstraint(
                 fields=["statement"],
-                condition=models.Q(question_group__isnull=True),
-                name="one_formula_statement",
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=True),
+                name="one_active_version_formula_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["question_group", "statement", "version"],
+                condition=models.Q(question_group__isnull=False),
+                name="one_version_formula_question_group_statement",
+            ),
+            models.UniqueConstraint(
+                fields=["question_group", "statement"],
+                condition=models.Q(is_active=True)
+                & models.Q(question_group__isnull=False),
+                name="one_active_formula_question_group_statement",
             ),
         ]
 

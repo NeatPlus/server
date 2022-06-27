@@ -63,13 +63,33 @@ class OpportunityFilter(FilterSet):
 
 
 class StatementFormulaFilter(FilterSet):
+    version = CharFilter(label="version", method="get_version")
+
     class Meta:
         model = StatementFormula
         fields = {
             "statement": ["exact"],
             "question_group": ["exact"],
             "module": ["exact"],
+            "is_active": ["exact"],
         }
+
+    def get_version(self, queryset, name, value):
+        if value == "latest":
+            draft_statement_formulas = queryset.filter(version="draft")
+            draft_statements = draft_statement_formulas.values_list(
+                "statement", flat=True
+            )
+            queryset_id = list(draft_statement_formulas.values_list("id", flat=True))
+            queryset_id.extend(
+                list(
+                    queryset.filter(is_active=True)
+                    .exclude(statement__in=draft_statements)
+                    .values_list("id", flat=True)
+                )
+            )
+            return queryset.filter(id__in=queryset_id)
+        return queryset.filter(version=value)
 
 
 class QuestionStatementFilter(FilterSet):
