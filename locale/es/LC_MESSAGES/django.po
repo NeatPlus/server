@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-07 11:55+0000\n"
+"POT-Creation-Date: 2022-06-29 05:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,16 +341,19 @@ msgstr ""
 msgid "experimental"
 msgstr ""
 
-msgid "question"
-msgstr ""
-
 msgid "question group"
 msgstr ""
 
-msgid "weightage"
+msgid "formula"
 msgstr ""
 
 msgid "version"
+msgstr ""
+
+msgid "question"
+msgstr ""
+
+msgid "weightage"
 msgstr ""
 
 msgid "option"
@@ -359,13 +362,34 @@ msgstr ""
 msgid "Successfully uploaded weightage for statement"
 msgstr ""
 
+msgid "Module required if formula is present"
+msgstr ""
+
 msgid "Failed to upload weightage for statement"
 msgstr ""
 
 msgid "Successfully activate new version"
 msgstr ""
 
+msgid "No question statements found for this version"
+msgstr ""
+
+msgid "No option statements found for this version"
+msgstr ""
+
+msgid "No statement formulas found for this version"
+msgstr ""
+
 msgid "Successfully activate draft version"
+msgstr ""
+
+msgid "No question statements found for draft"
+msgstr ""
+
+msgid "No option statements found for draft"
+msgstr ""
+
+msgid "No statement formulas found for draft"
 msgstr ""
 
 msgid "survey result"
@@ -420,6 +444,9 @@ msgid "Failed to add baseline survey result feedback"
 msgstr ""
 
 msgid "Successfully acknowledged survey result feedback"
+msgstr ""
+
+msgid "Missing module"
 msgstr ""
 
 msgid "legal document"
@@ -497,7 +524,7 @@ msgstr ""
 msgid "subject"
 msgstr ""
 
-msgid "html mesaage"
+msgid "html message"
 msgstr ""
 
 msgid "text message"

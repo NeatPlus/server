@@ -222,6 +222,8 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": statement.pk},
         )
         data = {
+            "question_group": None,
+            "module": module.pk,
             "questions": [
                 {
                     "question": self.question_statement.question.pk,
@@ -234,12 +236,7 @@ class APITest(FullTestCase):
                     "weightage": self.baker.random_gen.gen_float(),
                 }
             ],
-            "formulas": [
-                {
-                    "module": module.pk,
-                    "formula": self.baker.random_gen.gen_text(),
-                }
-            ],
+            "formula": self.baker.random_gen.gen_text(),
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(
