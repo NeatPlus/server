@@ -93,10 +93,13 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
+        question_group = data.pop("question_group")
+        module = data.pop("module", None)
+        has_formula = "formula" in data.keys()
+        if has_formula and module is None:
+            return Response({"error": _("Module required if formula is present")})
         try:
             with transaction.atomic():
-                question_group = data.pop("question_group", None)
-
                 QuestionStatement.objects.filter(
                     statement=statement, question_group=question_group, version="draft"
                 ).delete()
@@ -119,19 +122,26 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                         question_group=question_group,
                         statement=statement,
                         version="draft",
+                        created_by=user,
                     )
 
-                StatementFormula.objects.filter(
-                    statement=statement, question_group=question_group, version="draft"
-                ).delete()
-                for formula_data in data["formulas"]:
-                    StatementFormula.objects.create(
-                        **formula_data,
+                if has_formula:
+                    formula = data["formula"]
+                    StatementFormula.objects.filter(
                         statement=statement,
                         question_group=question_group,
+                        module=module,
                         version="draft",
-                    )
-
+                    ).delete()
+                    if formula:
+                        StatementFormula.objects.create(
+                            formula=formula,
+                            module=module,
+                            statement=statement,
+                            question_group=question_group,
+                            version="draft",
+                            created_by=user,
+                        )
         except Exception as e:
             print(e)
             return Response(

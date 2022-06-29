@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from context.models import Module
 from neatplus.serializers import UserModelSerializer
 from survey.models import QuestionGroup
 
@@ -90,13 +91,14 @@ class UploadStatementFormulaSerializer(serializers.ModelSerializer):
 
 class UploadWeightageSerializer(serializers.Serializer):
     question_group = serializers.PrimaryKeyRelatedField(
-        queryset=QuestionGroup.objects.all(), allow_null=True, required=False
+        queryset=QuestionGroup.objects.all(), allow_null=True
+    )
+    module = serializers.PrimaryKeyRelatedField(
+        queryset=Module.objects.all(), required=False
     )
     questions = UploadQuestionStatementSerializer(many=True)
     options = UploadOptionStatementSerializer(many=True)
-    formulas = UploadStatementFormulaSerializer(
-        many=True, allow_null=True, required=False
-    )
+    formula = serializers.CharField(required=False, allow_null=True)
 
 
 class ActivateVersionSerializer(serializers.Serializer):
