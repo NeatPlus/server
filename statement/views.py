@@ -133,7 +133,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                         module=module,
                         version="draft",
                     ).delete()
-                    if formula:
+                    if formula is not None:
                         StatementFormula.objects.create(
                             formula=formula,
                             module=module,

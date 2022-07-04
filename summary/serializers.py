@@ -11,15 +11,10 @@ class SurveyResultSerializer(UserModelSerializer):
     class Meta:
         model = SurveyResult
         fields = "__all__"
+        read_only_fields = ("survey",)
 
     def get_contains_baseline_feedback(self, obj):
         return obj.feedbacks.filter(is_baseline=True).exists()
-
-
-class WritableSurveyResultSerializer(SurveyResultSerializer):
-    class Meta:
-        model = SurveyResult
-        exclude = ("survey",)
 
 
 class SurveyResultFeedbackSerializer(UserModelSerializer):
@@ -29,6 +24,7 @@ class SurveyResultFeedbackSerializer(UserModelSerializer):
     class Meta:
         model = SurveyResultFeedback
         fields = "__all__"
+        read_only_fields = ("actual_score", "status", "is_baseline")
 
     def get_survey_title(self, obj):
         return obj.survey_result.survey.title
@@ -37,13 +33,6 @@ class SurveyResultFeedbackSerializer(UserModelSerializer):
         return obj.survey_result.survey.id
 
 
-class WritableSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
-    class Meta:
-        model = SurveyResultFeedback
-        exclude = ("actual_score", "status", "is_baseline")
-
-
-class WritableBaselineSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
-    class Meta:
-        model = SurveyResultFeedback
-        exclude = ("status", "is_baseline")
+class BaselineSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
+    class Meta(SurveyResultFeedbackSerializer.Meta):
+        read_only_fields = ("status", "is_baseline")

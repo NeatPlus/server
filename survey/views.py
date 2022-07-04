@@ -10,7 +10,7 @@ from neatplus.utils import gen_random_string
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
 from summary.models import SurveyResult
-from summary.serializers import WritableSurveyResultSerializer
+from summary.serializers import SurveyResultSerializer
 
 from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFilter
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
@@ -212,7 +212,7 @@ class SurveyViewSet(
         )
 
     @extend_schema(
-        request=WritableSurveyResultSerializer(many=True),
+        request=SurveyResultSerializer(many=True),
         responses=inline_serializer(
             name="AddSurveyResultResponseSerializer",
             fields={
@@ -226,7 +226,7 @@ class SurveyViewSet(
         methods=["post"],
         detail=True,
         permission_classes=[CanWriteSurvey],
-        serializer_class=WritableSurveyResultSerializer,
+        serializer_class=SurveyResultSerializer,
     )
     def add_results(self, request, *args, **kwargs):
         survey = self.get_object()
