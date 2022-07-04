@@ -17,10 +17,9 @@ from survey.models import Survey
 from .filters import SurveyResultFeedbackFilter, SurveyResultFilter
 from .models import SurveyResult, SurveyResultFeedback
 from .serializers import (
+    BaselineSurveyResultFeedbackSerializer,
     SurveyResultFeedbackSerializer,
     SurveyResultSerializer,
-    WritableBaselineSurveyResultFeedbackSerializer,
-    WritableSurveyResultFeedbackSerializer,
 )
 
 
@@ -44,7 +43,7 @@ class SurveyResultViewSet(
         return SurveyResult.objects.filter(survey__in=surveys)
 
     @extend_schema(
-        request=WritableSurveyResultFeedbackSerializer(many=True),
+        request=SurveyResultFeedbackSerializer(many=True),
         responses=inline_serializer(
             name="AddSurveyResultFeedbackResponseSerializer",
             fields={
@@ -58,7 +57,7 @@ class SurveyResultViewSet(
         methods=["post"],
         detail=False,
         permission_classes=[permissions.IsAuthenticated],
-        serializer_class=WritableSurveyResultFeedbackSerializer,
+        serializer_class=SurveyResultFeedbackSerializer,
     )
     def add_feedback(self, request, *args, **kwargs):
         user = self.request.user
@@ -89,7 +88,7 @@ class SurveyResultViewSet(
         )
 
     @extend_schema(
-        request=WritableSurveyResultFeedbackSerializer(many=True),
+        request=BaselineSurveyResultFeedbackSerializer(many=True),
         responses=inline_serializer(
             name="AddBaselineSurveyResultFeedbackResponseSerializer",
             fields={
@@ -103,7 +102,7 @@ class SurveyResultViewSet(
         methods=["post"],
         detail=False,
         permission_classes=[CanAddBaselineFeedback],
-        serializer_class=WritableBaselineSurveyResultFeedbackSerializer,
+        serializer_class=BaselineSurveyResultFeedbackSerializer,
     )
     def add_baseline_feedback(self, request, *args, **kwargs):
         user = self.request.user

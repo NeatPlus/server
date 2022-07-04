@@ -22,7 +22,6 @@ from .permissions import (
 )
 from .serializers import (
     AccessLevelResponseSerializer,
-    CreateProjectSerializer,
     ProjectSerializer,
     ProjectUserSerializer,
     RemoveProjectUserSerializer,
@@ -34,6 +33,7 @@ from .utils import read_allowed_project_for_user
 class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     permission_classes = [CanEditProjectOrReadOnly]
     filterset_class = ProjectFilter
+    serializer_class = ProjectSerializer
 
     def get_queryset(self):
         current_user = self.request.user
@@ -42,13 +42,6 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             .select_related("created_by")
             .prefetch_related("organization__admins")
         )
-
-    def get_serializer_class(self):
-        if self.name and self.serializer_class:
-            return self.serializer_class
-        if self.action == "create":
-            return CreateProjectSerializer
-        return ProjectSerializer
 
     @action(
         methods=["get"],

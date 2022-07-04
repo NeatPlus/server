@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from neatplus.views import UserStampedModelViewSetMixin
 from project.models import Project
-from project.serializers import CreateProjectSerializer
+from project.serializers import ProjectSerializer
 from user.models import User
 from user.serializers import UserSerializer
 
@@ -57,7 +57,7 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         methods=["post"],
         detail=True,
         permission_classes=[permissions.IsAuthenticated],
-        serializer_class=CreateProjectSerializer,
+        serializer_class=ProjectSerializer,
     )
     def create_project(self, request, *args, **kwargs):
         organization = self.get_object()

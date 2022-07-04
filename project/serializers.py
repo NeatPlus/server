@@ -17,13 +17,14 @@ class ProjectUserSerializer(UserModelSerializer):
 
 
 class ProjectSerializer(UserModelSerializer):
-    created_by = UserSerializer()
+    created_by = UserSerializer(read_only=True)
     organization_title = serializers.SerializerMethodField(read_only=True)
     is_admin_or_owner = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Project
         fields = "__all__"
+        read_only_fields = ("users",)
 
     def get_organization_title(self, obj):
         if obj.organization:
@@ -37,18 +38,24 @@ class ProjectSerializer(UserModelSerializer):
         else:
             return is_created_by
 
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
-
-
-class CreateProjectSerializer(UserModelSerializer):
-    class Meta:
-        model = Project
-        exclude = ("users",)
-
     def validate(self, attrs):
         data = super().validate(attrs)
-        organization_obj = data.get("organization")
+        request_method = self.context["request"].method
+
+        if request_method == "POST":
+            organization_obj = data.get("organization")
+            visibility = data.get("visibility")
+        else:
+            instance = self.instance
+            if "organization" in data.keys():
+                organization_obj = data.get("organization")
+            else:
+                organization_obj = instance.organization
+            if "visibility" in data.keys():
+                visibility = data.get("visibility")
+            else:
+                visibility = instance.visibility
+
         if organization_obj:
             if organization_obj.status != "accepted":
                 raise serializers.ValidationError(
@@ -59,7 +66,7 @@ class CreateProjectSerializer(UserModelSerializer):
                     }
                 )
         else:
-            if data["visibility"] == "public_within_organization":
+            if visibility == "public_within_organization":
                 raise serializers.ValidationError(
                     {
                         "visibility": _(
