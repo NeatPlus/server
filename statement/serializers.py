@@ -82,7 +82,7 @@ class UploadWeightageSerializer(serializers.Serializer):
     )
     questions = QuestionStatementSerializer(many=True)
     options = OptionStatementSerializer(many=True)
-    formula = serializers.CharField(required=False, allow_null=True)
+    formula = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
 
 class ActivateVersionSerializer(serializers.Serializer):
