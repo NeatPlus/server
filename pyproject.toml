@@ -20,7 +20,7 @@ classifiers = ["Private :: Do Not Upload"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Django = "^3.2.13"
+Django = "^3.2.14"
 environs = { version = "^9.5.0", extras = ["django"] }
 marshmallow = "^3.17.0"
 uvicorn = { version = "^0.18.2", extras = ["standard"], optional = true }
