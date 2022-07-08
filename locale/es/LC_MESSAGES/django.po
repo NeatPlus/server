@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-29 05:20+0000\n"
+"POT-Creation-Date: 2022-07-15 05:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,6 +49,15 @@ msgid ""
 "numbers, and ./-/_ characters."
 msgstr ""
 
+msgid "Unable to log in with provided credentials."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"You have attempted to login {failure_limit} times with no success. Wait "
+"{cooloff_time_seconds} seconds to re login"
+msgstr ""
+
 msgid "created at"
 msgstr ""
 
@@ -62,6 +71,11 @@ msgid "updated by"
 msgstr ""
 
 msgid "code"
+msgstr ""
+
+msgid ""
+"{error}. You have {defender_config.FAILURE_LIMIT-attempt_count-1} attempts "
+"remaining"
 msgstr ""
 
 msgid "English"

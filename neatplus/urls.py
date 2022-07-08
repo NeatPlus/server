@@ -111,6 +111,10 @@ router.register(
 )
 router.register("user", UserViewSet, basename="user")
 
+urlpatterns = []
+
+if settings.ENABLE_DEFENDER:
+    urlpatterns += [path("admin/defender/", include("defender.urls"))]  # defender admin
 
 if settings.IS_SERVER_SECURE:
     from django_otp.admin import OTPAdminSite
@@ -120,7 +124,7 @@ if settings.IS_SERVER_SECURE:
 
     admin.site.__class__ = OTPAdmin
 
-urlpatterns = i18n_patterns(  # admin
+urlpatterns += i18n_patterns(  # admin
     path("admin/", admin.site.urls), prefix_default_language=False
 )
 
