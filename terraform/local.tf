@@ -1,7 +1,8 @@
 # resources related locals
 locals {
-  suffix       = random_id.resource_suffix.hex
-  cluster_name = "${var.project_name}-cluster-${local.suffix}"
+  suffix         = random_id.resource_suffix.hex
+  cluster_name   = "${var.project_name}-cluster-${local.suffix}"
+  log_group_name = "${var.project_name}-server-${local.suffix}-logs"
 }
 
 # Locals for listing subnet name
