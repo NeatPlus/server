@@ -3,6 +3,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import boto3
 import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from django.utils.translation import gettext_lazy as _
@@ -235,33 +236,47 @@ MODELTRANSLATION_PREPOPULATE_LANGUAGE = "en"
 MODELTRANSLATION_AUTO_POPULATE = True
 
 
-# Logging
-ENABLE_SYSLOG = env.bool("ENABLE_SYSLOG", default=False)
+# Cloudwatch based logging
+ENABLE_WATCHTOWER = env.bool("ENABLE_WATCHTOWER", default=False)
 
-if ENABLE_SYSLOG:
+if ENABLE_WATCHTOWER:
+    AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY")
+
+    AWS_CLOUDWATCH_REGION_NAME = env.str("AWS_CLOUDWATCH_REGION_NAME")
+    AWS_LOG_GROUP_NAME = env.str("AWS_LOG_GROUP_NAME")
+
+    logger_boto3_client = boto3.client(
+        "logs",
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        region_name=AWS_CLOUDWATCH_REGION_NAME,
+    )
+
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "formatters": {
-            "simple": {
-                "()": "django.utils.log.ServerFormatter",
-                "format": "[{server_time}] ({levelname}): {message}",
-                "style": "{",
-            },
+        "root": {
+            "level": "DEBUG",
+            "handlers": ["watchtower", "console"],
         },
         "handlers": {
-            "SysLog": {
+            "console": {
+                "class": "logging.StreamHandler",
+            },
+            "watchtower": {
+                "class": "watchtower.CloudWatchLogHandler",
+                "boto3_client": logger_boto3_client,
+                "log_group_name": AWS_LOG_GROUP_NAME,
                 "level": "INFO",
-                "formatter": "simple",
-                "class": "logging.handlers.SysLogHandler",
-                "address": (env.url("SYSLOG_URL"), env.int("SYSLOG_PORT")),
             },
         },
         "loggers": {
             "django": {
-                "handlers": ["SysLog"],
-                "level": "INFO",
-            },
+                "level": "DEBUG",
+                "handlers": ["console"],
+                "propagate": IS_SERVER_SECURE,
+            }
         },
     }
 
