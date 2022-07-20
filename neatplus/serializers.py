@@ -1,8 +1,13 @@
 from ckeditor_uploader.fields import RichTextUploadingField
+from defender import config as defender_config
+from defender import utils as defender_utils
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+from rest_framework import exceptions
 from rest_framework.fields import CharField
 from rest_framework.serializers import ModelSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 CKEDITOR_LOCATION = f"/{settings.MEDIA_LOCATION}/{settings.CKEDITOR_UPLOAD_PATH}"
 ORIGINAL_TEXT = f'src="{CKEDITOR_LOCATION}'
@@ -63,3 +68,52 @@ class RichTextUploadingModelSerializer(UserModelSerializer):
             RichTextUploadingField
         ] = RichTextUploadingSerializerField
         super().__init__(*args, **kwargs)
+
+
+class TokenObtainPairDefenderSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        login_unsuccessful = False
+        login_exception = None
+        request_username = attrs[self.username_field]
+        request = self.context["request"]
+
+        try:
+            data = super().validate(attrs)
+        except exceptions.AuthenticationFailed as error:
+            login_unsuccessful = True
+            attempt_count = defender_utils.get_user_attempts(
+                request, username=request_username
+            )
+            message = _(
+                f"{error}. You have {defender_config.FAILURE_LIMIT-attempt_count-1} attempts remaining"
+            )
+            login_exception = exceptions.AuthenticationFailed(message)
+
+        block_detail_message = _(
+            "You have attempted to login {failure_limit} times with no success. Wait {cooloff_time_seconds} seconds to re login"
+        ).format(
+            failure_limit=defender_config.FAILURE_LIMIT,
+            cooloff_time_seconds=defender_config.COOLOFF_TIME,
+        )
+        block_exception = exceptions.AuthenticationFailed(block_detail_message)
+
+        if defender_utils.is_already_locked(request, username=request_username):
+            raise block_exception
+
+        defender_utils.add_login_attempt_to_db(
+            request,
+            login_valid=not login_unsuccessful,
+            username=request_username,
+        )
+        user_not_blocked = defender_utils.check_request(
+            request,
+            login_unsuccessful=login_unsuccessful,
+            username=request_username,
+        )
+        if user_not_blocked:
+            if login_unsuccessful:
+                raise login_exception
+            else:
+                return data
+        else:
+            raise block_exception

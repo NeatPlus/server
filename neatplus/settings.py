@@ -103,11 +103,12 @@ THIRD_PARTY_APPS = [
     "drf_recaptcha",
     "mptt",
     "oauth2_provider",
+    "defender",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
 
-# Add django extensions to installed app?
+# Add django extensions to installed app is django extension is installed
 if importlib.util.find_spec("django_extensions"):
     INSTALLED_APPS.append("django_extensions")
 
@@ -129,6 +130,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
 ]
+
+
+ENABLE_DEFENDER = env.bool("ENABLE_DEFENDER", default=False)
+
+
+if ENABLE_DEFENDER:
+    MIDDLEWARE += [
+        "defender.middleware.FailedLoginMiddleware",
+    ]
 
 ROOT_URLCONF = "neatplus.urls"
 
@@ -315,6 +325,27 @@ else:
 
 
 # Django rest framework settings
+REST_FRAMEWORK_AUTHENTICATION_CLASSES = [
+    "rest_framework.authentication.SessionAuthentication",
+    "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+]
+
+if ENABLE_DEFENDER:
+    REST_FRAMEWORK_AUTHENTICATION_CLASSES += [
+        "neatplus.authentication.JWTAuthenticationDefender",
+    ]
+else:
+    REST_FRAMEWORK_AUTHENTICATION_CLASSES += [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ]
+
+REST_FRAMEWORK_RENDERER_CLASSES = [
+    "djangorestframework_camel_case.render.CamelCaseJSONRenderer"
+]
+if not IS_SERVER_SECURE:
+    REST_FRAMEWORK_RENDERER_CLASSES += [
+        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer"
+    ]
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": [
@@ -322,11 +353,8 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+    "DEFAULT_RENDERER_CLASSES": REST_FRAMEWORK_RENDERER_CLASSES,
+    "DEFAULT_AUTHENTICATION_CLASSES": REST_FRAMEWORK_AUTHENTICATION_CLASSES,
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
@@ -340,15 +368,6 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-if IS_SERVER_SECURE:
-    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
-        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
-    ]
-else:
-    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
-        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
-        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
-    ]
 
 # OTP settings
 OTP_TOTP_ISSUER = env.str("OTP_TOTP_ISSUER", default="neatplus-server")
@@ -359,6 +378,11 @@ SIMPLE_JWT = {
     "ISSUER": env.str("SIMPLE_JWT_ISSUER", default="neatplus-sever"),
     "REFRESH_TOKEN_LIFETIME": timedelta(weeks=1),
 }
+
+if ENABLE_DEFENDER:
+    SIMPLE_JWT[
+        "TOKEN_OBTAIN_SERIALIZER"
+    ] = "neatplus.serializers.TokenObtainPairDefenderSerializer"
 
 # CORS settings
 CORS_URLS_REGEX = r"^(/api/).*$"
@@ -599,3 +623,11 @@ SILENCED_SYSTEM_CHECKS = [
 
 # Login url for django authentication login required decorator
 LOGIN_URL = "/admin/login/"
+
+if ENABLE_DEFENDER:
+    DEFENDER_LOGIN_FAILURE_LIMIT = 10
+    DEFENDER_BEHIND_REVERSE_PROXY = True
+    DEFENDER_LOCK_OUT_BY_IP_AND_USERNAME = True
+    DEFENDER_COOLOFF_TIME = 60 * 60  # seconds
+    DEFENDER_REDIS_URL = env.str("DEFENDER_REDIS_URL")
+    DEFENDER_USE_CELERY = ENABLE_CELERY
