@@ -48,14 +48,16 @@ OAUTH_PROVIDERS = [
 
 AUTH_USER_REGISTRATION = True
 
-AUTH_ROLES_MAPPING = {"superuser": ["Admin"], "non_superuser": ["Gamma"]}
+AUTH_ROLES_MAPPING = {"superuser": ["Admin"], "non_superuser": ["Alpha"]}
+
+AUTH_ROLES_SYNC_AT_LOGIN = True
 
 
 class CustomSsoSecurityManager(SupersetSecurityManager):
     def oauth_user_info(self, provider, response=None):
         if provider == "neatplus":
             me = self.appbuilder.sm.oauth_remotes[provider].get("user/me").json()
-            user_role = me["isSuperuser"]
+            user_role = me.get("isSuperuser", False)
             if user_role:
                 role_keys = ["superuser"]
             else:
