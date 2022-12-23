@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
+from reversion.admin import VersionAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
@@ -45,9 +46,7 @@ class QuestionGroupAutoCompleteFilter(AutocompleteFilter):
 
 @admin.register(Question)
 class QuestionAdmin(
-    UserStampedModelAdmin,
-    TranslationAdmin,
-    OrderedModelAdmin,
+    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
     list_display = (
         "code",
@@ -72,9 +71,7 @@ class QuestionAdmin(
 
 @admin.register(Option)
 class OptionAdmin(
-    UserStampedModelAdmin,
-    TranslationAdmin,
-    OrderedModelAdmin,
+    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
     list_display = ("code", "title", "question", "move_up_down_links")
     autocomplete_fields = ("question",)
