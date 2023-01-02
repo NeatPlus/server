@@ -1,5 +1,8 @@
 import os
 
+from django.contrib.auth import authenticate as django_authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
@@ -12,6 +15,7 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.authentication import CsrfExemptSessionAuthentication
 from neatplus.utils import gen_random_number, gen_random_string
 from support.models import EmailTemplate
 
@@ -24,6 +28,7 @@ from .serializers import (
     PasswordResetPasswordChangeSerializer,
     PinVerifySerializer,
     PrivateUserSerializer,
+    SessionLoginSerializer,
     UploadImageSerializer,
     UserNameSerializer,
     UserSerializer,
@@ -680,3 +685,54 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         url = request.build_absolute_uri(default_storage.url(saved_file))
         data = {"name": saved_file, "url": url}
         return Response(data)
+
+    @extend_schema(responses={status.HTTP_204_NO_CONTENT, serializers.Serializer})
+    @action(
+        methods=["post"],
+        detail=False,
+        serializer_class=SessionLoginSerializer,
+        permission_classes=[permissions.AllowAny],
+    )
+    def login(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = django_authenticate(request, **serializer.validated_data)
+        if user is None:
+            return Response(
+                {"error": _("Invalid authentication")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if user.is_staff:
+            return Response(
+                {"error": _("Invalid login for staff use django admin login")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        auth_login(request, user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(responses={status.HTTP_204_NO_CONTENT, serializers.Serializer})
+    @action(
+        methods=["post"],
+        detail=False,
+        serializer_class=serializers.Serializer,
+        authentication_classes=[CsrfExemptSessionAuthentication],
+    )
+    def logout(self, request, *args, **kwargs):
+        auth_logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(
+        responses=inline_serializer(
+            name="IsAuthenticatedResponseSerializer",
+            fields={"is_authenticated": serializers.BooleanField()},
+        )
+    )
+    @action(
+        methods=["get"],
+        detail=False,
+        serializer_class=serializers.Serializer,
+        permission_classes=[permissions.AllowAny],
+    )
+    def is_authenticated(self, request, *args, **kwargs):
+        return Response({"is_authenticated": self.request.user.is_authenticated})

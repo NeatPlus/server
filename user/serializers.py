@@ -156,3 +156,8 @@ CurrentlyEnabledUserRegisterSerializer = (
 
 class UploadImageSerializer(serializers.Serializer):
     file = serializers.ImageField()
+
+
+class SessionLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()

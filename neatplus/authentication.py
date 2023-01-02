@@ -2,6 +2,7 @@ from defender import config as defender_config
 from defender import utils as defender_utils
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
@@ -9,8 +10,7 @@ class JWTAuthenticationDefender(JWTAuthentication):
     def authenticate(self, request):
         response = super().authenticate(request)
         if response is None:
-            msg = _("Unable to log in with provided credentials.")
-            raise exceptions.AuthenticationFailed(msg)
+            return None
 
         block_detail_message = _(
             "You have attempted to login {failure_limit} times with no success. Wait {cooloff_time_seconds} seconds to re login"
@@ -37,3 +37,8 @@ class JWTAuthenticationDefender(JWTAuthentication):
             return response
         else:
             raise block_exception
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        pass
