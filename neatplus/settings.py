@@ -104,6 +104,7 @@ THIRD_PARTY_APPS = [
     "mptt",
     "oauth2_provider",
     "defender",
+    "reversion",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS

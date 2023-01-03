@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from ordered_model.admin import OrderedModelAdmin
+from reversion.admin import VersionAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
@@ -54,9 +55,7 @@ class StatementTagAdmin(UserStampedModelAdmin, TranslationAdmin, OrderedModelAdm
 
 @admin.register(Statement)
 class StatementAdmin(
-    UserStampedModelAdmin,
-    TranslationAdmin,
-    OrderedModelAdmin,
+    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
     list_display = (
         "code",
@@ -86,9 +85,7 @@ class StatementFormulaAdmin(UserStampedModelAdmin):
 
 @admin.register(Mitigation)
 class MitigationAdmin(
-    UserStampedModelAdmin,
-    TranslationAdmin,
-    OrderedModelAdmin,
+    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
     list_display = (
         "code",
@@ -109,9 +106,7 @@ class MitigationAdmin(
 
 @admin.register(Opportunity)
 class OpportunityAdmin(
-    UserStampedModelAdmin,
-    TranslationAdmin,
-    OrderedModelAdmin,
+    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
     list_display = (
         "code",
@@ -131,10 +126,7 @@ class OpportunityAdmin(
 
 
 @admin.register(QuestionStatement)
-class QuestionStatementAdmin(
-    UserStampedModelAdmin,
-    OrderedModelAdmin,
-):
+class QuestionStatementAdmin(VersionAdmin, UserStampedModelAdmin, OrderedModelAdmin):
     list_display = (
         "question",
         "statement",
@@ -151,10 +143,7 @@ class QuestionStatementAdmin(
 
 
 @admin.register(OptionStatement)
-class OptionStatementAdmin(
-    UserStampedModelAdmin,
-    OrderedModelAdmin,
-):
+class OptionStatementAdmin(VersionAdmin, UserStampedModelAdmin, OrderedModelAdmin):
     list_display = (
         "option",
         "statement",
