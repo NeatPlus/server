@@ -4,9 +4,9 @@ from defender import utils as defender_utils
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from rest_framework import exceptions
+from drf_spectacular.utils import inline_serializer
+from rest_framework import exceptions, serializers
 from rest_framework.fields import CharField
-from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 CKEDITOR_LOCATION = f"/{settings.MEDIA_LOCATION}/{settings.CKEDITOR_UPLOAD_PATH}"
@@ -15,7 +15,7 @@ ORIGINAL_TEXT = f'src="{CKEDITOR_LOCATION}'
 UserModel = get_user_model()
 
 
-class UserModelSerializer(ModelSerializer):
+class UserModelSerializer(serializers.ModelSerializer):
     def build_relational_field(self, field_name, relation_info):
         if (
             relation_info.related_model == get_user_model()
@@ -25,7 +25,7 @@ class UserModelSerializer(ModelSerializer):
         return super().build_relational_field(field_name, relation_info)
 
 
-class ExcludeUserStampedFieldSerializer(ModelSerializer):
+class ExcludeUserStampedFieldSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         if hasattr(self.Meta, "exclude"):
             excluded_fields = self.Meta.exclude
@@ -62,7 +62,7 @@ class RichTextUploadingSerializerField(CharField):
         return data
 
 
-class RichTextUploadingModelSerializer(UserModelSerializer):
+class RichTextUploadingModelSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.serializer_field_mapping[
             RichTextUploadingField
@@ -117,3 +117,19 @@ class TokenObtainPairDefenderSerializer(TokenObtainPairSerializer):
                 return data
         else:
             raise block_exception
+
+
+def get_detail_inline_serializer(name, content):
+    return inline_serializer(
+        name=name,
+        fields={
+            "detail": serializers.CharField(default=content),
+        },
+    )
+
+
+def get_errors_inline_serializer(name):
+    return inline_serializer(
+        name=name,
+        fields={"errors": serializers.DictField(child=serializers.CharField())},
+    )

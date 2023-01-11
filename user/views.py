@@ -12,6 +12,7 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from neatplus.utils import gen_random_number, gen_random_string
 from support.models import EmailTemplate
 
@@ -68,13 +69,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response(serializer.data)
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ChangePasswordResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Password successfully updated")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ChangePasswordResponseSerializer", _("Password successfully updated")
         )
     )
     @action(
@@ -105,15 +101,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response({"detail": _("Password successfully updated")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="RegisterUserResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_(
-                        "User successfully registered and email send to user's email address"
-                    )
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "RegisterUserResponseSerializer",
+            _("User successfully registered and email send to user's email address"),
         )
     )
     @action(
@@ -156,13 +146,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="PasswordResetResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Password reset email successfully send")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "PasswordResetResponseSerializer",
+            _("Password reset email successfully send"),
         )
     )
     @action(
@@ -287,13 +273,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response({"identifier": password_reset_pin_object_identifier})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="PasswordResetChangeResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Password successfully changed")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "PasswordResetChangeResponseSerializer", _("Password successfully changed")
         )
     )
     @action(
@@ -383,13 +364,9 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response({"detail": _("Password successfully changed")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="EmailConfirmResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Email confirmation mail successfully sent")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "EmailConfirmResponseSerializer",
+            _("Email confirmation mail successfully sent"),
         )
     )
     @action(
@@ -447,13 +424,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response({"detail": _("Email confirmation mail successfully sent")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="EmailConfirmVerifyResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Email successfully confirmed")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "EmailConfirmVerifyResponseSerializer", _("Email successfully confirmed")
         )
     )
     @action(
@@ -526,13 +498,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response({"detail": _("Email successfully confirmed")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="EmailChangeResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Email change mail successfully sent")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "EmailChangeResponseSerializer", _("Email change mail successfully sent")
         )
     )
     @action(
@@ -581,11 +548,8 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response({"detail": _("Email change mail successfully sent")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="EmailChangeVerifyResponseSerializer",
-            fields={
-                "detail": serializers.CharField(default=_("Email successfully changed"))
-            },
+        responses=get_detail_inline_serializer(
+            "EmailChangeVerifyResponseSerializer", _("Email successfully changed")
         )
     )
     @action(

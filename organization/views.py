@@ -1,11 +1,12 @@
 from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from neatplus.views import UserStampedModelViewSetMixin
 from project.models import Project
 from project.serializers import ProjectSerializer
@@ -44,13 +45,9 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="OrganizationProjectCreateResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully created project")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationProjectCreateResponseSerializer",
+            _("Successfully created project"),
         )
     )
     @action(
@@ -75,13 +72,9 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="OrganizationMemberRequestResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully requested member access")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationMemberRequestResponseSerializer",
+            _("Successfully requested member access"),
         )
     )
     @action(
@@ -126,13 +119,8 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
     @extend_schema(
         request=OrganizationUserSerializer(many=True),
-        responses=inline_serializer(
-            name="OrganizationAddUserSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully added all valid users")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationAddUserSerializer", _("Successfully added all valid users")
         ),
     )
     @action(
@@ -167,13 +155,8 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
     @extend_schema(
         request=OrganizationUserSerializer(many=True),
-        responses=inline_serializer(
-            name="OrganizationAddUserSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully removed all valid users")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationAddUserSerializer", _("Successfully removed all valid users")
         ),
     )
     @action(
@@ -223,13 +206,9 @@ class OrganizationMemberRequestViewSet(
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="OrganizationMemberRequestAcceptResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Member request successfully accepted")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationMemberRequestAcceptResponseSerializer",
+            _("Member request successfully accepted"),
         )
     )
     @action(
@@ -247,13 +226,9 @@ class OrganizationMemberRequestViewSet(
         return Response({"detail": _("Member request successfully accepted")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="OrganizationMemberRequestRejectResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Member request successfully rejected")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "OrganizationMemberRequestRejectResponseSerializer",
+            _("Member request successfully rejected"),
         )
     )
     @action(

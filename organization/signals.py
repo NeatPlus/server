@@ -16,7 +16,7 @@ def send_organization_acceptance_change_mail(sender, instance, created, **kwargs
             email = EmailTemplate.objects.get(identifier="reject_organization")
         else:
             return
-        for admin in instance.admins.all():
+        for admin in instance.admins.all().distinct():
             subject, html_message, text_message = email.get_email_contents(
                 {"organization": instance, "admin": admin}
             )
@@ -34,7 +34,7 @@ def send_new_member_request_organization_admin(sender, instance, created, **kwar
     if created or "status" in kwargs["update_fields"]:
         if not created and instance.status != "pending":
             return
-        for admin in instance.organization.admins.all():
+        for admin in instance.organization.admins.all().distinct():
             subject, html_message, text_message = EmailTemplate.objects.get(
                 identifier="new_member_request"
             ).get_email_contents({"admin": admin, "member_request": instance})

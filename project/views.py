@@ -1,11 +1,12 @@
 from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from neatplus.views import UserStampedModelViewSetMixin
 from organization.models import Organization
 from summary.models import SurveyResult
@@ -73,13 +74,8 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ProjectAcceptResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Project successfully accepted")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ProjectAcceptResponseSerializer", _("Project successfully accepted")
         )
     )
     @action(
@@ -97,13 +93,8 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Response({"detail": _("Project successfully accepted")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ProjectRejectResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Project successfully rejected")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ProjectRejectResponseSerializer", _("Project successfully rejected")
         )
     )
     @action(
@@ -122,13 +113,9 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
     @extend_schema(
         request=UpsertProjectUserSerializer(many=True),
-        responses=inline_serializer(
-            name="ProjectUpsertResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully modified users list for project")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ProjectUpsertResponseSerializer",
+            _("Successfully modified users list for project"),
         ),
     )
     @action(
@@ -168,13 +155,9 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
     @extend_schema(
         request=RemoveProjectUserSerializer(many=True),
-        responses=inline_serializer(
-            name="ProjectRemoveUserResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully removed users from project")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ProjectRemoveUserResponseSerializer",
+            _("Successfully removed users from project"),
         ),
     )
     @action(
@@ -232,13 +215,8 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ProjectSurveySubmitResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully submitted survey")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ProjectSurveySubmitResponseSerializer", _("Successfully submitted survey")
         )
     )
     @action(

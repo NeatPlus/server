@@ -35,7 +35,7 @@ class ResourceSerializer(UserModelSerializer):
         fields = "__all__"
 
 
-class ActionSerializer(RichTextUploadingModelSerializer):
+class ActionSerializer(RichTextUploadingModelSerializer, UserModelSerializer):
     context_title = serializers.SerializerMethodField()
 
     class Meta:

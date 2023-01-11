@@ -5,9 +5,9 @@ import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import neatplus.auth_validators
 import neatplus.fields
-import neatplus.managers
+import user.auth_validators
+import user.managers
 
 
 class Migration(migrations.Migration):
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('username', neatplus.fields.LowerCharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. Length can be between 5 to 20. Letters, digits and ./-/_ only.', max_length=20, unique=True, validators=[neatplus.auth_validators.CustomASCIIUsernameValidator(), django.core.validators.MinLengthValidator(limit_value=5)], verbose_name='username')),
+                ('username', neatplus.fields.LowerCharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. Length can be between 5 to 20. Letters, digits and ./-/_ only.', max_length=20, unique=True, validators=[user.auth_validators.CustomASCIIUsernameValidator(), django.core.validators.MinLengthValidator(limit_value=5)], verbose_name='username')),
                 ('email', neatplus.fields.LowerEmailField(error_messages={'unique': 'A user with that email already exists.'}, max_length=254, unique=True, verbose_name='email address')),
                 ('is_active', models.BooleanField(default=False, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             managers=[
-                ('objects', neatplus.managers.CustomUserManager()),
+                ('objects', user.managers.CustomUserManager()),
             ],
         ),
         migrations.CreateModel(
