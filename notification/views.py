@@ -1,9 +1,11 @@
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from neatplus.serializers import get_detail_inline_serializer
 
 from .filters import NoticeFilter, NotificationFilter
 from .models import Notice, Notification
@@ -46,13 +48,9 @@ class NotificationViewSet(
         return Response(serializer.data)
 
     @extend_schema(
-        responses=inline_serializer(
-            name="MarkAllAsReadResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully marked all notification as read")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "MarkAllAsReadResponseSerializer",
+            _("Successfully marked all notification as read"),
         )
     )
     @action(detail=False, methods=["post"], serializer_class=serializers.Serializer)
@@ -66,13 +64,8 @@ class NotificationViewSet(
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="MarkAsReadResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully marked as read")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "MarkAsReadResponseSerializer", _("Successfully marked as read")
         )
     )
     @action(detail=True, methods=["post"], serializer_class=serializers.Serializer)

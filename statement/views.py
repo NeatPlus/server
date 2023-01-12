@@ -3,11 +3,12 @@ from ensurepip import version
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from neatplus.views import UserStampedModelViewSetMixin
 
 from .filters import (
@@ -72,13 +73,9 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = StatementFilter
 
     @extend_schema(
-        responses=inline_serializer(
-            name="UploadWeightageResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully uploaded weightage for statement")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "UploadWeightageResponseSerializer",
+            _("Successfully uploaded weightage for statement"),
         )
     )
     @action(
@@ -154,13 +151,8 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ActivateVersionResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully activate new version")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ActivateVersionResponseSerializer", _("Successfully activate new version")
         )
     )
     @action(
@@ -219,13 +211,9 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Response({"detail": _("Successfully activate new version")})
 
     @extend_schema(
-        responses=inline_serializer(
-            name="ActivateDraftVersionResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully activate draft version")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "ActivateDraftVersionResponseSerializer",
+            _("Successfully activate draft version"),
         )
     )
     @action(

@@ -6,10 +6,10 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from neatplus.auth_validators import CustomASCIIUsernameValidator
 from neatplus.fields import LowerCharField, LowerEmailField
-from neatplus.managers import CustomUserManager
 from neatplus.models import TimeStampedModel
+from user.auth_validators import CustomASCIIUsernameValidator
+from user.managers import CustomUserManager
 
 from .tasks import send_user_mail
 
@@ -107,14 +107,17 @@ class User(AbstractUser):
 
         Use '{actor} {verb} {action_object(optional)} on {target(optional)}' as description if description is not provided
         """
-        if not description:
+        if description is None:
             extra_content = ""
             if action_object:
                 extra_content += f" {action_object}"
             if target:
                 extra_content += f" on {target}"
+            description = f"{actor} {verb}{extra_content}"
 
-        description = f"{actor} {verb}{extra_content}"
+        if notification_type is None:
+            notification_type = "default"
+
         NotificationModel = apps.get_model("notification", "Notification")
         NotificationModel.objects.create(
             recipient=self,

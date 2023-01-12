@@ -6,6 +6,7 @@ from rest_framework import mixins, permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from neatplus.utils import gen_random_string
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
@@ -124,9 +125,9 @@ class SurveyViewSet(
             )
 
     @extend_schema(
-        responses=inline_serializer(
-            name="SurveyUnShareLinkResponseSerializer",
-            fields={"detail": _("Successfully unshared survey")},
+        responses=get_detail_inline_serializer(
+            "SurveyUnShareLinkResponseSerializer",
+            _("Successfully unshared survey"),
         )
     )
     @action(
@@ -164,13 +165,8 @@ class SurveyViewSet(
 
     @extend_schema(
         request=WritableSurveyAnswerSerializer(many=True),
-        responses=inline_serializer(
-            name="AddSurveyAnswerResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully added survey answers")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "AddSurveyAnswerResponseSerializer", _("Successfully added survey answers")
         ),
     )
     @action(
@@ -213,13 +209,8 @@ class SurveyViewSet(
 
     @extend_schema(
         request=SurveyResultSerializer(many=True),
-        responses=inline_serializer(
-            name="AddSurveyResultResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully added survey results")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "AddSurveyResultResponseSerializer", _("Successfully added survey results")
         ),
     )
     @action(

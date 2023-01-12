@@ -11,10 +11,6 @@ class QuestionGroupFilter(FilterSet):
 
 
 class QuestionFilter(FilterSet):
-    # Added at 2022-03-23. Added for backward compatibility.
-    # TODO: Remove it after some time if required
-    module = NumberFilter(field_name="group__module", lookup_expr="exact")
-
     class Meta:
         model = Question
         fields = {

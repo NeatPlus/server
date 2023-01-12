@@ -333,7 +333,7 @@ REST_FRAMEWORK_AUTHENTICATION_CLASSES = [
 
 if ENABLE_DEFENDER:
     REST_FRAMEWORK_AUTHENTICATION_CLASSES += [
-        "neatplus.authentication.JWTAuthenticationDefender",
+        "user.authentication.JWTAuthenticationDefender",
     ]
 else:
     REST_FRAMEWORK_AUTHENTICATION_CLASSES += [
@@ -632,3 +632,7 @@ if ENABLE_DEFENDER:
     DEFENDER_COOLOFF_TIME = 60 * 60  # seconds
     DEFENDER_REDIS_URL = env.str("DEFENDER_REDIS_URL")
     DEFENDER_USE_CELERY = ENABLE_CELERY
+
+# Path of gdal and geos
+GDAL_LIBRARY_PATH = env.str("GDAL_LIBRARY_PATH", default=None)
+GEOS_LIBRARY_PATH = env.str("GEOS_LIBRARY_PATH", default=None)

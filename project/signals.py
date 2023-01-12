@@ -16,7 +16,7 @@ def send_new_project_notification_to_admin(sender, instance, created, **kwargs):
             admins = instance.organization.admins.all()
         else:
             admins = User.objects.filter(is_superuser=True)
-        for admin in admins:
+        for admin in admins.distinct():
             subject, html_message, text_message = EmailTemplate.objects.get(
                 identifier="new_project"
             ).get_email_contents({"admin": admin, "project": instance})

@@ -1,11 +1,12 @@
 from django.db import transaction
 from django.db.models import Avg, F, FloatField, Q, StdDev, Sum
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, permissions, serializers, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from neatplus.serializers import get_detail_inline_serializer
 from project.utils import read_allowed_project_for_user
 from summary.permissions import (
     CanAcknowledgeSurveyResultFeedback,
@@ -44,13 +45,9 @@ class SurveyResultViewSet(
 
     @extend_schema(
         request=SurveyResultFeedbackSerializer(many=True),
-        responses=inline_serializer(
-            name="AddSurveyResultFeedbackResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully added survey result feedback")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "AddSurveyResultFeedbackResponseSerializer",
+            _("Successfully added survey result feedback"),
         ),
     )
     @action(
@@ -89,13 +86,9 @@ class SurveyResultViewSet(
 
     @extend_schema(
         request=BaselineSurveyResultFeedbackSerializer(many=True),
-        responses=inline_serializer(
-            name="AddBaselineSurveyResultFeedbackResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully added baseline survey result feedback")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "AddBaselineSurveyResultFeedbackResponseSerializer",
+            _("Successfully added baseline survey result feedback"),
         ),
     )
     @action(
@@ -157,13 +150,9 @@ class SurveyResultFeedbackViewSet(
         ).select_related("survey_result__survey")
 
     @extend_schema(
-        responses=inline_serializer(
-            name="AcknowledgeSurveyResultFeedbackResponseSerializer",
-            fields={
-                "detail": serializers.CharField(
-                    default=_("Successfully acknowledged survey result feedback")
-                )
-            },
+        responses=get_detail_inline_serializer(
+            "AcknowledgeSurveyResultFeedbackResponseSerializer",
+            _("Successfully acknowledged survey result feedback"),
         ),
     )
     @action(
