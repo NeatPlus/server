@@ -1,10 +1,17 @@
 from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from import_export import resources
+from import_export.admin import ExportMixin
 
 from neatplus.admin import UserStampedModelAdmin
 
 from .models import SurveyResult, SurveyResultFeedback
+
+
+class SurveyResultResource(resources.ModelResource):
+    class Meta:
+        model = SurveyResult
 
 
 class SurveyAutoCompleteFilter(AutocompleteFilter):
@@ -18,11 +25,12 @@ class StatementAutoCompleteFilter(AutocompleteFilter):
 
 
 @admin.register(SurveyResult)
-class SurveyResultAdmin(UserStampedModelAdmin):
+class SurveyResultAdmin(ExportMixin, UserStampedModelAdmin):
     list_display = ("statement", "survey", "module", "question_group", "score")
     autocomplete_fields = ("statement", "survey", "module", "question_group")
     search_fields = ("__str__",)
     list_filter = (SurveyAutoCompleteFilter, StatementAutoCompleteFilter)
+    resource_classes = (SurveyResultResource,)
 
     class Meta:
         verbose_name = _("survey result")
