@@ -105,6 +105,7 @@ THIRD_PARTY_APPS = [
     "oauth2_provider",
     "defender",
     "reversion",
+    "import_export",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
@@ -636,3 +637,8 @@ if ENABLE_DEFENDER:
 # Path of gdal and geos
 GDAL_LIBRARY_PATH = env.str("GDAL_LIBRARY_PATH", default=None)
 GEOS_LIBRARY_PATH = env.str("GEOS_LIBRARY_PATH", default=None)
+
+# import export settings
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+IMPORT_EXPORT_IMPORT_PERMISSION_CODE = "add"
+IMPORT_EXPORT_EXPORT_PERMISSION_CODE = "view"
