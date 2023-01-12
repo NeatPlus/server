@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: container
-        image: amancevice/superset:1.4.1
+        image: amancevice/superset:2.0.1
         ports:
           - containerPort: 8088
         envFrom:

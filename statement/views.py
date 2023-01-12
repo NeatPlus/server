@@ -177,6 +177,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         data = serializer.validated_data
         version = data["version"]
         question_group = data.pop("question_group", None)
+
         if not QuestionStatement.objects.filter(
             version=version, statement=statement, question_group=question_group
         ).exists():
@@ -184,6 +185,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 {"error": _("No question statements found for this version")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         if not OptionStatement.objects.filter(
             version=version, statement=statement, question_group=question_group
         ).exists():
@@ -191,13 +193,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 {"error": _("No option statements found for this version")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if not StatementFormula.objects.filter(
-            version=version, statement=statement, question_group=question_group
-        ).exists():
-            return Response(
-                {"error": _("No statement formulas found for this version")},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+
         with transaction.atomic():
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
@@ -205,18 +201,21 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
             OptionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             OptionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
             StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
         return Response({"detail": _("Successfully activate new version")})
 
     @extend_schema(
@@ -243,6 +242,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         question_group = data.pop("question_group", None)
+
         if not QuestionStatement.objects.filter(
             version="draft", statement=statement, question_group=question_group
         ).exists():
@@ -250,6 +250,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 {"error": _("No question statements found for draft")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         if not OptionStatement.objects.filter(
             version="draft", statement=statement, question_group=question_group
         ).exists():
@@ -257,13 +258,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
                 {"error": _("No option statements found for draft")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if not StatementFormula.objects.filter(
-            version="draft", statement=statement, question_group=question_group
-        ).exists():
-            return Response(
-                {"error": _("No statement formulas found for draft")},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+
         with transaction.atomic():
             # Rename version to date time based version
             QuestionStatement.objects.filter(
@@ -275,6 +270,7 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             StatementFormula.objects.filter(
                 statement=statement, version="draft", question_group=question_group
             ).update(version=version)
+
             # Make all old version inactive and new version active version
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
@@ -282,18 +278,21 @@ class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             QuestionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
             OptionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             OptionStatement.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
             StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).exclude(version=version).update(is_active=False, updated_by=user)
             StatementFormula.objects.filter(
                 statement=statement, question_group=question_group
             ).filter(version=version).update(is_active=True, updated_by=user)
+
         return Response({"detail": _("Successfully activate draft version")})
 
 
