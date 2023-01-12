@@ -1,3 +1,4 @@
+from admin_auto_filters.filters import AutocompleteFilter
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -6,11 +7,22 @@ from neatplus.admin import UserStampedModelAdmin
 from .models import SurveyResult, SurveyResultFeedback
 
 
+class SurveyAutoCompleteFilter(AutocompleteFilter):
+    title = "survey"
+    field_name = "survey"
+
+
+class StatementAutoCompleteFilter(AutocompleteFilter):
+    title = "statement"
+    field_name = "statement"
+
+
 @admin.register(SurveyResult)
 class SurveyResultAdmin(UserStampedModelAdmin):
     list_display = ("statement", "survey", "module", "question_group", "score")
     autocomplete_fields = ("statement", "survey", "module", "question_group")
     search_fields = ("__str__",)
+    list_filter = (SurveyAutoCompleteFilter, StatementAutoCompleteFilter)
 
     class Meta:
         verbose_name = _("survey result")
@@ -18,7 +30,7 @@ class SurveyResultAdmin(UserStampedModelAdmin):
 
 
 @admin.register(SurveyResultFeedback)
-class SurveyResultAdmin(UserStampedModelAdmin):
+class SurveyResultFeedbackAdmin(UserStampedModelAdmin):
     list_display = (
         "survey_result",
         "actual_score",
