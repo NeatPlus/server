@@ -33,11 +33,8 @@ class NotificationViewSet(
         detail=False, methods=["get"], serializer_class=UnReadCountResponseSerializer
     )
     def unread_count(self, request, *args, **kwargs):
-        data = {
-            "unread_count": Notification.objects.filter(
-                recipient=self.request.user, has_read=False
-            ).count()
-        }
+        queryset = self.filter_queryset(self.get_queryset().filter(has_read=False))
+        data = {"unread_count": queryset.count()}
         serializer = self.get_serializer(data=data)
 
         if not serializer.is_valid():
@@ -55,9 +52,8 @@ class NotificationViewSet(
     )
     @action(detail=False, methods=["post"], serializer_class=serializers.Serializer)
     def mark_all_as_read(self, request, *args, **kwargs):
-        Notification.objects.filter(recipient=self.request.user, has_read=False).update(
-            has_read=True, modified_at=timezone.now()
-        )
+        queryset = self.filter_queryset(self.get_queryset().filter(has_read=False))
+        queryset.update(has_read=True, modified_at=timezone.now())
         return Response(
             {"detail": _("Successfully marked all notification as read")},
             status=status.HTTP_200_OK,
@@ -71,9 +67,9 @@ class NotificationViewSet(
     @action(detail=True, methods=["post"], serializer_class=serializers.Serializer)
     def mark_as_read(self, request, pk=None, *args, **kwargs):
         notification = self.get_object()
-        Notification.objects.filter(pk=notification.pk).update(
-            has_read=True, modified_at=timezone.now()
-        )
+        notification.has_read = True
+        notification.modified_at = timezone.now()
+        notification.save()
         return Response({"detail": _("Successfully marked as read")})
 
 

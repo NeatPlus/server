@@ -56,7 +56,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         q_filter = Q(organization__in=admin_organizations)
         if user.is_superuser:
             q_filter = q_filter | Q(organization__isnull=True)
-        projects = self.get_queryset().filter(q_filter)
+        projects = self.filter_queryset(self.get_queryset()).filter(q_filter)
         serializer = self.get_serializer(projects, many=True)
         return Response(serializer.data)
 
