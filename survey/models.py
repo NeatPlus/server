@@ -72,8 +72,8 @@ class Option(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         related_name="options",
         verbose_name=_("question"),
     )
-    mitigation = models.JSONField(_("mitigations"), blank=True)
-    opportunity = models.JSONField(_("opportunities"), blank=True)
+    mitigation = models.JSONField(_("mitigations"), blank=True, default=list)
+    opportunity = models.JSONField(_("opportunities"), blank=True, default=list)
 
     def __str__(self):
         return self.code + "-" + self.title
@@ -90,7 +90,7 @@ class Survey(UserStampedModel, TimeStampedModel, OrderedModel):
         related_name="surveys",
         verbose_name=_("project"),
     )
-    config = models.JSONField(_("config"), default=dict)
+    config = models.JSONField(_("config"), blank=True, default=dict)
     is_shared_publicly = models.BooleanField(_("shared publicly"), default=False)
     shared_link_identifier = models.CharField(
         _("shared link identifier"),
