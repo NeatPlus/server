@@ -72,8 +72,8 @@ class Option(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         related_name="options",
         verbose_name=_("question"),
     )
-    mitigation = models.JSONField(_("mitigations"))
-    opportunity = models.JSONField(_("opportunities"))
+    mitigation = models.JSONField(_("mitigations"), blank=True)
+    opportunity = models.JSONField(_("opportunities"), blank=True)
 
     def __str__(self):
         return self.code + "-" + self.title
