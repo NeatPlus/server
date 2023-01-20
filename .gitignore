@@ -29,3 +29,6 @@ kubernetes/**/*.env
 !kubernetes/**/*.example.env
 kubernetes/**/kustomization.yml
 kubernetes/**/kustomization.yaml
+
+# Mac related
+.DS_Store

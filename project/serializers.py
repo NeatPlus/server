@@ -20,6 +20,7 @@ class ProjectSerializer(UserModelSerializer):
     created_by = UserSerializer(read_only=True)
     organization_title = serializers.SerializerMethodField(read_only=True)
     is_admin_or_owner = serializers.SerializerMethodField(read_only=True)
+    surveys_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Project
@@ -37,6 +38,9 @@ class ProjectSerializer(UserModelSerializer):
             return is_created_by or current_user in obj.organization.admins.all()
         else:
             return is_created_by
+
+    def get_surveys_count(self, obj):
+        return obj.surveys.count()
 
     def validate(self, attrs):
         data = super().validate(attrs)

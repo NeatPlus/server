@@ -42,5 +42,5 @@ class SurveyResultFeedbackAdmin(UserStampedModelAdmin):
     autocomplete_fields = ("survey_result",)
 
     class Meta:
-        verbose_name = _("survey result feeback")
+        verbose_name = _("survey result feedback")
         verbose_plural_name = _("survey result feedbacks")
