@@ -32,6 +32,9 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     filterset_class = OrganizationFilter
     permission_classes = [IsOrganizationAdminOrReadOnly]
     serializer_class = OrganizationSerializer
+    search_fields = [
+        "title",
+    ]
 
     def get_queryset(self):
         authenticated_user = self.request.user

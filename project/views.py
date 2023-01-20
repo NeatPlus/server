@@ -35,13 +35,16 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
     permission_classes = [CanEditProjectOrReadOnly]
     filterset_class = ProjectFilter
     serializer_class = ProjectSerializer
+    search_fields = [
+        "title",
+    ]
 
     def get_queryset(self):
         current_user = self.request.user
         return (
             read_allowed_project_for_user(current_user)
             .select_related("created_by")
-            .prefetch_related("organization__admins")
+            .prefetch_related("organization__admins", "surveys")
         )
 
     @action(
