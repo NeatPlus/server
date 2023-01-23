@@ -47,7 +47,7 @@ class SurveyResult(UserStampedModel, TimeStampedModel):
         permissions = [("add_baseline_feedback", _("Can add baseline feedback"))]
 
     def __str__(self):
-        return str(self.statement) + str(self.survey) + str(self.module)
+        return self.statement.code + "-" + str(self.survey) + "-" + str(self.module)
 
     def save(self, *args, **kwargs):
         if self.pk:
