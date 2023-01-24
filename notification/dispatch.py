@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db.models.query import QuerySet
 from django.utils import timezone
 
+from .models import Notification
+
 UserModel = get_user_model()
 
 
@@ -9,7 +11,7 @@ def notification(
     user,
     actor,
     verb,
-    notification_type=None,
+    notification_type=Notification.notification_type.default,
     timestamp=timezone.now(),
     action_object=None,
     target=None,

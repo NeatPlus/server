@@ -25,7 +25,7 @@ jobs:
 
       - name: Build image
         run: |
-          docker build . --file Dockerfile --tag server --target production --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $(echo $IMAGE_ID | tr '[A-Z]' '[a-z]'):latest
+          docker build . --file Dockerfile --tag server --target production --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $(echo $IMAGE_ID | tr '[A-Z]' '[a-z]'):develop
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

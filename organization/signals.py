@@ -20,7 +20,7 @@ def send_organization_acceptance_change_mail(sender, instance, created, **kwargs
             subject, html_message, text_message = email.get_email_contents(
                 {"organization": instance, "admin": admin}
             )
-            admin.celery_email_user(subject, text_message, html_message=html_message)
+            admin.email_user(subject, text_message, html_message=html_message)
             admin.notify(
                 instance.updated_by,
                 instance.status,
@@ -38,7 +38,7 @@ def send_new_member_request_organization_admin(sender, instance, created, **kwar
             subject, html_message, text_message = EmailTemplate.objects.get(
                 identifier="new_member_request"
             ).get_email_contents({"admin": admin, "member_request": instance})
-            admin.celery_email_user(subject, text_message, html_message=html_message)
+            admin.email_user(subject, text_message, html_message=html_message)
             admin.notify(
                 instance.created_by,
                 "created",
@@ -62,9 +62,7 @@ def send_member_request_acceptance_change_mail(sender, instance, created, **kwar
             ).get_email_contents({"member_request": instance})
         else:
             return
-        instance.created_by.celery_email_user(
-            subject, text_message, html_message=html_message
-        )
+        instance.created_by.email_user(subject, text_message, html_message=html_message)
         instance.created_by.notify(
             instance.organization,
             instance.status,

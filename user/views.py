@@ -193,7 +193,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ).get_email_contents(
             context={"user": user, "password_reset_object": password_reset_pin_object}
         )
-        user.email_user(subject, text_message, html_message=html_message)
+        user.email_user(subject, text_message, html_message=html_message, delay=False)
         return Response({"detail": _("Password reset email successfully send")})
 
     @extend_schema(
@@ -420,7 +420,7 @@ class UserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ).get_email_contents(
             {"user": user, "email_confirm_object": email_confirm_pin_object}
         )
-        user.email_user(subject, text_message, html_message=html_message)
+        user.email_user(subject, text_message, html_message=html_message, delay=False)
         return Response({"detail": _("Email confirmation mail successfully sent")})
 
     @extend_schema(
