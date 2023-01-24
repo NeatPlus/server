@@ -17,12 +17,21 @@ class StatementAutoCompleteFilter(AutocompleteFilter):
     field_name = "statement"
 
 
+class ModuleAutoCompleteFilter(AutocompleteFilter):
+    title = "module"
+    field_name = "module"
+
+
 @admin.register(SurveyResult)
 class SurveyResultAdmin(ExportCsvMixin, UserStampedModelAdmin):
     list_display = ("statement", "survey", "module", "question_group", "score")
     autocomplete_fields = ("statement", "survey", "module", "question_group")
     search_fields = ("__str__",)
-    list_filter = (SurveyAutoCompleteFilter, StatementAutoCompleteFilter)
+    list_filter = (
+        SurveyAutoCompleteFilter,
+        StatementAutoCompleteFilter,
+        ModuleAutoCompleteFilter,
+    )
     actions = ("export_as_csv",)
 
     class Meta:
