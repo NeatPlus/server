@@ -21,11 +21,11 @@ class UserSerializer(UserModelSerializer):
 class PrivateUserSerializer(UserSerializer):
     email = serializers.EmailField(read_only=True)
     password = serializers.CharField(write_only=True)
+    is_superuser = serializers.BooleanField(read_only=True)
     permissions = serializers.SerializerMethodField(read_only=True)
 
     class Meta(UserSerializer.Meta):
         fields = (
-            "id",
             "username",
             "email",
             "first_name",
