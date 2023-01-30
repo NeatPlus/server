@@ -37,6 +37,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
     filterset_class = ResourceFilter
+    search_fields = ["title", "description"]
 
 
 class ActionViewSet(viewsets.ReadOnlyModelViewSet):

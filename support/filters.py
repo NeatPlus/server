@@ -1,6 +1,8 @@
 from django_filters.rest_framework import FilterSet
 
-from .models import LegalDocument, Resource
+from neatplus.filters import M2MInFilter
+
+from .models import LegalDocument, Resource, ResourceTag
 
 
 class LegalDocumentFilter(FilterSet):
@@ -10,6 +12,12 @@ class LegalDocumentFilter(FilterSet):
 
 
 class ResourceFilter(FilterSet):
+    tags__in = M2MInFilter(
+        queryset=ResourceTag.objects.all(),
+        field_name="tags",
+        distinct=True,
+    )
+
     class Meta:
         model = Resource
         fields = {
