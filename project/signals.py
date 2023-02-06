@@ -20,7 +20,7 @@ def send_new_project_notification_to_admin(sender, instance, created, **kwargs):
             subject, html_message, text_message = EmailTemplate.objects.get(
                 identifier="new_project"
             ).get_email_contents({"admin": admin, "project": instance})
-            admin.celery_email_user(subject, text_message, html_message=html_message)
+            admin.email_user(subject, text_message, html_message=html_message)
             admin.notify(
                 instance.created_by,
                 "created",
@@ -45,11 +45,9 @@ def send_project_acceptance_change_mail(sender, instance, created, **kwargs):
         else:
             return
         context = {"project": instance}
-        instance.created_by.celery_email_user(
-            subject, text_message, html_message=html_message
-        )
+        instance.created_by.email_user(subject, text_message, html_message=html_message)
         instance.created_by.notify(
-            instance.organization,
+            instance.updated_by,
             instance.status,
             action_object=instance,
             notification_type=f"project_{instance.status}",

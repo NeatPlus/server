@@ -27,4 +27,4 @@ def send_email_confiramtion_pin(sender, instance, created, **kwargs):
         ).get_email_contents(
             {"user": instance, "email_confirm_object": email_confirm_object}
         )
-        instance.celery_email_user(subject, text_message, html_message=html_message)
+        instance.email_user(subject, text_message, html_message=html_message)

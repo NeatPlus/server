@@ -11,7 +11,7 @@ from neatplus.models import TimeStampedModel
 from user.auth_validators import CustomASCIIUsernameValidator
 from user.managers import CustomUserManager
 
-from .tasks import send_user_mail
+from .tasks import send_email_address_mail
 
 
 class User(AbstractUser):
@@ -85,7 +85,7 @@ class User(AbstractUser):
         self,
         actor,
         verb,
-        notification_type=None,
+        notification_type,
         timestamp=timezone.now(),
         action_object=None,
         target=None,
@@ -119,6 +119,7 @@ class User(AbstractUser):
             notification_type = "default"
 
         NotificationModel = apps.get_model("notification", "Notification")
+
         NotificationModel.objects.create(
             recipient=self,
             actor_content_object=actor,
@@ -130,13 +131,15 @@ class User(AbstractUser):
             target_content_object=target,
         )
 
-    def celery_email_user(self, subject, message, from_email=None, **kwargs):
-        if settings.ENABLE_CELERY:
-            send_user_mail.delay(
-                self.pk, subject, message, from_email=from_email, **kwargs
+    def email_user(self, subject, message, from_email=None, delay=True, **kwargs):
+        if settings.ENABLE_CELERY and delay:
+            send_email_address_mail.delay(
+                self.email, subject, message, from_email=from_email, **kwargs
             )
         else:
-            self.email_user(subject, message, from_email=from_email, **kwargs)
+            super(User, self).email_user(
+                subject, message, from_email=from_email, **kwargs
+            )
 
 
 class PasswordResetPin(TimeStampedModel):
