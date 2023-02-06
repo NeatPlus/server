@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-15 05:42+0000\n"
+"POT-Creation-Date: 2023-02-06 11:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,6 @@ msgstr ""
 
 #, python-brace-format
 msgid "{name} accepted"
-msgstr ""
-
-msgid ""
-"Enter a valid username. This value may contain only English letters, "
-"numbers, and ./-/_ characters."
 msgstr ""
 
 msgid "Unable to log in with provided credentials."
@@ -391,9 +386,6 @@ msgstr ""
 msgid "No option statements found for this version"
 msgstr ""
 
-msgid "No statement formulas found for this version"
-msgstr ""
-
 msgid "Successfully activate draft version"
 msgstr ""
 
@@ -403,16 +395,13 @@ msgstr ""
 msgid "No option statements found for draft"
 msgstr ""
 
-msgid "No statement formulas found for draft"
-msgstr ""
-
 msgid "survey result"
 msgstr ""
 
 msgid "survey results"
 msgstr ""
 
-msgid "survey result feeback"
+msgid "survey result feedback"
 msgstr ""
 
 msgid "survey result feedbacks"
@@ -656,6 +645,11 @@ msgid "Failed to create survey result due to invalid data"
 msgstr ""
 
 msgid "Additional Fields"
+msgstr ""
+
+msgid ""
+"Enter a valid username. This value may contain only English letters, "
+"numbers, and ./-/_ characters."
 msgstr ""
 
 msgid "username"

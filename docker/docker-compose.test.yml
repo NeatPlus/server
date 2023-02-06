@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
       target: testing
       cache_from:
-        - ghcr.io/neatplus/server:latest
+        - ghcr.io/neatplus/server:develop
     volumes:
       - .:/code
     networks:
