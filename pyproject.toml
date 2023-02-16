@@ -59,7 +59,7 @@ isort = "^5.10.1"
 safety = "^2.0.0"
 pre-commit = "^2.20.0"
 django-extensions = "^3.2.0"
-Werkzeug = "^2.0.3"
+Werkzeug = "^2.2.3"
 model-bakery = "^1.6.0"
 
 [tool.poetry.extras]
