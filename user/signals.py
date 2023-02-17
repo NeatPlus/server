@@ -10,7 +10,7 @@ from .models import EmailConfirmationPin
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def send_email_confiramtion_pin(sender, instance, created, **kwargs):
+def send_email_confirmation_pin(sender, instance, created, **kwargs):
     if created:
         six_digit_pin = gen_random_number(6)
         active_for_one_hour = timezone.now() + timezone.timedelta(hours=1)

@@ -53,7 +53,7 @@ watchtower = "^3.0.0"
 django-defender = "^0.9.5"
 django-reversion = "^5.0.4"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^22.6.0"
 isort = "^5.10.1"
 safety = "^2.0.0"

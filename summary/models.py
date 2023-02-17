@@ -88,3 +88,12 @@ class SurveyResultFeedback(UserStampedModel, TimeStampedModel):
         max_length=12, choices=StatusChoice.choices, default=StatusChoice.PENDING
     )
     is_baseline = models.BooleanField(_("baseline"), default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["survey_result"],
+                condition=models.Q(is_baseline=True),
+                name="survey_result_one_baseline",
+            )
+        ]
