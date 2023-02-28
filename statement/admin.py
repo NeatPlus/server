@@ -89,7 +89,6 @@ class MitigationAdmin(
 ):
     list_display = (
         "code",
-        "statement",
         "title",
         "move_up_down_links",
     )
@@ -97,7 +96,7 @@ class MitigationAdmin(
         "code",
         "title",
     )
-    autocomplete_fields = ("statement",)
+    autocomplete_fields = ("statements", "options")
 
     class Meta:
         verbose_name = _("mitigation")
@@ -110,7 +109,6 @@ class OpportunityAdmin(
 ):
     list_display = (
         "code",
-        "statement",
         "title",
         "move_up_down_links",
     )
@@ -118,7 +116,7 @@ class OpportunityAdmin(
         "code",
         "title",
     )
-    autocomplete_fields = ("statement",)
+    autocomplete_fields = ("statements", "options")
 
     class Meta:
         verbose_name = _("opportunity")

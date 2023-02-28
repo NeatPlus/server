@@ -22,9 +22,11 @@ class APITest(FullTestCase):
             questions=questions,
             options=options,
         )
-        cls.mitigation = cls.baker.make("statement.Mitigation", statement=cls.statement)
+        cls.mitigation = cls.baker.make(
+            "statement.Mitigation", statements=[cls.statement], options=options
+        )
         cls.opportunity = cls.baker.make(
-            "statement.Opportunity", statement=cls.statement
+            "statement.Opportunity", statements=[cls.statement], options=options
         )
         cls.question_statement = cls.baker.make(
             "statement.QuestionStatement", version="initial", is_active=True
