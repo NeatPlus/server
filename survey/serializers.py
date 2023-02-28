@@ -43,40 +43,6 @@ class OptionSerializer(UserModelSerializer):
         model = Option
         fields = "__all__"
 
-    def validate_mitigation(self, value):
-        if type(value) != list:
-            raise serializers.ValidationError(
-                _("Invalid mitigations field expect list")
-            )
-        for data in value:
-            if type(data) != dict:
-                raise serializers.ValidationError(
-                    _("list must contains dictionary as its value")
-                )
-            title = data.get("title", None)
-            if type(title) != str:
-                raise serializers.ValidationError(
-                    _("title field should be present with string value for dictionary")
-                )
-        return value
-
-    def validate_opportunity(self, value):
-        if type(value) != list:
-            raise serializers.ValidationError(
-                _("Invalid opportunities field expect list")
-            )
-        for data in value:
-            if type(data) != dict:
-                raise serializers.ValidationError(
-                    _("list must contains dictionary as its value")
-                )
-            title = data.get("title", None)
-            if type(title) != str:
-                raise serializers.ValidationError(
-                    _("title field should be present with string value for dictionary")
-                )
-        return value
-
 
 class SurveySerializer(UserModelSerializer):
     class Meta:
