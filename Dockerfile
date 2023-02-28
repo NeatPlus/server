@@ -29,9 +29,6 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 # install virtualenv
 RUN pip install -U virtualenv
 
-# Add gis ppa
-RUN add-apt-repository ppa:ubuntugis/ppa -y
-
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://install.python-poetry.org | python
 

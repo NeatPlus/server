@@ -333,7 +333,7 @@ REST_FRAMEWORK_AUTHENTICATION_CLASSES = [
 
 if ENABLE_DEFENDER:
     REST_FRAMEWORK_AUTHENTICATION_CLASSES += [
-        "user.authentication.JWTAuthenticationDefender",
+        "neatplus.authentication.JWTAuthenticationDefender",
     ]
 else:
     REST_FRAMEWORK_AUTHENTICATION_CLASSES += [

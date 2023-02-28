@@ -94,11 +94,17 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField(_("title"))
-    statement = models.ForeignKey(
+    statements = models.ManyToManyField(
         "Statement",
-        on_delete=models.CASCADE,
         related_name="mitigations",
-        verbose_name=_("statement"),
+        verbose_name=_("statements"),
+        blank=True,
+    )
+    options = models.ManyToManyField(
+        "survey.Option",
+        related_name="mitigations",
+        verbose_name=_("options"),
+        blank=True,
     )
 
     def __str__(self):
@@ -110,18 +116,24 @@ class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
 
 class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField(_("title"))
-    statement = models.ForeignKey(
+    statements = models.ManyToManyField(
         "Statement",
-        on_delete=models.CASCADE,
         related_name="opportunities",
-        verbose_name=_("statement"),
+        verbose_name=_("statements"),
+        blank=True,
+    )
+    options = models.ManyToManyField(
+        "survey.Option",
+        related_name="opportunities",
+        verbose_name=_("options"),
+        blank=True,
     )
 
     def __str__(self):
         return self.code + "-" + self.title
 
     class Meta(OrderedModel.Meta):
-        verbose_name_plural = "Opportunities"
+        verbose_name_plural = "opportunities"
 
 
 class StatementFormula(UserStampedModel, TimeStampedModel):

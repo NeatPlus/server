@@ -47,19 +47,13 @@ class StatementFilter(FilterSet):
 class MitigationFilter(FilterSet):
     class Meta:
         model = Mitigation
-        fields = {
-            "title": ["exact"],
-            "statement": ["exact"],
-        }
+        fields = {"title": ["exact"], "statements": ["exact"], "options": ["exact"]}
 
 
 class OpportunityFilter(FilterSet):
     class Meta:
         model = Opportunity
-        fields = {
-            "title": ["exact"],
-            "statement": ["exact"],
-        }
+        fields = {"title": ["exact"], "statements": ["exact"], "options": ["exact"]}
 
 
 class StatementFormulaFilter(FilterSet):
