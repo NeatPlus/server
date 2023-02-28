@@ -19,7 +19,7 @@ def gen_random_string(length, allowed_chars=RANDOM_STRING_CHARS):
 
 def gen_random_password(
     length=12,
-    allowed_chars="abcdefghjkmnpqrstuvwxyz" + "ABCDEFGHJKLMNPQRSTUVWXYZ" + "23456789",
+    allowed_chars=RANDOM_STRING_CHARS,
     user=None,
 ) -> str:
     random_password = gen_random_string(length, allowed_chars)
