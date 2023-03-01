@@ -1,11 +1,13 @@
 from django.test import RequestFactory
 from django.urls import reverse as django_reverse
 from model_bakery import baker, random_gen
+from rest_flex_fields import EXPAND_PARAM, WILDCARD_VALUES
 from rest_framework import status
 from rest_framework.test import APILiveServerTestCase, APITestCase
 
 
 class FullTestCase(APITestCase, APILiveServerTestCase):
+
     fixtures = ["support/content/email.yaml"]
 
     baker = baker
@@ -34,10 +36,14 @@ class FullTestCase(APITestCase, APILiveServerTestCase):
         params=None,
     ):
         url = django_reverse(viewname, urlconf, args, kwargs, current_app)
-        if params:
-            extra_params = []
-            for key, value in params.items():
-                extra_params.append(f"{key}={value}")
-            param = "&".join(extra_params)
-            url = f"{url}?{param}"
+        if params is None:
+            params = {}
+        if EXPAND_PARAM not in params and not url.startswith("/admin"):
+            if WILDCARD_VALUES:
+                params[EXPAND_PARAM] = WILDCARD_VALUES[0]
+        extra_paths = []
+        for key, value in params.items():
+            extra_paths.append(f"{key}={value}")
+        query_string = "&".join(extra_paths)
+        url = f"{url}?{query_string}"
         return url

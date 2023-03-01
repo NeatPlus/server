@@ -1,15 +1,13 @@
-from ensurepip import version
-
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from neatplus.serializers import get_detail_inline_serializer
-from neatplus.views import UserStampedModelViewSetMixin
+from neatplus.views import RetrieveRelatedObjectMixin, UserStampedModelViewSetMixin
 
 from .filters import (
     MitigationFilter,
@@ -67,10 +65,15 @@ class StatementTagViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = StatementTagFilter
 
 
-class StatementViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
+class StatementViewSet(
+    RetrieveRelatedObjectMixin, UserStampedModelViewSetMixin, viewsets.ModelViewSet
+):
     serializer_class = StatementSerializer
-    queryset = Statement.objects.all()
     filterset_class = StatementFilter
+    expand_prefetch_fields = ["mitigations", "opportunities"]
+
+    def get_queryset(self):
+        return self.retrieve_related_objects(Statement.objects.all())
 
     @extend_schema(
         responses=get_detail_inline_serializer(
