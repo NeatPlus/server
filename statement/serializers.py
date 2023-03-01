@@ -1,3 +1,4 @@
+from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 
 from context.models import Module
@@ -35,10 +36,14 @@ class StatementTagSerializer(UserModelSerializer):
         fields = "__all__"
 
 
-class StatementSerializer(UserModelSerializer):
+class StatementSerializer(UserModelSerializer, FlexFieldsModelSerializer):
     class Meta:
         model = Statement
         fields = "__all__"
+        expandable_fields = {
+            "mitigations": ("statement.MitigationSerializer", {"many": True}),
+            "opportunities": ("statement.OpportunitySerializer", {"many": True}),
+        }
 
 
 class MitigationSerializer(UserModelSerializer):
