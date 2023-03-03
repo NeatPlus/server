@@ -18,7 +18,7 @@ class UserStampedModelViewSetMixin(
 
 
 class RetrieveRelatedObjectMixin:
-    def retrieve_related_objects(self, queryset):
+    def fetch_related_objects(self, queryset):
         if self.action == "list":
             expand_params = self.request.query_params.get(EXPAND_PARAM, "").split(",")
             wildcard_present = any(value in expand_params for value in WILDCARD_VALUES)

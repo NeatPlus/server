@@ -73,7 +73,9 @@ class StatementViewSet(
     expand_prefetch_fields = ["mitigations", "opportunities"]
 
     def get_queryset(self):
-        return self.retrieve_related_objects(Statement.objects.all())
+        return self.fetch_related_objects(
+            Statement.objects.all().defer("questions", "options")
+        )
 
     @extend_schema(
         responses=get_detail_inline_serializer(

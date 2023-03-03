@@ -92,6 +92,19 @@ class Statement(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         pass
 
 
+class PriorityTypeChoice(models.TextChoices):
+    HIGH = "high", _("High")
+    MEDIUM = "medium", _("Medium")
+    LOW = "low", _("Low")
+
+
+class ImplementorTypeChoice(models.TextChoices):
+    LOCAL = "local", _("Local")
+    REGIONAL = "regional", _("Regional")
+    HQ = "hq", _("HQ")
+    ALL = "all", _("All")
+
+
 class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField(_("title"))
     statements = models.ManyToManyField(
@@ -106,6 +119,23 @@ class Mitigation(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         verbose_name=_("options"),
         blank=True,
     )
+    priority = models.CharField(
+        _("priority"),
+        max_length=6,
+        choices=PriorityTypeChoice.choices,
+        null=True,
+        blank=True,
+        default=None,
+    )
+    implementor = models.CharField(
+        _("implementor"),
+        max_length=8,
+        choices=ImplementorTypeChoice.choices,
+        null=True,
+        blank=True,
+        default=None,
+    )
+    rank = models.PositiveIntegerField(_("rank"), null=True, blank=True, default=None)
 
     def __str__(self):
         return self.code + "-" + self.title
@@ -128,6 +158,23 @@ class Opportunity(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
         verbose_name=_("options"),
         blank=True,
     )
+    priority = models.CharField(
+        _("priority"),
+        max_length=6,
+        choices=PriorityTypeChoice.choices,
+        null=True,
+        blank=True,
+        default=None,
+    )
+    implementor = models.CharField(
+        _("implementor"),
+        max_length=8,
+        choices=ImplementorTypeChoice.choices,
+        null=True,
+        blank=True,
+        default=None,
+    )
+    rank = models.PositiveIntegerField(_("rank"), null=True, blank=True, default=None)
 
     def __str__(self):
         return self.code + "-" + self.title

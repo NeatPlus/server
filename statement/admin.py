@@ -90,6 +90,9 @@ class MitigationAdmin(
     list_display = (
         "code",
         "title",
+        "priority",
+        "implementor",
+        "rank",
         "move_up_down_links",
     )
     search_fields = (
@@ -110,6 +113,9 @@ class OpportunityAdmin(
     list_display = (
         "code",
         "title",
+        "priority",
+        "implementor",
+        "rank",
         "move_up_down_links",
     )
     search_fields = (
