@@ -39,7 +39,7 @@ class StatementTagSerializer(UserModelSerializer):
 class StatementSerializer(UserModelSerializer, FlexFieldsModelSerializer):
     class Meta:
         model = Statement
-        fields = "__all__"
+        exclude = ("questions", "options")
         expandable_fields = {
             "mitigations": ("statement.MitigationSerializer", {"many": True}),
             "opportunities": ("statement.OpportunitySerializer", {"many": True}),
