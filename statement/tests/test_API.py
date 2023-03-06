@@ -8,8 +8,10 @@ class APITest(FullTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        questions = cls.baker.make("survey.Question", _quantity=3)
-        options = cls.baker.make("survey.Option", _quantity=3)
+        cls.questions = cls.baker.make("survey.Question", _quantity=3)
+        cls.options = cls.baker.make(
+            "survey.Option", question=cls.questions[0], _quantity=3
+        )
         statement_topic = cls.baker.make("statement.StatementTopic")
         statement_tag_group = cls.baker.make("statement.StatementTagGroup")
         statement_tag = cls.baker.make(
@@ -19,21 +21,25 @@ class APITest(FullTestCase):
             "statement.Statement",
             topic=statement_topic,
             tags=[statement_tag],
-            questions=questions,
-            options=options,
+            questions=cls.questions,
+            options=cls.options,
         )
         cls.mitigation = cls.baker.make(
-            "statement.Mitigation", statements=[cls.statement], options=options
+            "statement.Mitigation", statements=[cls.statement], options=cls.options
         )
         cls.opportunity = cls.baker.make(
-            "statement.Opportunity", statements=[cls.statement], options=options
+            "statement.Opportunity", statements=[cls.statement], options=cls.options
         )
         cls.question_statement = cls.baker.make(
-            "statement.QuestionStatement", version="initial", is_active=True
+            "statement.QuestionStatement",
+            version="initial",
+            is_active=True,
+            question=cls.questions[0],
         )
         cls.option_statement = cls.baker.make(
             "statement.OptionStatement",
             statement=cls.question_statement.statement,
+            option=cls.options[0],
             version="initial",
             is_active=True,
         )
@@ -218,14 +224,13 @@ class APITest(FullTestCase):
         )
         self.client.force_authenticate(user)
         statement = self.question_statement.statement
-        module = self.baker.make("context.Module")
         url = self.reverse(
             "statement-upload-weightage",
             kwargs={"version": "v1", "pk": statement.pk},
         )
         data = {
             "question_group": None,
-            "module": module.pk,
+            "module": self.question_statement.question.group.module.pk,
             "questions": [
                 {
                     "question": self.question_statement.question.pk,
@@ -246,22 +251,22 @@ class APITest(FullTestCase):
         )
         self.assertTrue(
             QuestionStatement.objects.filter(
-                question=self.question_statement.question.pk,
-                statement=statement.pk,
+                question=self.question_statement.question,
+                statement=statement,
                 version="draft",
             ).exists()
         )
         self.assertTrue(
             OptionStatement.objects.filter(
-                option=self.option_statement.option.pk,
-                statement=statement.pk,
+                option=self.option_statement.option,
+                statement=statement,
                 version="draft",
             ).exists()
         )
         self.assertTrue(
             StatementFormula.objects.filter(
-                module=module.pk,
-                statement=statement.pk,
+                module=self.question_statement.question.group.module,
+                statement=statement,
                 version="draft",
             ).exists()
         )
@@ -277,13 +282,17 @@ class APITest(FullTestCase):
             kwargs={"version": "v1", "pk": statement.pk},
         )
         version = self.baker.random_gen.gen_string(max_length=255)
-        self.baker.make(
-            "statement.QuestionStatement", statement=statement, version=version
+        question_statement = self.baker.make(
+            "statement.QuestionStatement",
+            statement=statement,
+            version=version,
+            question=self.questions[0],
         )
         self.baker.make(
             "statement.OptionStatement",
             statement=statement,
             version=version,
+            option=self.options[0],
         )
         self.baker.make(
             "statement.StatementFormula", statement=statement, version=version
@@ -292,6 +301,7 @@ class APITest(FullTestCase):
             url,
             data={
                 "version": version,
+                "module": question_statement.question.group.module.pk,
             },
             format="json",
         )
@@ -309,18 +319,26 @@ class APITest(FullTestCase):
             "statement-activate-draft-version",
             kwargs={"version": "v1", "pk": statement.pk},
         )
-        self.baker.make(
-            "statement.QuestionStatement", statement=statement, version="draft"
+        question_statement = self.baker.make(
+            "statement.QuestionStatement",
+            statement=statement,
+            version="draft",
+            question=self.questions[0],
         )
         self.baker.make(
             "statement.OptionStatement",
             statement=statement,
             version="draft",
+            option=self.options[0],
         )
         self.baker.make(
             "statement.StatementFormula", statement=statement, version="draft"
         )
-        response = self.client.post(url, format="json", data={})
+        response = self.client.post(
+            url,
+            data={"module": question_statement.question.group.module.pk},
+            format="json",
+        )
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )

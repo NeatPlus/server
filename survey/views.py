@@ -1,15 +1,19 @@
+from collections import Counter, defaultdict
+
 from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import mixins, permissions, serializers, status, viewsets
+from rest_framework import mixins, permissions, serializers, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from context.models import Module
 from neatplus.serializers import get_detail_inline_serializer
 from neatplus.utils import gen_random_string
 from neatplus.views import UserStampedModelViewSetMixin
 from project.utils import read_allowed_project_for_user
+from statement.models import Mitigation, Opportunity
 from summary.models import SurveyResult
 from summary.serializers import SurveyResultSerializer
 
@@ -17,6 +21,7 @@ from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFil
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
 from .permissions import CanWriteSurvey, CanWriteSurveyOrReadOnly
 from .serializers import (
+    MitigationOpportunityInsightSerializer,
     OptionSerializer,
     QuestionGroupSerializer,
     QuestionSerializer,
@@ -273,3 +278,124 @@ class SurveyAnswerViewSet(
             Q(project__in=projects) | Q(created_by=current_user)
         )
         return SurveyAnswer.objects.filter(survey__in=surveys)
+
+
+class MitigationOpportunityInsightAPIView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        survey_id = self.request.query_params.get("survey")
+        module_id = self.request.query_params.get("module")
+
+        if not survey_id:
+            return Response(
+                {"error": _("Missing survey")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not module_id:
+            return Response(
+                {"error": _("Missing module")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        survey = Survey.objects.filter(id=survey_id).first()
+        if not survey:
+            return Response(
+                {"error": _("Invalid survey id")}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        module = Module.objects.filter(id=module_id).first()
+        if not module:
+            return Response(
+                {"error": _("Invalid module id")}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        mitigation_counter = Counter()
+        submitted_answer_mitigations = defaultdict(float)
+        for mitigation in Mitigation.objects.filter(
+            options__survey_answers__survey=survey
+        ):
+            if mitigation.rank:
+                submitted_answer_mitigations[mitigation.id] += 1 / mitigation.rank
+                mitigation_counter[mitigation.id] += 1
+        mitigation_score = SurveyResult.objects.filter(
+            module=module,
+            survey=survey,
+            statement__options__mitigations__isnull=False,
+        ).values_list("statement__options__mitigations", "score")
+        mitigation_scores = {}
+        for mitigation, score in mitigation_score:
+            if mitigation in submitted_answer_mitigations:
+                old_score = mitigation_scores.get(
+                    mitigation, submitted_answer_mitigations[mitigation]
+                )
+                mitigation_scores[mitigation] = old_score + score
+                mitigation_counter[mitigation] += 1
+        important_mitigation = sorted(
+            mitigation_scores, key=mitigation_scores.get, reverse=True
+        )[:20]
+        repeated_mitigation = [
+            i[0]
+            for i in mitigation_counter.most_common(25)
+            if i[0] not in important_mitigation
+        ][:5]
+        mitigation_dict = {
+            "important": Mitigation.objects.filter(
+                id__in=important_mitigation
+            ).values_list("title", flat=True),
+            "repeated": Mitigation.objects.filter(
+                id__in=repeated_mitigation
+            ).values_list("title", flat=True),
+        }
+
+        opportunity_counter = Counter()
+        submitted_answer_opportunities = defaultdict(float)
+        for opportunity in Opportunity.objects.filter(
+            options__survey_answers__survey=survey
+        ):
+            if opportunity.rank:
+                submitted_answer_opportunities[opportunity.id] += 1 / opportunity.rank
+                opportunity_counter[opportunity.id] += 1
+        opportunity_score = SurveyResult.objects.filter(
+            module=module,
+            survey=survey,
+            statement__options__opportunities__isnull=False,
+        ).values_list("statement__options__opportunities", "score")
+        opportunity_scores = {}
+        for opportunity, score in opportunity_score:
+            if opportunity in submitted_answer_opportunities:
+                old_score = opportunity_scores.get(
+                    opportunity, submitted_answer_opportunities[opportunity]
+                )
+                opportunity_scores[opportunity] = old_score + score
+                opportunity_counter[opportunity] += 1
+        important_opportunity = sorted(
+            opportunity_scores, key=opportunity_scores.get, reverse=True
+        )[:20]
+        repeated_opportunity = [
+            i[0]
+            for i in opportunity_counter.most_common(25)
+            if i[0] not in important_opportunity
+        ][:5]
+        opportunity_dict = {
+            "important": Opportunity.objects.filter(
+                id__in=important_opportunity
+            ).values_list("title", flat=True),
+            "repeated": Opportunity.objects.filter(
+                id__in=repeated_opportunity
+            ).values_list("title", flat=True),
+        }
+
+        response = {"mitigations": mitigation_dict, "opportunities": opportunity_dict}
+
+        serializer = MitigationOpportunityInsightSerializer(data=response)
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            serializer.validated_data,
+            status=status.HTTP_200_OK,
+        )

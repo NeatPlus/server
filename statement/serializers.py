@@ -95,9 +95,11 @@ class ActivateVersionSerializer(serializers.Serializer):
     question_group = serializers.PrimaryKeyRelatedField(
         queryset=QuestionGroup.objects.all(), allow_null=True, required=False
     )
+    module = serializers.PrimaryKeyRelatedField(queryset=Module.objects.all())
 
 
 class ActivateDraftVersionSerializer(serializers.Serializer):
     question_group = serializers.PrimaryKeyRelatedField(
         queryset=QuestionGroup.objects.all(), allow_null=True, required=False
     )
+    module = serializers.PrimaryKeyRelatedField(queryset=Module.objects.all())

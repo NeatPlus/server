@@ -123,7 +123,9 @@ class SurveyAnswer(UserStampedModel, TimeStampedModel):
     answer_type = models.CharField(
         _("answer type"), max_length=15, choices=AnswerTypeChoices.choices
     )
-    options = models.ManyToManyField("Option", blank=True, verbose_name=_("options"))
+    options = models.ManyToManyField(
+        "Option", blank=True, related_name="survey_answers", verbose_name=_("options")
+    )
 
     class Meta:
         constraints = [

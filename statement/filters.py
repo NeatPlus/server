@@ -110,6 +110,7 @@ class QuestionStatementFilter(FilterSet):
             "question": ["exact"],
             "is_active": ["exact"],
             "question_group": ["exact"],
+            "question__group__module": ["exact"],
         }
 
     def get_version(self, queryset, name, value):
@@ -140,6 +141,7 @@ class OptionStatementFilter(FilterSet):
             "option": ["exact"],
             "is_active": ["exact"],
             "question_group": ["exact"],
+            "option__question__group__module": ["exact"],
         }
 
     def get_version(self, queryset, name, value):

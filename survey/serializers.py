@@ -192,3 +192,13 @@ class WritableSurveySerializer(SurveySerializer):
 class SharedSurveySerializer(SurveySerializer):
     answers = SurveyAnswerSerializer(many=True)
     results = SurveyResultSerializer(many=True)
+
+
+class ImportantRepeatedSerializer(serializers.Serializer):
+    important = serializers.ListField(child=serializers.CharField())
+    repeated = serializers.ListField(child=serializers.CharField())
+
+
+class MitigationOpportunityInsightSerializer(serializers.Serializer):
+    mitigations = ImportantRepeatedSerializer()
+    opportunities = ImportantRepeatedSerializer()
