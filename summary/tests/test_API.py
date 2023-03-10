@@ -18,11 +18,11 @@ class APITest(FullTestCase):
             status="accepted",
         )
         survey = cls.baker.make("survey.Survey", project=project)
-        statement = cls.baker.make("statement.Statement")
+        cls.statement = cls.baker.make("statement.Statement")
         cls.survey_result = cls.baker.make(
             "summary.SurveyResult",
             survey=survey,
-            statement=statement,
+            statement=cls.statement,
         )
         cls.survey_result_feedback = cls.baker.make(
             "summary.SurveyResultFeedback", survey_result=cls.survey_result
@@ -124,11 +124,16 @@ class APITest(FullTestCase):
 
     def test_survey_insight(self):
         self.client.force_authenticate(self.user)
+        self.baker.make(
+            "summary.SurveyResultFeedback",
+            survey_result=self.survey_result,
+            is_baseline=True,
+        )
         url = self.reverse(
             "survey-insight",
             kwargs={"version": "v1"},
             params={
-                "statement": self.survey_result.statement.pk,
+                "statement": self.statement.pk,
                 "module": self.survey_result.module.pk,
             },
         )

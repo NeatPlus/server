@@ -43,6 +43,7 @@ from support.views import (
     ResourceViewSet,
 )
 from survey.views import (
+    MitigationOpportunityInsightAPIView,
     OptionViewSet,
     QuestionGroupViewSet,
     QuestionViewSet,
@@ -161,6 +162,11 @@ urlpatterns += [
         get_api_path(r"survey-insight/$"),
         SurveyInsightAPIView.as_view(),
         name="survey-insight",
+    ),
+    re_path(
+        get_api_path(r"mitigation-opportunity-insight/$"),
+        MitigationOpportunityInsightAPIView.as_view(),
+        name="mitigation-opportunity-insight",
     ),
 ]
 

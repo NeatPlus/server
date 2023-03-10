@@ -36,3 +36,10 @@ class SurveyResultFeedbackSerializer(UserModelSerializer):
 class BaselineSurveyResultFeedbackSerializer(SurveyResultFeedbackSerializer):
     class Meta(SurveyResultFeedbackSerializer.Meta):
         read_only_fields = ("status", "is_baseline")
+
+
+class SurveyInsightSerializer(serializers.Serializer):
+    statement = serializers.IntegerField()
+    difference = serializers.FloatField()
+    sum_of_square = serializers.FloatField()
+    standard_deviation = serializers.FloatField()

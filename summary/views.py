@@ -19,6 +19,7 @@ from .filters import SurveyResultFeedbackFilter, SurveyResultFilter
 from .models import SurveyResult, SurveyResultFeedback
 from .serializers import (
     BaselineSurveyResultFeedbackSerializer,
+    SurveyInsightSerializer,
     SurveyResultFeedbackSerializer,
     SurveyResultSerializer,
 )
@@ -176,11 +177,11 @@ class SurveyInsightAPIView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        statement = self.request.query_params.get("statement")
-        question_group = self.request.query_params.get("question_group", None)
-        module = self.request.query_params.get("module", None)
+        statement_id = self.request.query_params.get("statement")
+        question_group_id = self.request.query_params.get("question_group")
+        module_id = self.request.query_params.get("module")
 
-        if not module:
+        if not module_id:
             return Response(
                 {"error": _("Missing module")},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -188,17 +189,17 @@ class SurveyInsightAPIView(views.APIView):
 
         baseline_survey_result_feedback = SurveyResultFeedback.objects.filter(
             is_baseline=True,
-            survey_result__question_group_id=question_group,
-            survey_result__module_id=module,
+            survey_result__question_group_id=question_group_id,
+            survey_result__module_id=module_id,
         )
 
-        if statement:
+        if statement_id:
             baseline_survey_result_feedback = baseline_survey_result_feedback.filter(
-                survey_result__statement_id=statement
+                survey_result__statement_id=statement_id
             )
 
-        response = baseline_survey_result_feedback.values(
-            "survey_result__statement"
+        queryset = baseline_survey_result_feedback.values(
+            statement=F("survey_result__statement")
         ).annotate(
             difference=Avg(
                 F("expected_score") - F("actual_score"), output_field=FloatField()
@@ -212,7 +213,9 @@ class SurveyInsightAPIView(views.APIView):
             ),
         )
 
+        serializer = SurveyInsightSerializer(queryset, many=True)
+
         return Response(
-            list(response),
+            serializer.data,
             status=status.HTTP_200_OK,
         )

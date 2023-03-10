@@ -85,7 +85,10 @@ class StatementFormulaAdmin(UserStampedModelAdmin):
 
 @admin.register(Mitigation)
 class MitigationAdmin(
-    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
+    VersionAdmin,
+    UserStampedModelAdmin,
+    TranslationAdmin,
+    OrderedModelAdmin,
 ):
     list_display = (
         "code",
@@ -108,7 +111,10 @@ class MitigationAdmin(
 
 @admin.register(Opportunity)
 class OpportunityAdmin(
-    VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
+    VersionAdmin,
+    UserStampedModelAdmin,
+    TranslationAdmin,
+    OrderedModelAdmin,
 ):
     list_display = (
         "code",

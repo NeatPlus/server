@@ -1,3 +1,5 @@
+import random
+
 from django.conf import settings
 from model_bakery import random_gen
 
@@ -20,14 +22,14 @@ class APITest(FullTestCase):
             users=[cls.user],
             status="accepted",
         )
-        module = cls.baker.make("context.Module")
-        question_group = cls.baker.make("survey.QuestionGroup", module=module)
+        cls.module = cls.baker.make("context.Module")
+        question_group = cls.baker.make("survey.QuestionGroup", module=cls.module)
         cls.question = cls.baker.make(
             "survey.Question",
             group=question_group,
             answer_type="single_option",
         )
-        option = cls.baker.make("survey.Option", question=cls.question)
+        cls.option = cls.baker.make("survey.Option", question=cls.question)
         cls.survey = cls.baker.make(
             "survey.Survey", project=project, created_by=cls.user
         )
@@ -36,7 +38,7 @@ class APITest(FullTestCase):
             survey=cls.survey,
             answer_type="single_option",
             question=cls.question,
-            options=[option],
+            options=[cls.option],
         )
         cls.question_group_list_url = cls.reverse(
             "question-group-list", kwargs={"version": "v1"}
@@ -50,7 +52,7 @@ class APITest(FullTestCase):
         )
         cls.option_list_url = cls.reverse("option-list", kwargs={"version": "v1"})
         cls.option_detail_url = cls.reverse(
-            "option-detail", kwargs={"version": "v1", "pk": option.pk}
+            "option-detail", kwargs={"version": "v1", "pk": cls.option.pk}
         )
         cls.survey_list_url = cls.reverse("survey-list", kwargs={"version": "v1"})
         cls.survey_detail_url = cls.reverse(
@@ -357,4 +359,37 @@ class APITest(FullTestCase):
                 survey=self.survey.pk,
                 score=0.37,
             ).exists()
+        )
+
+    def test_mitigation_opportunity_insight(self):
+        self.client.force_authenticate(self.user)
+        statement = self.baker.make("statement.Statement", options=[self.option])
+        self.baker.make(
+            "summary.SurveyResult",
+            statement=statement,
+            survey=self.survey,
+            module=self.module,
+            score=random.random(),
+        )
+        self.baker.make(
+            "statement.Mitigation",
+            options=[self.option],
+            rank=self.baker.random_gen.gen_integer(0, 1000),
+        )
+        self.baker.make(
+            "statement.Opportunity",
+            options=[self.option],
+            rank=self.baker.random_gen.gen_integer(0, 1000),
+        )
+        url = self.reverse(
+            "mitigation-opportunity-insight",
+            kwargs={"version": "v1"},
+            params={
+                "survey": self.survey.pk,
+                "module": self.module.pk,
+            },
+        )
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
