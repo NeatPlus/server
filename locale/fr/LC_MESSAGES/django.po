@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-06 11:08+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2023-04-15 14:49+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/neatplus/server/"
+"fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: context/admin.py:24 context/apps.py:8 context/models.py:26
 #: project/models.py:52 statement/models.py:26 support/models.py:105
@@ -62,21 +63,23 @@ msgid "{name} accepted"
 msgstr "{name} accepté"
 
 msgid "Unable to log in with provided credentials."
-msgstr ""
+msgstr "Impossible de se connecter avec les identifiants fournis."
 
 #, python-brace-format
 msgid ""
 "You have attempted to login {failure_limit} times with no success. Wait "
 "{cooloff_time_seconds} seconds to re login"
 msgstr ""
+"Vous avez tenté de vous connecter {failure_limit} fois sans succès. Attendez "
+"{cooloff_time_seconds} secondes pour vous reconnecter"
 
 #: neatplus/models.py:7
 msgid "created at"
-msgstr "créé à"
+msgstr "créé le"
 
 #: neatplus/models.py:8
 msgid "modified at"
-msgstr "modifié à"
+msgstr "modifié le"
 
 #: neatplus/models.py:23
 msgid "created by"
@@ -94,18 +97,20 @@ msgid ""
 "{error}. You have {defender_config.FAILURE_LIMIT-attempt_count-1} attempts "
 "remaining"
 msgstr ""
+"{error}. Vous avez {defender_config.FAILURE_LIMIT-attempt_count-1} essai "
+"restant"
 
 #: neatplus/settings.py:226
 msgid "English"
-msgstr "anglais"
+msgstr "Anglais"
 
 #: neatplus/settings.py:227
 msgid "Spanish"
-msgstr "espagnol"
+msgstr "Espagnol"
 
 #: neatplus/settings.py:228
 msgid "French"
-msgstr "français"
+msgstr "Français"
 
 #: notification/admin.py:22 notification/apps.py:8
 msgid "notification"
@@ -133,7 +138,7 @@ msgstr "type de contenu d'acteur"
 
 #: notification/models.py:29
 msgid "actor object id"
-msgstr ""
+msgstr "identifiant de l'objet acteur"
 
 #: notification/models.py:34
 msgid "verb"
@@ -149,7 +154,7 @@ msgstr "horodatage"
 
 #: notification/models.py:48
 msgid "action object content type"
-msgstr ""
+msgstr "type de contenu de l'objet d'action"
 
 #: notification/models.py:51
 msgid "action object object id"
@@ -161,7 +166,7 @@ msgstr ""
 
 #: notification/models.py:67
 msgid "target object id"
-msgstr ""
+msgstr "identifiant de l'objet cible"
 
 #: notification/models.py:71
 msgid "read"
@@ -169,22 +174,22 @@ msgstr "lu"
 
 #: notification/models.py:79
 msgid "User"
-msgstr ""
+msgstr "Utilisateur"
 
 #: notification/models.py:80 project/filters.py:12 project/models.py:11
 msgid "Public"
-msgstr ""
+msgstr "Public"
 
 #: notification/models.py:85
 msgid "notice type"
-msgstr ""
+msgstr "type d'avis"
 
 #: notification/models.py:90 statement/models.py:141 statement/models.py:175
 #: user/models.py:44 user/models.py:153 user/models.py:171 user/models.py:189
 #: statement/models.py:136 statement/models.py:170 statement/models.py:148
 #: statement/models.py:182
 msgid "active"
-msgstr ""
+msgstr "actif"
 
 #: notification/views.py:53 notification/views.py:64
 msgid "Successfully marked all notification as read"
@@ -214,15 +219,15 @@ msgstr ""
 #: organization/models.py:11 organization/models.py:89 project/models.py:18
 #: summary/models.py:51
 msgid "Pending"
-msgstr ""
+msgstr "En attente"
 
 #: organization/models.py:12 organization/models.py:90 project/models.py:19
 msgid "Accepted"
-msgstr ""
+msgstr "Accepté"
 
 #: organization/models.py:13 organization/models.py:91 project/models.py:20
 msgid "Rejected"
-msgstr ""
+msgstr "Refusé"
 
 #: organization/models.py:17 survey/models.py:60
 msgid "acronym"
@@ -234,7 +239,7 @@ msgstr "logo"
 
 #: organization/models.py:32
 msgid "admins"
-msgstr "admins"
+msgstr "administrateurs"
 
 #: organization/models.py:38
 msgid "members"
@@ -250,7 +255,7 @@ msgstr "point de contact"
 
 #: organization/models.py:57
 msgid "organization parent"
-msgstr ""
+msgstr "parent de l'organisation"
 
 #: organization/models.py:97 project/models.py:97 user/admin.py:37
 #: user/apps.py:8 user/models.py:144 user/models.py:162 user/models.py:179
@@ -260,42 +265,42 @@ msgstr "utilisateur"
 
 #: organization/views.py:46 organization/views.py:68
 msgid "Successfully created project"
-msgstr "Projet créé avec succès"
+msgstr "Le projet a bien été créé"
 
 #: organization/views.py:82 organization/views.py:100 organization/views.py:80
 #: organization/views.py:98 organization/views.py:77 organization/views.py:95
 msgid "Successfully requested member access"
-msgstr ""
+msgstr "La demande d'adhésion a bien été effectuée"
 
 #: organization/views.py:133 organization/views.py:166
 #: organization/views.py:130 organization/views.py:161
 msgid "Successfully added all valid users"
-msgstr ""
+msgstr "Les utilisateurs ont bien été ajoutés comme valides"
 
 #: organization/views.py:163 organization/views.py:158
 msgid "Failed to add users to organization"
-msgstr ""
+msgstr "Échec de l'ajout des utilisateurs à l'organisation"
 
 #: organization/views.py:174 organization/views.py:205
 #: organization/views.py:169 organization/views.py:200
 msgid "Successfully removed all valid users"
-msgstr ""
+msgstr "Tous les utilisateurs valides ont bien été supprimées"
 
 #: organization/views.py:202 organization/views.py:197
 msgid "Failed to remove users from organization"
-msgstr ""
+msgstr "Échec de la suppression des utilisateurs de l'organisation"
 
 #: organization/views.py:230 organization/views.py:247
 #: organization/views.py:225 organization/views.py:242
 #: organization/views.py:122 organization/views.py:139
 msgid "Member request successfully accepted"
-msgstr ""
+msgstr "La demande d'adhésion a bien été acceptée"
 
 #: organization/views.py:254 organization/views.py:271
 #: organization/views.py:249 organization/views.py:266
 #: organization/views.py:146 organization/views.py:163
 msgid "Member request successfully rejected"
-msgstr ""
+msgstr "La demande d'adhésion a bien été refusée"
 
 #: project/admin.py:34 project/apps.py:8 project/models.py:94
 #: survey/models.py:92
@@ -316,19 +321,19 @@ msgstr "utilisateurs du projet"
 
 #: project/filters.py:10
 msgid "My Project"
-msgstr ""
+msgstr "Mon projet"
 
 #: project/filters.py:11
 msgid "Organization"
-msgstr ""
+msgstr "Organisation"
 
 #: project/models.py:13
 msgid "Public Within Organization"
-msgstr ""
+msgstr "Public au sein de l'organisation"
 
 #: project/models.py:15
 msgid "Private"
-msgstr ""
+msgstr "Privé"
 
 #: project/models.py:32
 msgid "visibility"
@@ -340,15 +345,15 @@ msgstr "utilisateurs"
 
 #: project/models.py:55
 msgid "share analytics with NEAT"
-msgstr "partager des analyses avec NEAT"
+msgstr "partager des statistiques d'utilisation avec NEAT"
 
 #: project/models.py:92
 msgid "Write"
-msgstr ""
+msgstr "Écriture"
 
 #: project/models.py:93
 msgid "Read Only"
-msgstr ""
+msgstr "Lecture seule"
 
 #: project/models.py:100
 msgid "permission"
@@ -366,63 +371,67 @@ msgstr ""
 #: project/views.py:69 project/views.py:86 project/views.py:71
 #: project/views.py:88
 msgid "Project successfully accepted"
-msgstr ""
+msgstr "Le projet a bien été accepté"
 
 #: project/views.py:93 project/views.py:110 project/views.py:95
 #: project/views.py:112
 msgid "Project successfully rejected"
-msgstr ""
+msgstr "Le projet a bien été refusé"
 
 #: project/views.py:118 project/views.py:156 project/views.py:117
 #: project/views.py:155 project/views.py:119 project/views.py:159
 msgid "Successfully modified users list for project"
-msgstr ""
+msgstr "La liste des utilisateurs du projet a bien été modifiée"
 
 #: project/views.py:153 project/views.py:152
 msgid "Failed to update or add users due to invalid data"
 msgstr ""
+"Échec de la mise à jour ou de l'ajout des utilisateurs en raison de données "
+"invalides"
 
 #: project/views.py:164 project/views.py:192 project/views.py:162
 #: project/views.py:190 project/views.py:166 project/views.py:196
 msgid "Successfully removed users from project"
-msgstr ""
+msgstr "Les utilisateurs ont bien été supprimés du projet"
 
 #: project/views.py:189 project/views.py:187
 msgid "Failed to remove users due to invalid data"
-msgstr ""
+msgstr "Échec de la suppression des utilisateurs en raison de données invalides"
 
 #: project/views.py:228 project/views.py:274 project/views.py:226
 #: project/views.py:272 project/views.py:232 project/views.py:278
 msgid "Successfully submitted survey"
-msgstr ""
+msgstr "Le sondage a bien été envoyé"
 
 #: project/views.py:268 project/views.py:266 project/views.py:272
 msgid "Failed to create survey or survey answer due to invalid data"
 msgstr ""
+"Échec de la création du sondage ou de la réponse au sondage en raison de "
+"données invalides"
 
 #: statement/admin.py:27 statement/models.py:69 statement/admin.py:29
 msgid "statement topic"
-msgstr ""
+msgstr "sujet de la déclaration"
 
 #: statement/admin.py:28 statement/admin.py:30
 msgid "statement topics"
-msgstr ""
+msgstr "sujets de la déclaration"
 
 #: statement/admin.py:39 statement/models.py:52 statement/admin.py:41
 msgid "statement tag group"
-msgstr ""
+msgstr "groupe d'étiquette de la déclaration"
 
 #: statement/admin.py:40 statement/admin.py:42
 msgid "statement tag groups"
-msgstr ""
+msgstr "groupes d'étiquette de la déclaration"
 
 #: statement/admin.py:50 statement/admin.py:52
 msgid "statement tag"
-msgstr ""
+msgstr "étiquette de la déclaration"
 
 #: statement/admin.py:51 statement/models.py:72 statement/admin.py:53
 msgid "statement tags"
-msgstr ""
+msgstr "étiquettes de la déclaration"
 
 #: statement/admin.py:73 statement/apps.py:8 statement/models.py:106
 #: statement/models.py:122 statement/models.py:137 statement/models.py:171
@@ -430,11 +439,11 @@ msgstr ""
 #: statement/models.py:132 statement/models.py:166 statement/admin.py:75
 #: statement/models.py:123 statement/models.py:144 statement/models.py:178
 msgid "statement"
-msgstr ""
+msgstr "déclaration"
 
 #: statement/admin.py:74 statement/admin.py:76
 msgid "statements"
-msgstr ""
+msgstr "déclarations"
 
 #: statement/admin.py:96 statement/admin.py:98 statement/models.py:212
 #: statement/models.py:188
@@ -448,27 +457,27 @@ msgstr ""
 #: statement/admin.py:119 statement/admin.py:121 statement/models.py:233
 #: statement/models.py:209
 msgid "opportunity"
-msgstr ""
+msgstr "opportunité"
 
 #: statement/admin.py:120 survey/models.py:79 statement/admin.py:122
 msgid "opportunities"
-msgstr ""
+msgstr "opportunités"
 
 #: statement/admin.py:139 statement/admin.py:141 statement/admin.py:134
 msgid "question statement"
-msgstr ""
+msgstr "énoncé de la question"
 
 #: statement/admin.py:140 statement/admin.py:142 statement/admin.py:135
 msgid "question statements"
-msgstr ""
+msgstr "énoncés de la question"
 
 #: statement/admin.py:159 statement/admin.py:161 statement/admin.py:147
 msgid "option statement"
-msgstr ""
+msgstr "énoncé de l'option"
 
 #: statement/admin.py:160 statement/admin.py:162 statement/admin.py:148
 msgid "option statements"
-msgstr ""
+msgstr "énoncés de l'option"
 
 #: statement/models.py:12
 msgid "icon"
@@ -496,12 +505,12 @@ msgid "question group"
 msgstr "groupe de questions"
 
 msgid "formula"
-msgstr ""
+msgstr "formule"
 
 #: statement/models.py:140 statement/models.py:174 statement/models.py:135
 #: statement/models.py:169 statement/models.py:147 statement/models.py:181
 msgid "version"
-msgstr ""
+msgstr "version"
 
 #: statement/models.py:141 support/models.py:53 survey/admin.py:57
 #: survey/models.py:76 survey/models.py:117
