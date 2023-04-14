@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-06 11:08+0000\n"
 "PO-Revision-Date: 2023-04-15 14:49+0000\n"
-"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"Last-Translator: Lukim Gather <lukim@nepware.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/neatplus/server/"
 "fr/>\n"
 "Language: fr\n"
@@ -162,7 +162,7 @@ msgstr ""
 
 #: notification/models.py:64
 msgid "target content type"
-msgstr ""
+msgstr "type de contenu cible"
 
 #: notification/models.py:67
 msgid "target object id"
