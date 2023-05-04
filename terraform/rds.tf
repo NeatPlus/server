@@ -64,6 +64,7 @@ resource "aws_db_instance" "postgresql" {
   auto_minor_version_upgrade          = true
   backup_retention_period             = 7
   backup_window                       = "03:00-04:00"
+  db_name                             = var.rds_database_name
   db_subnet_group_name                = aws_db_subnet_group.main.id
   delete_automated_backups            = true
   engine                              = "postgres"
@@ -74,7 +75,6 @@ resource "aws_db_instance" "postgresql" {
   maintenance_window                  = "Sat:00:00-Sat:02:00"
   max_allocated_storage               = 100
   multi_az                            = false
-  name                                = var.rds_database_name
   parameter_group_name                = "default.postgres13"
   password                            = local.rds_password
   port                                = var.rds_port

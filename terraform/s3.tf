@@ -26,15 +26,24 @@ resource "aws_vpc_endpoint_route_table_association" "private" {
 # Create s3 bucket
 resource "aws_s3_bucket" "storage" {
   bucket = "${var.s3_bucket_name}-${local.suffix}"
-  acl    = "private"
 
+  tags = {
+    "Name" = "${var.s3_bucket_name}-${local.suffix}"
+  }
+}
+
+# Create cors configuration
+resource "aws_s3_bucket_cors_configuration" "storage" {
+  bucket = aws_s3_bucket.storage.id
   cors_rule {
     allowed_methods = ["GET"]
     allowed_origins = ["https://*.neatplus.org", "https://neatplus.org"]
     max_age_seconds = 3600
   }
+}
 
-  tags = {
-    "Name" = "${var.s3_bucket_name}-${local.suffix}"
-  }
+# Create bucket acl
+resource "aws_s3_bucket_acl" "storage" {
+  bucket = aws_s3_bucket.storage.id
+  acl    = "private"
 }
