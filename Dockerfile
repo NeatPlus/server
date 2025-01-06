@@ -20,7 +20,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.8.4 \
+    POETRY_VERSION=2.0.0 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
@@ -42,7 +42,7 @@ RUN curl -sSL https://install.python-poetry.org | python
 WORKDIR $PYSETUP_PATH
 COPY poetry.lock pyproject.toml ./
 
-RUN poetry install --no-dev
+RUN poetry install --without=dev --no-root
 
 # testing stage
 FROM python-base AS testing
@@ -67,7 +67,7 @@ ENTRYPOINT ["/code/docker/entrypoint.dev.sh"]
 # production stage
 FROM builder-base AS production-build
 
-RUN poetry install --no-root --no-dev --extras asgi
+RUN poetry install --no-root --without=dev --extras asgi
 
 # production stage
 FROM python-base AS production
