@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers, status, viewsets
@@ -9,9 +9,8 @@ from rest_framework.response import Response
 from neatplus.serializers import get_detail_inline_serializer
 from neatplus.views import UserStampedModelViewSetMixin
 from organization.models import Organization
-from summary.models import SurveyResult
-from survey.models import Survey, SurveyAnswer
-from survey.serializers import WritableSurveySerializer
+from survey.models import Survey, SurveyModule
+from survey.serializers import CreateSurveyResponseSerializer, WritableSurveySerializer
 
 from .filters import ProjectFilter
 from .models import ProjectUser
@@ -45,6 +44,15 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             read_allowed_project_for_user(current_user)
             .select_related("created_by")
             .prefetch_related("organization__admins", "surveys")
+            .prefetch_related(
+                Prefetch(
+                    "surveys",
+                    queryset=Survey.objects.exclude(
+                        modules__status="published"
+                    ).distinct(),
+                    to_attr="draft_surveys",
+                )
+            )
         )
 
     @action(
@@ -217,11 +225,7 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
             )
         return Response(serializer.data)
 
-    @extend_schema(
-        responses=get_detail_inline_serializer(
-            "ProjectSurveySubmitResponseSerializer", _("Successfully submitted survey")
-        )
-    )
+    @extend_schema(responses=CreateSurveyResponseSerializer)
     @action(
         methods=["post"],
         detail=True,
@@ -235,34 +239,16 @@ class ProjectViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         validated_data = serializer.validated_data
-        answers = validated_data.pop("answers", [])
-        results = validated_data.pop("results", [])
-        try:
-            with transaction.atomic():
-                survey = Survey.objects.create(
-                    **validated_data, created_by=request.user, project=project
+        modules = validated_data.pop("modules", None)
+        survey = Survey.objects.create(
+            **validated_data, created_by=request.user, project=project
+        )
+        if modules:
+            for module in modules:
+                SurveyModule.objects.create(
+                    survey=survey, module=module, status="draft"
                 )
-                for answer in answers:
-                    options = answer.pop("options", None)
-                    survey_answer = SurveyAnswer.objects.create(
-                        **answer, created_by=request.user, survey=survey
-                    )
-                    if options:
-                        survey_answer.options.add(*options)
-                for result in results:
-                    SurveyResult.objects.create(
-                        **result, created_by=request.user, survey=survey
-                    )
-        except Exception:
-            return Response(
-                {
-                    "error": _(
-                        "Failed to create survey or survey answer due to invalid data"
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
         return Response(
-            {"detail": _("Successfully submitted survey")},
+            CreateSurveyResponseSerializer(survey).data,
             status=status.HTTP_201_CREATED,
         )

@@ -20,6 +20,7 @@ class ProjectSerializer(UserModelSerializer):
     organization_title = serializers.SerializerMethodField(read_only=True)
     is_admin_or_owner = serializers.SerializerMethodField(read_only=True)
     surveys_count = serializers.SerializerMethodField(read_only=True)
+    draft_surveys_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Project
@@ -40,6 +41,12 @@ class ProjectSerializer(UserModelSerializer):
 
     def get_surveys_count(self, obj):
         return obj.surveys.count()
+
+    def get_draft_surveys_count(self, obj):
+        if hasattr(obj, "draft_surveys"):
+            return len(obj.draft_surveys)
+        else:
+            return 0
 
     def validate(self, attrs):
         data = super().validate(attrs)

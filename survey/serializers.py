@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.fields import ImageField
 from rest_framework_gis.fields import GeometryField
-
+from context.models import Module
 from neatplus.serializers import RichTextUploadingModelSerializer, UserModelSerializer
 from summary.serializers import SurveyResultSerializer
 
@@ -15,6 +15,7 @@ from .models import (
     QuestionGroup,
     Survey,
     SurveyAnswer,
+    SurveyModule,
 )
 
 
@@ -25,8 +26,6 @@ class QuestionGroupSerializer(UserModelSerializer):
 
 
 class QuestionSerializer(RichTextUploadingModelSerializer, UserModelSerializer):
-    # Added at 2022-03-23. Added for backward compatibility.
-    # TODO: Remove it after some time if frontend is not using
     module = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -46,6 +45,12 @@ class OptionSerializer(UserModelSerializer):
 class SurveySerializer(UserModelSerializer):
     class Meta:
         model = Survey
+        fields = "__all__"
+
+
+class SurveyModuleSerializer(UserModelSerializer):
+    class Meta:
+        model = SurveyModule
         fields = "__all__"
 
 
@@ -173,19 +178,39 @@ class SurveyAnswerSerializer(UserModelSerializer):
             return None
 
 
+class WritableSurveyModuleSerializer(SurveyModuleSerializer):
+    class Meta:
+        model = SurveyModule
+        exclude = ("survey",)
+
+
 class WritableSurveyAnswerSerializer(SurveyAnswerSerializer):
     class Meta:
         model = SurveyAnswer
         exclude = ("survey",)
 
+    def get_validators(self):
+        # remove unique together validators from serializers since it is handled during add answers
+        unique_together_validators = self.get_unique_together_validators()
+        return [
+            validator
+            for validator in super().get_validators()
+            if validator not in unique_together_validators
+        ]
+
 
 class WritableSurveySerializer(SurveySerializer):
-    answers = WritableSurveyAnswerSerializer(many=True)
-    results = SurveyResultSerializer(many=True)
+    modules = serializers.PrimaryKeyRelatedField(
+        queryset=Module.objects.all(), many=True, required=False
+    )
 
     class Meta:
         model = Survey
         exclude = ("project", "is_shared_publicly")
+
+
+class CreateSurveyResponseSerializer(SurveySerializer):
+    modules = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
 
 
 class SharedSurveySerializer(SurveySerializer):

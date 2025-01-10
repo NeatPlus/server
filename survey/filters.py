@@ -1,7 +1,7 @@
 from django_filters.filters import NumberFilter
 from django_filters.rest_framework import FilterSet
 
-from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
+from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer, SurveyModule
 
 
 class QuestionGroupFilter(FilterSet):
@@ -11,8 +11,6 @@ class QuestionGroupFilter(FilterSet):
 
 
 class QuestionFilter(FilterSet):
-    # Added at 2022-03-23. Added for backward compatibility.
-    # TODO: Remove it after some time if frontend is not using
     module = NumberFilter(field_name="group__module", lookup_expr="exact")
 
     class Meta:
@@ -38,6 +36,12 @@ class SurveyFilter(FilterSet):
     class Meta:
         model = Survey
         fields = {"project": ["exact"], "title": ["exact"]}
+
+
+class SurveyModuleFilter(FilterSet):
+    class Meta:
+        model = SurveyModule
+        fields = {"survey": ["exact"], "module": ["exact"], "status": ["exact"]}
 
 
 class SurveyAnswerFilter(FilterSet):

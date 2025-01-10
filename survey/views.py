@@ -17,8 +17,14 @@ from statement.models import Mitigation, Opportunity
 from summary.models import SurveyResult
 from summary.serializers import SurveyResultSerializer
 
-from .filters import OptionFilter, QuestionFilter, SurveyAnswerFilter, SurveyFilter
-from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
+from .filters import (
+    OptionFilter,
+    QuestionFilter,
+    SurveyAnswerFilter,
+    SurveyFilter,
+    SurveyModuleFilter,
+)
+from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer, SurveyModule
 from .permissions import CanWriteSurvey, CanWriteSurveyOrReadOnly
 from .serializers import (
     MitigationOpportunityInsightSerializer,
@@ -27,8 +33,10 @@ from .serializers import (
     QuestionSerializer,
     SharedSurveySerializer,
     SurveyAnswerSerializer,
+    SurveyModuleSerializer,
     SurveySerializer,
     WritableSurveyAnswerSerializer,
+    WritableSurveyModuleSerializer,
 )
 
 
@@ -50,6 +58,7 @@ class OptionViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
 
 
 class SurveyViewSet(
+    UserStampedModelViewSetMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
@@ -168,6 +177,28 @@ class SurveyViewSet(
                 {"error": _("Identifier not found")}, status=status.HTTP_404_NOT_FOUND
             )
 
+    @extend_schema(responses=SurveyModuleSerializer)
+    @action(
+        methods=["post"],
+        detail=True,
+        permission_classes=[CanWriteSurvey],
+        serializer_class=WritableSurveyModuleSerializer,
+    )
+    def create_module(self, request, *args, **kwargs):
+        survey = self.get_object()
+        user = self.request.user
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        survey_module = SurveyModule.objects.create(
+            survey=survey, module=data["module"], status=data["status"], created_by=user
+        )
+        return Response(
+            SurveyModuleSerializer(survey_module).data,
+            status=status.HTTP_201_CREATED,
+        )
+
     @extend_schema(
         request=WritableSurveyAnswerSerializer(many=True),
         responses=get_detail_inline_serializer(
@@ -192,8 +223,12 @@ class SurveyViewSet(
                 for validated_datum in serializer.validated_data:
                     options = validated_datum.pop("options", None)
                     question = validated_datum.pop("question")
+                    survey_module = validated_datum.pop("survey_module")
                     survey_answer, created = SurveyAnswer.objects.update_or_create(
-                        survey=survey, question=question, defaults=validated_datum
+                        survey=survey,
+                        question=question,
+                        survey_module=survey_module,
+                        defaults=validated_datum,
                     )
                     if created:
                         survey_answer.created_by = user
@@ -260,7 +295,29 @@ class SurveyViewSet(
         )
 
 
+class SurveyModuleViewSet(
+    UserStampedModelViewSetMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    serializer_class = SurveyModuleSerializer
+    permission_classes = [CanWriteSurveyOrReadOnly]
+    filterset_class = SurveyModuleFilter
+
+    def get_queryset(self):
+        current_user = self.request.user
+        projects = read_allowed_project_for_user(current_user)
+        surveys = Survey.objects.filter(
+            Q(project__in=projects) | Q(created_by=current_user)
+        )
+        return SurveyModule.objects.filter(survey__in=surveys)
+
+
 class SurveyAnswerViewSet(
+    UserStampedModelViewSetMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,

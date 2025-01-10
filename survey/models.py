@@ -107,6 +107,36 @@ class Survey(UserStampedModel, TimeStampedModel, OrderedModel):
         pass
 
 
+class StatusChoices(models.TextChoices):
+    DRAFT = "draft", _("Draft")
+    PUBLISHED = "published", _("Published")
+
+
+class SurveyModule(UserStampedModel, TimeStampedModel):
+    survey = models.ForeignKey(
+        "Survey",
+        on_delete=models.CASCADE,
+        related_name="modules",
+        verbose_name=_("survey"),
+    )
+    module = models.ForeignKey(
+        "context.Module",
+        on_delete=models.CASCADE,
+        related_name="surveys",
+        verbose_name=_("module"),
+    )
+    status = models.CharField(_("status"), max_length=9, choices=StatusChoices.choices)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["survey", "module"],
+                condition=models.Q(status="published"),
+                name="unique_survey_module_published",
+            ),
+        ]
+
+
 class SurveyAnswer(UserStampedModel, TimeStampedModel):
     question = models.ForeignKey(
         "Question",
@@ -119,6 +149,12 @@ class SurveyAnswer(UserStampedModel, TimeStampedModel):
         related_name="answers",
         verbose_name=_("survey"),
     )
+    survey_module = models.ForeignKey(
+        "SurveyModule",
+        on_delete=models.CASCADE,
+        related_name="answers",
+        verbose_name=_("survey module"),
+    )
     answer = models.TextField(_("answer"), null=True, blank=True, default=None)
     answer_type = models.CharField(
         _("answer type"), max_length=15, choices=AnswerTypeChoices.choices
@@ -130,7 +166,7 @@ class SurveyAnswer(UserStampedModel, TimeStampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["question", "survey"],
-                name="unique_survey_question",
+                fields=["question", "survey_module"],
+                name="unique_survey_module_question",
             ),
         ]

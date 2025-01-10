@@ -35,3 +35,6 @@ kubernetes/**/kustomization.yaml
 .DS_Store
 
 control/
+
+# Local files
+.local/
