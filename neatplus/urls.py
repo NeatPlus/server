@@ -52,6 +52,8 @@ from survey.views import (
 )
 from user.views import UserViewSet
 
+from .views import ckeditor_file_upload_view
+
 API_VERSION = "v1"
 
 
@@ -129,6 +131,11 @@ urlpatterns += i18n_patterns(  # admin
     path("admin/", admin.site.urls), prefix_default_language=False
 )
 
+# url for ckeditor5 custom file handling view
+urlpatterns += [
+    path('file_upload/', ckeditor_file_upload_view, name='ckeditor_file_upload_view'),
+]
+
 urlpatterns += [
     # DRF router
     re_path(get_api_path(""), include(router.urls)),
@@ -154,7 +161,6 @@ urlpatterns += [
     path(
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
-    path("ckeditor/", include("ckeditor_uploader.urls")),
     # Oauth
     path("oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     # API

@@ -1,4 +1,4 @@
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -80,7 +80,7 @@ class Notice(UserStampedModel, TimeStampedModel):
         PUBLIC = "public", _("Public")
 
     title = models.CharField(_("title"), max_length=255)
-    description = RichTextField(_("description"), blank=True, null=True, default=None)
+    description = CKEditor5Field(_("description"), blank=True, null=True, default=None)
     notice_type = models.CharField(
         _("notice type"),
         max_length=6,

@@ -1,4 +1,4 @@
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
@@ -38,9 +38,7 @@ class AnswerTypeChoices(models.TextChoices):
 
 class Question(CodeModel, UserStampedModel, TimeStampedModel, OrderedModel):
     title = models.TextField(_("title"))
-    description = RichTextUploadingField(
-        _("description"), blank=True, null=True, default=None
-    )
+    description = CKEditor5Field(_("description"), blank=True, null=True, default=None)
     hints = models.TextField(_("hints"), blank=True, null=True, default=None)
     answer_type = models.CharField(
         _("answer type"), max_length=15, choices=AnswerTypeChoices.choices

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from neatplus.serializers import RichTextUploadingModelSerializer, UserModelSerializer
+from neatplus.serializers import UserModelSerializer
 
 from .models import (
     Action,
@@ -35,7 +35,7 @@ class ResourceSerializer(UserModelSerializer):
         fields = "__all__"
 
 
-class ActionSerializer(RichTextUploadingModelSerializer, UserModelSerializer):
+class ActionSerializer(UserModelSerializer):
     context_title = serializers.SerializerMethodField()
 
     class Meta:
