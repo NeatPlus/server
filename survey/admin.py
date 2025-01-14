@@ -9,6 +9,8 @@ from neatplus.admin import UserStampedModelAdmin
 
 from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
 
+from .forms import QuestionAdminForm
+
 
 class ModuleAutoCompleteFilter(AutocompleteFilter):
     title = "module"
@@ -48,6 +50,7 @@ class QuestionGroupAutoCompleteFilter(AutocompleteFilter):
 class QuestionAdmin(
     VersionAdmin, UserStampedModelAdmin, TranslationAdmin, OrderedModelAdmin
 ):
+    form = QuestionAdminForm
     list_display = (
         "code",
         "title",

@@ -14,9 +14,12 @@ from .models import (
     ResourceTag,
 )
 
+from .forms import ActionAdminForm, EmailTemplateAdminForm, LegalDocumentAdminForm
+
 
 @admin.register(LegalDocument)
 class LegalDocumentAdmin(UserStampedModelAdmin, TranslationAdmin):
+    form = LegalDocumentAdminForm
     list_display = ("document_type",)
 
     class Meta:
@@ -63,6 +66,7 @@ class ResourceAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
 
 @admin.register(Action)
 class ActionAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
+    form = ActionAdminForm
     list_display = ("title", "context", "organization", "point", "move_up_down_links")
     autocomplete_fields = ("context",)
 
@@ -73,6 +77,7 @@ class ActionAdmin(UserStampedModelAdmin, OrderedModelAdmin, TranslationAdmin):
 
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
+    form = EmailTemplateAdminForm
     list_display = ("identifier",)
 
     def has_add_permission(self, request):

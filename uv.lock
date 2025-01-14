@@ -344,6 +344,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-ckeditor-5"
+version = "0.2.15"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/58/61/86d285a9b690c785393083e4d3604ac07c8ec5360dca92ca3f6701c0a8b4/django_ckeditor_5-0.2.15.tar.gz", hash = "sha256:587f0485a3dca6a1a7c7c68e4160770e46389b8cf50205bf352bd47fcb63567c", size = 2563275 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/59/ac/771a22ff54cd9e7f252a4a4f431fc638153dfa89f386537394e90a508ea6/django_ckeditor_5-0.2.15-py3-none-any.whl", hash = "sha256:71980998d4bef7b272e50cb6878cca5c0bedec42b389a3827ffe1bbb88babd29", size = 2603644 },
+]
+
+[[package]]
 name = "django-colorfield"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -823,6 +836,7 @@ dependencies = [
     { name = "django-admin-autocomplete-filter" },
     { name = "django-admin-interface" },
     { name = "django-ckeditor" },
+    { name = "django-ckeditor-5" },
     { name = "django-cors-headers" },
     { name = "django-defender" },
     { name = "django-filter" },
@@ -875,6 +889,7 @@ requires-dist = [
     { name = "django-admin-autocomplete-filter", specifier = ">=0.7.1,<0.8.0" },
     { name = "django-admin-interface", specifier = ">=0.29.2,<0.30.0" },
     { name = "django-ckeditor", specifier = ">=6.7.1,<7.0.0" },
+    { name = "django-ckeditor-5", specifier = ">=0.2.15,<0.3" },
     { name = "django-cors-headers", specifier = ">=4.6.0,<5.0.0" },
     { name = "django-defender", specifier = ">=0.9.8,<0.10" },
     { name = "django-filter", specifier = ">=24.3,<25.0" },

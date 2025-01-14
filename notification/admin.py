@@ -5,6 +5,8 @@ from neatplus.admin import UserStampedModelAdmin
 
 from .models import Notice, Notification
 
+from .forms import NoticeAdminForm
+
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
@@ -25,6 +27,7 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(Notice)
 class NoticeAdmin(UserStampedModelAdmin):
+    form = NoticeAdminForm
     list_display = ("title", "notice_type", "is_active")
 
     class Meta:

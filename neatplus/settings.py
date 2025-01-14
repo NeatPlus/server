@@ -96,8 +96,6 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "ordered_model",
     "drf_spectacular",
-    "ckeditor",
-    "ckeditor_uploader",
     "rest_framework_gis",
     "admin_auto_filters",
     "drf_recaptcha",
@@ -105,6 +103,7 @@ THIRD_PARTY_APPS = [
     "oauth2_provider",
     "defender",
     "reversion",
+    "django_ckeditor_5",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
@@ -310,6 +309,7 @@ if USE_S3_STORAGE:
     USE_CLOUDFRONT_CDN = env.bool("USE_CLOUDFRONT_CDN", default=False)
     if USE_CLOUDFRONT_CDN:
         AWS_S3_CUSTOM_DOMAIN = env.str("CLOUDFRONT_CDN_URL")
+
     UPLOAD_STATIC_TO_S3 = env.bool("UPLOAD_STATIC_TO_S3", default=True)
     # s3 media settings
     DEFAULT_FILE_STORAGE = "neatplus.storage_backends.MediaStorage"
@@ -454,142 +454,90 @@ SPECTACULAR_SETTINGS = {
     "CAMELIZE_NAMES": True,
 }
 
-# CKEDITOR settings
-CKEDITOR_UPLOAD_PATH = "ckeditor-uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
+# All CKEditor5 Configs
 if USE_S3_STORAGE:
-    CKEDITOR_STORAGE_BACKEND = "neatplus.storage_backends.CKEditorStorage"
-CKEDITOR_ALLOW_NONIMAGE_FILES = False
-CKEDITOR_CONFIGS = {
+    CKEDITOR_5_FILE_STORAGE = "neatplus.storage_backends.CKEditorStorage"
+
+CKEDITOR_5_MAX_FILE_SIZE = 10
+customColorPalette = [
+    {"color": "hsl(4, 90%, 58%)", "label": "Red"},
+    {"color": "hsl(340, 82%, 52%)", "label": "Pink"},
+    {"color": "hsl(291, 64%, 42%)", "label": "Purple"},
+    {"color": "hsl(262, 52%, 47%)", "label": "Deep Purple"},
+    {"color": "hsl(231, 48%, 48%)", "label": "Indigo"},
+    {"color": "hsl(207, 90%, 54%)", "label": "Blue"},
+]
+
+
+CKEDITOR_5_CONFIGS = {
     "default": {
-        "toolbar_CustomToolbarConfig": [
-            {
-                "name": "document",
-                "items": [
-                    "Source",
-                    "-",
-                    "Save",
-                    "NewPage",
-                    "Preview",
-                    "Print",
-                    "-",
-                    "Templates",
-                ],
-            },
-            {
-                "name": "clipboard",
-                "items": [
-                    "Cut",
-                    "Copy",
-                    "Paste",
-                    "PasteText",
-                    "PasteFromWord",
-                    "-",
-                    "Undo",
-                    "Redo",
-                ],
-            },
-            {
-                "name": "editing",
-                "items": ["Find", "Replace", "-", "SelectAll", "-", "Scayt"],
-            },
-            {
-                "name": "forms",
-                "items": [
-                    "Form",
-                    "Checkbox",
-                    "Radio",
-                    "TextField",
-                    "Textarea",
-                    "Select",
-                    "Button",
-                    "ImageButton",
-                    "HiddenField",
-                ],
-            },
-            "/",
-            {
-                "name": "basicstyles",
-                "items": [
-                    "Bold",
-                    "Italic",
-                    "Underline",
-                    "Strike",
-                    "Subscript",
-                    "Superscript",
-                    "-",
-                    "CopyFormatting",
-                    "RemoveFormat",
-                ],
-            },
-            {
-                "name": "paragraph",
-                "items": [
-                    "NumberedList",
-                    "BulletedList",
-                    "-",
-                    "Outdent",
-                    "Indent",
-                    "-",
-                    "Blockquote",
-                    "CreateDiv",
-                    "-",
-                    "JustifyLeft",
-                    "JustifyCenter",
-                    "JustifyRight",
-                    "JustifyBlock",
-                    "-",
-                    "BidiLtr",
-                    "BidiRtl",
-                    "Language",
-                ],
-            },
-            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
-            {
-                "name": "insert",
-                "items": [
-                    "Image",
-                    "Flash",
-                    "Table",
-                    "HorizontalRule",
-                    "Smiley",
-                    "SpecialChar",
-                    "PageBreak",
-                    "Iframe",
-                ],
-            },
-            "/",
-            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
-            {"name": "colors", "items": ["TextColor", "BGColor"]},
-            {"name": "tools", "items": ["Maximize", "ShowBlocks"]},
-            {"name": "about", "items": ["About"]},
-            "/",
-            {"name": "embeding_tools", "items": ["Embed", "Mathjax", "CodeSnippet"]},
+        "toolbar": {
+            "toolbar_panel_id": "toolbar",
+            "toolbar_width": "100%",
+            "items": [
+                "undo",
+                "redo",
+                "|",
+                "heading",
+                "|",
+                "bold",
+                "italic",
+                "underline",
+                "strikethrough",
+                "|",
+                "alignment",
+                "fontFamily",
+                "fontColor",
+                "fontBackgroundColor",
+                "|",
+                "link",
+                "imageUpload",
+                "mediaEmbed",
+                "fileUpload",
+                "|",
+                "bulletedList",
+                "numberedList",
+                "todoList",
+                "|",
+                "blockQuote",
+                "insertTable",
+                "codeBlock",
+                "code",
+                "|",
+                "findAndReplace",
+                "highlight",
+                "removeFormat",
+            ],
+            "shouldNotGroupWhenFull": True,
+        },
+        "language": "en",  # set any language you want
+        "image": {
+            "toolbar": ["imageTextAlternative", "imageStyle:full", "imageStyle:side"]
+        },
+        "table": {"contentToolbar": ["tableColumn", "tableRow", "mergeTableCells"]},
+        "placeholder": "Enter Your Text...",
+    },
+    "test_field": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
         ],
-        "toolbar": "CustomToolbarConfig",
-        "mathJaxLib": "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML",
-        "tabSpaces": 4,
-        "extraPlugins": ",".join(
-            [
-                "uploadimage",
-                "div",
-                "autolink",
-                "autoembed",
-                "embedsemantic",
-                "autogrow",
-                "widget",
-                "lineutils",
-                "clipboard",
-                "dialog",
-                "dialogui",
-                "elementspath",
-                "mathjax",
-                "embed",
-                "codesnippet",
-            ]
-        ),
-    }
+        "height": 300,
+        "width": "100%",
+    },
 }
+
+CKEDITOR_5_UPLOAD_FILE_TYPES = ["jpeg", "png", "jpg", "svg"]
+# Define a constant in settings.py to specify file upload permissions
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = (
+    "staff"  # Possible values: "staff", "authenticated", "any"
+)
 
 # Bakery custom baker class
 BAKER_CUSTOM_CLASS = "neatplus.bakery.UserStampedBaker"

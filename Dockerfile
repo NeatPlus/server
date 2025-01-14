@@ -18,9 +18,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
     CODE_PATH="/code" \
-    VENV_PATH="/code/.venv"
+    VENV_PATH="/code/.venv" \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
 FROM python-base AS builder
 
