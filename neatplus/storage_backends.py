@@ -14,7 +14,7 @@ class MediaStorage(S3Boto3Storage):
 
 
 class CKEditorStorage(S3Boto3Storage):
-    location = settings.MEDIA_LOCATION
+    location = f"{settings.MEDIA_LOCATION}/ckeditor"
     default_acl = "public-read"
     querystring_auth = False
     file_overwrite = False

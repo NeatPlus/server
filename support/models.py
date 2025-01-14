@@ -1,5 +1,3 @@
-from ckeditor.fields import RichTextField
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.template import Context, Template
@@ -22,7 +20,7 @@ class LegalDocument(UserStampedModel, TimeStampedModel):
         choices=LegalDocumentTypeChoice.choices,
         unique=True,
     )
-    description = RichTextField(_("description"))
+    description = models.TextField(_("description"))
 
     def __str__(self):
         return self.document_type
@@ -105,7 +103,7 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
     )
     organization = models.CharField(_("organization"), max_length=255)
     summary = models.TextField(_("summary"))
-    description = RichTextUploadingField(_("description"))
+    description = models.TextField(_("description"))
     point = PointField(_("point"))
 
     def __str__(self):
@@ -118,7 +116,7 @@ class Action(UserStampedModel, TimeStampedModel, OrderedModel):
 class EmailTemplate(models.Model):
     identifier = models.CharField(_("identifier"), max_length=50, unique=True)
     subject = models.CharField(_("subject"), max_length=255)
-    html_message = RichTextField(_("html message"))
+    html_message = models.TextField(_("html message"))
     text_message = models.TextField(_("text message"))
 
     def __str__(self):
