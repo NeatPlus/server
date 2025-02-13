@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.fields import ImageField
 from rest_framework_gis.fields import GeometryField
 
-from neatplus.serializers import RichTextUploadingModelSerializer, UserModelSerializer
+from neatplus.serializers import UserModelSerializer
 from summary.serializers import SurveyResultSerializer
 
 from .models import (
@@ -24,7 +24,7 @@ class QuestionGroupSerializer(UserModelSerializer):
         fields = "__all__"
 
 
-class QuestionSerializer(RichTextUploadingModelSerializer, UserModelSerializer):
+class QuestionSerializer(UserModelSerializer):
     # Added at 2022-03-23. Added for backward compatibility.
     # TODO: Remove it after some time if frontend is not using
     module = serializers.SerializerMethodField(read_only=True)
