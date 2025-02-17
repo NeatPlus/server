@@ -7,7 +7,7 @@ from reversion.admin import VersionAdmin
 
 from neatplus.admin import UserStampedModelAdmin
 
-from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer
+from .models import Option, Question, QuestionGroup, Survey, SurveyAnswer, SurveyModule
 
 
 class ModuleAutoCompleteFilter(AutocompleteFilter):
@@ -100,6 +100,16 @@ class SurveyAdmin(UserStampedModelAdmin, OrderedModelAdmin):
     class Meta:
         verbose_name = _("survey")
         verbose_plural_name = _("surveys")
+
+
+@admin.register(SurveyModule)
+class SurveyModuleAdmin(UserStampedModelAdmin):
+    list_display = ("survey", "module", "status")
+    autocomplete_fields = ("survey", "module")
+
+    class Meta:
+        verbose_name = _("survey module")
+        verbose_plural_name = _("survey modules")
 
 
 @admin.register(SurveyAnswer)

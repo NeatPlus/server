@@ -33,6 +33,12 @@ class APITest(FullTestCase):
         cls.survey = cls.baker.make(
             "survey.Survey", project=project, created_by=cls.user
         )
+        cls.survey_module = cls.baker.make(
+            "survey.SurveyModule",
+            survey=cls.survey,
+            module=cls.module,
+            created_by=cls.user,
+        )
         survey_answer = cls.baker.make(
             "survey.SurveyAnswer",
             survey=cls.survey,
@@ -63,6 +69,12 @@ class APITest(FullTestCase):
         )
         cls.survey_answer_detail_url = cls.reverse(
             "survey-answer-detail", kwargs={"version": "v1", "pk": survey_answer.pk}
+        )
+        cls.survey_module_list_url = cls.reverse(
+            "survey-module-list", kwargs={"version": "v1"}
+        )
+        cls.survey_module_detail_url = cls.reverse(
+            "survey-module-detail", kwargs={"version": "v1", "pk": cls.survey_module.pk}
         )
 
     def test_question_group_list(self):
@@ -111,6 +123,20 @@ class APITest(FullTestCase):
     def test_survey_detail(self):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.survey_detail_url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_survey_module_list(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.survey_module_list_url)
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_200_OK, response.json()
+        )
+
+    def test_survey_module_detail(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.survey_module_detail_url)
         self.assertEqual(
             response.status_code, self.status_code.HTTP_200_OK, response.json()
         )
@@ -183,6 +209,24 @@ class APITest(FullTestCase):
             response.status_code, self.status_code.HTTP_400_BAD_REQUEST, response.json()
         )
 
+    def test_create_survey_module(self):
+        self.client.force_authenticate(self.user)
+        survey = self.baker.make(
+            "survey.Survey",
+            created_by=self.user,
+            is_shared_publicly=True,
+            shared_link_identifier=random_gen.gen_string(10),
+        )
+        url = self.reverse(
+            "survey-create-module", kwargs={"version": "v1", "pk": survey.pk}
+        )
+        response = self.client.post(
+            url, data={"module": self.module.pk, "status": "draft"}
+        )
+        self.assertEqual(
+            response.status_code, self.status_code.HTTP_201_CREATED, response.json()
+        )
+
     def test_get_identifier_survey(self):
         shared_link_identifier = random_gen.gen_string(10)
         survey = self.baker.make(
@@ -232,26 +276,31 @@ class APITest(FullTestCase):
                 "question": question_1.pk,
                 "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
                 "answerType": "location",
+                "surveyModule": self.survey_module.pk,
             },
             {
                 "question": question_2.pk,
                 "answer": 2,
                 "answerType": "number",
+                "surveyModule": self.survey_module.pk,
             },
             {
                 "question": question_3.pk,
                 "answer": "true",
                 "answerType": "boolean",
+                "surveyModule": self.survey_module.pk,
             },
             {
                 "question": question_4.pk,
                 "answerType": "single_option",
                 "options": [question_4_option.pk],
+                "surveyModule": self.survey_module.pk,
             },
             {
                 "question": question_5.pk,
                 "answerType": "multiple_option",
                 "options": [question_5_option_1.pk, question_5_option_2.pk],
+                "surveyModule": self.survey_module.pk,
             },
         ]
         self.client.force_authenticate(self.user)
@@ -274,6 +323,7 @@ class APITest(FullTestCase):
                 "question": question_3.pk,
                 "answer": "false",
                 "answerType": "boolean",
+                "surveyModule": self.survey_module.pk,
             },
         ]
         update_response = self.client.post(url, data=update_data, format="json")

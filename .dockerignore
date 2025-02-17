@@ -1,9 +1,51 @@
+# Project files
 .git/
-.venv/
-.github/
-.ruff_cache/
 .gitignore
-**/__pycache__/
 .example.env
 README.MD
 COPYING
+
+# Python related
+.venv/
+**/__pycache__/
+**/*.pyc
+.python-version
+.ruff_cache
+
+# Django related
+media/
+static/
+**/*.sqlite3
+**/.env
+
+# IDE related
+.vscode/
+
+# docker related
+docker-compose.yml
+docker-compose.yaml
+external-services.yml
+external-services.yaml
+
+# terraform related
+.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+**/backend.hcl
+
+# Kubrnetes related
+kubernetes/**/*.env
+!kubernetes/**/*.example.env
+kubernetes/**/kustomization.yml
+kubernetes/**/kustomization.yaml
+
+# Mac related
+**/.DS_Store
+
+control/
+
+# Local files
+.local/
+
+# Github files
+.github/

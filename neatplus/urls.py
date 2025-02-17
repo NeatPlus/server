@@ -48,6 +48,7 @@ from survey.views import (
     QuestionGroupViewSet,
     QuestionViewSet,
     SurveyAnswerViewSet,
+    SurveyModuleViewSet,
     SurveyViewSet,
 )
 from user.views import UserViewSet
@@ -104,6 +105,7 @@ router.register(
 router.register("statement-topic", StatementTopicViewSet, basename="statement-topic")
 router.register("survey", SurveyViewSet, basename="survey")
 router.register("survey-answer", SurveyAnswerViewSet, basename="survey-answer")
+router.register("survey-module", SurveyModuleViewSet, basename="survey-module")
 router.register("survey-result", SurveyResultViewSet, basename="survey-result")
 router.register(
     "survey-result-feedback",

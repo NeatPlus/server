@@ -259,55 +259,7 @@ class APITest(FullTestCase):
             "project-create-survey", kwargs={"version": "v1", "pk": self.project.pk}
         )
         module = self.baker.make("context.Module")
-        question_group = self.baker.make("survey.QuestionGroup", module=module)
-        question_1 = self.baker.make(
-            "survey.Question", answer_type="location", group=question_group
-        )
-        question_2 = self.baker.make("survey.Question", answer_type="number")
-        question_3 = self.baker.make("survey.Question", answer_type="boolean")
-        question_4 = self.baker.make("survey.Question", answer_type="single_option")
-        question_4_option = self.baker.make("survey.Option", question=question_4)
-        question_5 = self.baker.make("survey.Question", answer_type="multiple_option")
-        question_5_option_1 = self.baker.make("survey.Option", question=question_5)
-        question_5_option_2 = self.baker.make("survey.Option", question=question_5)
-        statement = self.baker.make("statement.Statement")
-        data = {
-            "title": random_gen.gen_string(255),
-            "answers": [
-                {
-                    "question": question_1.pk,
-                    "answer": '{"type": "Point", "coordinates": [5.000000, 23.000000]}',
-                    "answerType": "location",
-                },
-                {
-                    "question": question_2.pk,
-                    "answer": 2,
-                    "answerType": "number",
-                },
-                {
-                    "question": question_3.pk,
-                    "answer": "true",
-                    "answerType": "boolean",
-                },
-                {
-                    "question": question_4.pk,
-                    "answerType": "single_option",
-                    "options": [question_4_option.pk],
-                },
-                {
-                    "question": question_5.pk,
-                    "answerType": "multiple_option",
-                    "options": [question_5_option_1.pk, question_5_option_2.pk],
-                },
-            ],
-            "results": [
-                {
-                    "statement": statement.pk,
-                    "score": 0.90,
-                    "module": question_1.group.module.pk,
-                },
-            ],
-        }
+        data = {"title": random_gen.gen_string(255), "modules": [module.pk]}
         self.client.force_authenticate(self.project_created_user)
         response = self.client.post(url, data, format="json")
         self.assertEqual(

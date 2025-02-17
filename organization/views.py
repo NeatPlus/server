@@ -8,8 +8,6 @@ from rest_framework.response import Response
 
 from neatplus.serializers import get_detail_inline_serializer
 from neatplus.views import UserStampedModelViewSetMixin
-from project.models import Project
-from project.serializers import ProjectSerializer
 from user.models import User
 from user.serializers import UserSerializer
 
@@ -45,33 +43,6 @@ class OrganizationViewSet(UserStampedModelViewSetMixin, viewsets.ModelViewSet):
         return Organization.objects.filter(filter_statement).prefetch_related(
             "admins",
             "members",
-        )
-
-    @extend_schema(
-        responses=get_detail_inline_serializer(
-            "OrganizationProjectCreateResponseSerializer",
-            _("Successfully created project"),
-        )
-    )
-    @action(
-        methods=["post"],
-        detail=True,
-        permission_classes=[permissions.IsAuthenticated],
-        serializer_class=ProjectSerializer,
-    )
-    def create_project(self, request, *args, **kwargs):
-        organization = self.get_object()
-        data = request.data
-        serializer = self.get_serializer(data=data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        validated_data = serializer.validated_data
-        Project.objects.create(
-            **validated_data, organization=organization, created_by=self.request.user
-        )
-        return Response(
-            {"detail": _("Successfully created project")},
-            status=status.HTTP_201_CREATED,
         )
 
     @extend_schema(
